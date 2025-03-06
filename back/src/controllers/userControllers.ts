@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
+import { Like } from 'typeorm';
 
 // Repositorio de la entidad User
 const userRepository = AppDataSource.getRepository(User);
@@ -108,4 +109,85 @@ export const getUserByIosfa = async (req: Request, res: Response) => {
   }
 };
 
+//Buscar por numero de DNI
+export const getUserByDni = async (req: Request, res: Response) => {
+  try {
+    const { dni } = req.params; // Captura el parámetro de la URL
 
+    const user = await userRepository.findOne({
+      where: { numeroDeDni: String(dni) },
+      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+    });
+
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener el usuario' });
+  }
+};
+
+//Buscar por numero de apellido
+export const getUserByApellido = async (req: Request, res: Response) => {
+  try {
+    const { apellido } = req.params; // Captura el parámetro de la URL
+
+    const user = await userRepository.findOne({
+      where: { apellido: String(apellido) },
+      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+    });
+
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener el usuario' });
+  }
+};
+
+//Buscar por numero de grado
+export const getUserByGrado = async (req: Request, res: Response) => {
+  try {
+    const { grado } = req.params; // Captura el parámetro de la URL
+
+    const users = await userRepository.find({
+      where: { 
+        grado: grado as 'CABO' | 'CABO PRIMERO' | 'CABO PRINCIPAL' | 'SUBOFICIAL AUXILIAR' | 'SUBOFICIAL AYUDANTE' | 'SUBOFICIAL PRINCIPAL' | 'SUBOFICIAL MAYOR'
+      },
+      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+    });
+
+    if (users.length > 0) {
+      res.json(users);
+    } else {
+      res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener el usuario' });
+  }
+};
+
+
+//Buscar por numero de curso
+export const getUserByCurso = async (req: Request, res: Response) => {
+  try {
+    const { curso } = req.params; // Captura el parámetro de la URL
+
+    const users = await userRepository.find({
+      where: { cursosRealizados: Like(`%${curso}%`) },
+      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+    });
+
+    if (users.length > 0) {
+      res.json(users);
+    } else {
+      res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener el usuario' });
+  }
+};

@@ -23,6 +23,33 @@ export const getUserByIosfa = async (iosfa: number) => {
   return response.json();
 };
 
+export const getUserByDni = async (dni: number) => {
+  const response = await fetch(`${API_URL}/users/dni/${dni}`);
+  if (!response.ok) throw new Error("Usuario no encontrado");
+  return response.json();
+};
+
+export const getUserByApellido = async (apellido: string) => {
+  const response = await fetch(`${API_URL}/users/apellido/${apellido}`);
+  if (!response.ok) throw new Error("Usuario no encontrado");
+  return response.json();
+};
+
+export const getUserByGrado = async (grado: string) => {
+  const response = await fetch(`${API_URL}/users/grado/${grado}`);
+  if (!response.ok) throw new Error("Usuario no encontrado");
+  return response.json();
+};
+
+export const getUserByCurso = async (curso: string) => {
+  const response = await fetch(`${API_URL}/users/curso/${curso}`);
+  if (!response.ok) throw new Error("Usuario no encontrado");
+  return response.json();
+};
+
+
+
+
 
 
 
