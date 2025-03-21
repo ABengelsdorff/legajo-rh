@@ -10,9 +10,8 @@ export class Actuacion {
   @Column()
   numeroDeExpediente!: string;
 
-  @Column({ type: 'text' })
-  @IsIn(['SERVICIO EFECTIVO', 'DISPONIBILIDAD', 'PASIVA', 'LICENCIA EX 6 MESES'])
-  situacionDeRevista!: 'SERVICIO EFECTIVO' | 'DISPONIBILIDAD' | 'PASIVA' | 'LICENCIA EX 6 MESES';
+  @Column()
+  afeccion!: string;
 
   @Column('json')
   disponibilidad!: { desde?: Date; hasta?: Date };

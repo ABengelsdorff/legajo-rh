@@ -19,29 +19,29 @@ app.use(
 );
 
 //!Ver en modo producción
-// // Define los orígenes permitidos
-// const allowedOrigins = [
-//   'http://localhost:3000',
-//   'http://127.0.0.1:3000',
-//   'http://192.168.0.15:3000'
-// ];
+// Define los orígenes permitidos
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'http://192.168.0.15:3000'
+];
 
-// app.use(
-//   cors({
-//     origin: (origin, callback) => {
-//       console.log('Origin recibido:', origin);
-//       // Permite solicitudes sin origen (por ejemplo, desde herramientas como curl o Postman)
-//       if (!origin) return callback(null, true);
-//       if (allowedOrigins.indexOf(origin) !== -1) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error('Not allowed by CORS'));
-//       }
-//     },
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      console.log('Origin recibido:', origin);
+      // Permite solicitudes sin origen (por ejemplo, desde herramientas como curl o Postman)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use('/users', userRoutes);
@@ -69,6 +69,11 @@ export async function initializeDatabase(): Promise<void> {
 // Exporta la app y la función de inicialización
 export { app, PORT };
 
+initializeDatabase().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  });
+});
 
 
 

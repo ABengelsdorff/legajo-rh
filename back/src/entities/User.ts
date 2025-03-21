@@ -16,6 +16,9 @@ export class User {
   @Column()
   apellido!: string;
 
+  @Column()
+  sexo!: string
+
   @Column({ type: 'date', nullable: true })
   fechaDeNacimiento!: Date | null;
 
@@ -38,6 +41,9 @@ export class User {
   correoElectronico!: string;
 
   @Column()
+  correoInstitucional!: string;
+
+  @Column()
   usuarioGde!: string;
 
   @Column() 
@@ -52,9 +58,12 @@ export class User {
   @Column()
   rti!: string;
 
+  @Column()
+  destinoAnterior!: string;
+
   @Column({ type: 'text' })
-  @IsIn(['EAM', 'ESFA', 'IFE', 'ESFAC', 'CUPROSO', 'CUSERPRO', 'INCORPORACION TROPA'])  
-  institutoDeFormacion!: 'EAM' | 'ESFA' | 'IFE' | 'ESFAC' | 'CUPROSO' | 'CUSERPRO' | 'INCORPORACION TROPA'; 
+  @IsIn(['EAM', 'ESFA', 'IFE', 'ESFAC', 'CUPROSO', 'CUSERPRO', 'INCORPORACION TROPA', 'ESFAE', 'BAME'])  
+  institutoDeFormacion!: 'EAM' | 'ESFA' | 'IFE' | 'ESFAC' | 'CUPROSO' | 'CUSERPRO' | 'INCORPORACION TROPA' | 'ESFAE' | 'BAME'; 
 
   @Column({ type: 'text' })
   @IsIn(['CABO', 'CABO PRIMERO', 'CABO PRINCIPAL', 'SUBOFICIAL AUXILIAR', 'SUBOFICIAL AYUDANTE', 'SUBOFICIAL PRINCIPAL', 'SUBOFICIAL MAYOR'])
@@ -65,18 +74,17 @@ export class User {
 
   @Column({ type: 'text' })
   @IsIn(['JEFATURA', 'GRUPO BASE', 'ESCUADRON TECNICO', 'GRUPO AEREO'])
-  destinoJbGrupos!: 'JEFATURA' | 'GRUPO BASE' | 'ESCUADRON TECNICO' | 'GRUPO AEREO';
+  destinoJbGrupos!: 'JEFATURA' | 'GRUPO BASE' | 'GRUPO TECNICO' | 'GRUPO AEREO';
 
   @Column()
   destinoInterno!: string; 
 
   @Column({ type: 'text' })
-  @IsIn(['JEFE', 'ENCARGADO', 'ASESOR', 'AUXILIAR'])  
-  cargo!: 'JEFE' | 'ENCARGADO' | 'ASESOR' | 'AUXILIAR';
+  @IsIn(['ENCARGADO', 'AUXILIAR'])  
+  cargo!:'ENCARGADO' | 'AUXILIAR';
 
-  @Column({ type: 'text' })
-  @IsIn(['AIRE', 'TECNICO', 'GENERAL', 'COMPLEMENTARIO', 'SERVICIO', 'ADMINISTRACION'])  
-  escalafon!: 'AIRE' | 'TECNICO' | 'GENERAL' | 'COMPLEMENTARIO' | 'SERVICIO' | 'ADMINISTRACION';
+  @Column()
+  escalafon!: string; 
 
   @Column()
   especialidad!: string;
@@ -97,10 +105,11 @@ export class User {
   @IsIn(['SOLTERO', 'CASADO', 'CONCUBINATO', 'DIVORCIADO', 'VIUDO'])  
   estadoCivil!: 'SOLTERO' | 'CASADO' | 'CONCUBINATO' | 'DIVORCIADO' | 'VIUDO';
 
-  
   @OneToMany(() => GrupoFamiliar, (grupoFamiliar) => grupoFamiliar.user, { cascade: true })
   grupoFamiliar!: GrupoFamiliar[];
 
+  @Column()
+  situacionDeRevista!: string;
 
   @OneToMany(() => Actuacion, (actuacion) => actuacion.user, { cascade: true })
   actuaciones!: Actuacion[];
