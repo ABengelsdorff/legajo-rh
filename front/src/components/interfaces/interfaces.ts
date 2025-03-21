@@ -13,6 +13,7 @@ export interface IUser {
   id: number
   nombre: string
   apellido: string
+  sexo: "FEMENINO" | "MASCULINO" | "" 
   fechaDeNacimiento: Date | null
   grupoSanguineo: string
   numeroDeDni: string
@@ -20,12 +21,14 @@ export interface IUser {
   direccion: string
   codigoPostal: string
   correoElectronico: string
+  correoInstitucional: string
   usuarioGde: string
   cbu: string
   numeroDeCelular: string
   numeroDeIosfa: string
   rti: string
-  institutoDeFormacion: "EAM" | "ESFA" | "IFE" | "ESFAC" | "CUPROSO" | "CUSERPRO" | "INCORPORACION TROPA"
+  destinoAnterior: string
+  institutoDeFormacion: "EAM" | "ESFA" | "IFE" | "ESFAC" | "CUPROSO" | "CUSERPRO" | "INCORPORACION TROPA" | "ESFAE" | "BAME" | ""
   grado:
     | "CABO"
     | "CABO PRIMERO"
@@ -35,20 +38,21 @@ export interface IUser {
     | "SUBOFICIAL PRINCIPAL"
     | "SUBOFICIAL MAYOR"
   destinadoEnLaUnidad: "" | "SI" | "NO"
-  destinoJbGrupos: "JEFATURA" | "GRUPO BASE" | "ESCUADRON TECNICO" | "GRUPO AEREO"
+  destinoJbGrupos: "JEFATURA" | "GRUPO BASE" | "GRUPO TECNICO" | "GRUPO AEREO" | ""
   destinoInterno: string
-  cargo: "JEFE" | "ENCARGADO" | "ASESOR" | "AUXILIAR"
-  escalafon: "AIRE" | "TECNICO" | "GENERAL" | "COMPLEMENTARIO" | "SERVICIO" | "ADMINISTRACION"
+  cargo: "ENCARGADO" | "AUXILIAR" | ""
+  escalafon: string
   especialidad: string
   especialidadAvanzada: string
   cursosRealizados: string[]
-  formacionAcademica: string
+  formacionAcademica: "SECUNDARIO INCOMPLETO" | "SECUNDARIO COMPLETO" | "TERCIARIO INCOMPLETO" | "TERCIARIO COMPLETO" | "UNIVERSITARIO INCOMPLETO" | "UNIVERSITARIO COMPLETO" | ""
   nivelDeIngles: number
-  estadoCivil: "SOLTERO" | "CASADO" | "CONCUBINATO" | "DIVORCIADO" | "VIUDO"
+  estadoCivil: "SOLTERO" | "CASADO" | "CONCUBINATO" | "DIVORCIADO" | "VIUDO" | ""
   grupoFamiliar: IGrupoFamiliar[];
+  situacionDeRevista: "SERVICIO EFECTIVO" | "DISPONIBILIDAD" | "PASIVA" | ""
   actuaciones: Array<{
     numeroDeExpediente: string
-    situacionDeRevista: "SERVICIO EFECTIVO" | "DISPONIBILIDAD" | "PASIVA" | "LICENCIA EX 6 MESES"
+    afeccion: string 
     disponibilidad: { desde?: Date | string; hasta?: Date | string}
     pasiva: { desde?: Date | string; hasta?: Date | string}
   }>

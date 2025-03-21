@@ -2,10 +2,21 @@ export const ValidacionLegajo = {
   nombre: {
     required: "El nombre es obligatorio",
     minLength: { value: 3, message: "Debe tener al menos 3 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   apellido: {
     required: "El apellido es obligatorio",
     minLength: { value: 3, message: "Debe tener al menos 3 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
+  },
+  sexo: {
+    required: "El sexo es obligatorio",
   },
   fechadeNacimiento: {
     required: "La fecha de nacimiento es obligatoria",
@@ -27,10 +38,18 @@ export const ValidacionLegajo = {
   grupoSanguineo: {
     required: "El grupo sanguíneo es obligatorio",
     minLength: { value: 2, message: "El grupo sanguíneo debe tener al menos 2 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   direccion: {
     required: "La dirección es obligatoria",
     minLength: { value: 5, message: "La dirección debe tener al menos 5 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   codigoPostal: {
     required: "El código postal es obligatorio",
@@ -44,6 +63,13 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
       message: "El correo electrónico debe ser válido",
+    },
+  },
+  correoInstitucional: {
+    required: "El correo institucional es obligatorio",
+    pattern: {
+      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      message: "El correo institucional debe ser válido",
     },
   },
   cbu: {
@@ -81,6 +107,10 @@ export const ValidacionLegajo = {
   },
   escalafon: {
     required: "El escalafón es obligatorio",
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   grado: {
     required: "El grado es obligatorio",
@@ -90,15 +120,27 @@ export const ValidacionLegajo = {
   },
   destinoInterno: {
     required: "El destino interno es obligatorio",
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   cargo: {
     required: "El cargo es obligatorio",
   },
   especialidad: {
     required: "La especialidad es obligatoria",
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   especialidadAvanzada: {
     required: "La especialidad avanzada es obligatoria",
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   nivelDeIngles: {
     required: "El nivel de inglés es obligatorio",
@@ -118,9 +160,20 @@ export const ValidacionLegajo = {
       message: "El RTI debe ser válido",
     },
   },
+  destinoAnterior: {
+    required: "El destino anterior es obligatorio",
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
+  },
   usuarioGde: {
     required: "El usuario GDE es obligatorio",
     minLength: { value: 3, message: "Debe tener al menos 3 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   parentesco: {
     required: "El parentesco es obligatorio",
@@ -131,17 +184,32 @@ export const ValidacionLegajo = {
   observaciones: {
     required: "Las observaciones son obligatorias",
     minLength: { value: 5, message: "Las observaciones deben tener al menos 5 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   cursosRealizados: {
     required: "El nombre del curso es obligatorio",
     minLength: { value: 2, message: "El nombre del curso debe tener al menos 2 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
+  },
+  situacionDeRevista: {
+    required: "La situación de revista es obligatoria",
   },
   numeroDeExpediente: {
     required: "El número de expediente es obligatorio",
     minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
   },
-  situacionDeRevista: {
-    required: "La situación de revista es obligatoria",
+  afeccion: {
+    required: "La afección es obligatoria",
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    },
   },
   disponibilidadDesde: {
     required: "La fecha de inicio de disponibilidad es obligatoria",
@@ -164,6 +232,10 @@ export const ValidacionLegajo = {
   juntaMedicaMensaje: {
     required: "El mensaje aeronáutico es obligatorio",
     minLength: { value: 10, message: "Debe tener al menos 10 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
   },
   juntaMedicaTurnos: {
     required: "Debe seleccionar una fecha para la junta médica",
@@ -181,9 +253,16 @@ export const ValidacionLegajo = {
   juntaMedicaObservacion: {
     required: "La observación es obligatoria",
     minLength: { value: 10, message: "Debe tener al menos 10 caracteres" },
+    pattern: {
+  value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+  message: "Solo se permiten letras en mayúsculas y espacios",
+}
   },
-  afeccion: {
+  juntaMedicaAfeccion: {
     required: "La afección es obligatoria",
-    pattern: { value: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, message: "Solo se permiten letras y espacios" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    },
   },
 };

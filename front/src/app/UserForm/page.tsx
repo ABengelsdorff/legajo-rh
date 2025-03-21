@@ -15,6 +15,7 @@ export default function LegajoProfesional() {
     id: 0,
     nombre: "",
     apellido: "",
+    sexo: "",
     fechaDeNacimiento: null,
     grupoSanguineo: "",
     numeroDeDni: "",
@@ -22,25 +23,28 @@ export default function LegajoProfesional() {
     direccion: "",
     codigoPostal: "",
     correoElectronico: "",
+    correoInstitucional: "",
     usuarioGde: "",
     cbu: "",
     numeroDeCelular: "",
     numeroDeIosfa: "",
     rti: "",
-    institutoDeFormacion: "EAM",
+    destinoAnterior: "",
+    institutoDeFormacion: "",
     grado: "CABO",
     destinadoEnLaUnidad: "",
-    destinoJbGrupos: "GRUPO BASE",
+    destinoJbGrupos: "",
     destinoInterno: "",
-    cargo: "AUXILIAR",
-    escalafon: "AIRE",
+    cargo: "",
+    escalafon: "",
     especialidad: "",
     especialidadAvanzada: "",
     cursosRealizados: [],
     formacionAcademica: "",
     nivelDeIngles: 0,
-    estadoCivil: "SOLTERO",
+    estadoCivil: "",
     grupoFamiliar: [],
+    situacionDeRevista: "",
     actuaciones: [],
     juntaMedica: [],
   })
@@ -53,7 +57,8 @@ export default function LegajoProfesional() {
         ...prevUser.actuaciones,
         {
           numeroDeExpediente: "",
-          situacionDeRevista: "SERVICIO EFECTIVO",
+          afeccion: "",
+          // situacionDeRevista: "SERVICIO EFECTIVO",
           disponibilidad: { desde: undefined, hasta: undefined },
           pasiva: { desde: undefined, hasta: undefined },
         },
@@ -226,6 +231,27 @@ export default function LegajoProfesional() {
                     {errors.apellido && <span className="text-red-600">{errors.apellido.message}</span>}
 
 
+                      <Controller
+                      name="sexo"
+                      control={control}
+                      rules={ValidacionLegajo.sexo}
+                      render={({ field }) => (
+                        <div className="relative">
+                          <label htmlFor="sexo" className="block text-sm font-medium text-gray-900">
+                            Sexo
+                          </label>
+                          <select
+                            {...field}
+                            id="sexo"
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                          >
+                            <option value="">Seleccionar...</option>
+                            <option value="MASCULINO">Masculino</option>
+                            <option value="FEMENINO">Femenino</option>
+                          </select>
+                        </div>
+                      )}
+                      />
 
                     <Controller
   name="fechaDeNacimiento"
@@ -564,12 +590,14 @@ export default function LegajoProfesional() {
         className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
       >
         <option value="">Seleccionar...</option>
-        <option value="EAM">EAM</option>
-        <option value="ESFA">ESFA</option>
-        <option value="IFE">IFE</option>
-        <option value="ESFAC">ESFAC</option>
+        <option value="BAME">BAME</option>
         <option value="CUPROSO">CUPROSO</option>
         <option value="CUSERPRO">CUSERPRO</option>
+        <option value="EAM">EAM</option>
+        <option value="ESFA">ESFA</option>
+        <option value="ESFAC">ESFAC</option>
+        <option value="ESFAE">ESFAE</option>
+        <option value="IFE">IFE</option>
         <option value="INCORPORACION TROPA">INCORPORACION TROPA</option>
       </select>
     </div>
@@ -578,6 +606,8 @@ export default function LegajoProfesional() {
 {errors.institutoDeFormacion && <span className="text-red-600">{errors.institutoDeFormacion.message}</span>}
 
 
+
+{/* //!Ver */}
 <Controller
   name="escalafon"
   control={control}
@@ -587,23 +617,22 @@ export default function LegajoProfesional() {
       <label htmlFor="escalafon" className="block text-sm font-medium text-gray-900">
         Escalafón
       </label>
-      <select
+      <input
         {...field}
         id="escalafon"
+        value={field.value || ''}
         className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
       >
-        <option value="">Seleccionar...</option>
-        <option value="AIRE">AIRE</option>
-        <option value="TECNICO">TECNICO</option>
-        <option value="GENERAL">GENERAL</option>
-        <option value="COMPLEMENTARIO">COMPLEMENTARIO</option>
-        <option value="SERVICIO">SERVICIO</option>
-        <option value="ADMINISTRACION">ADMINISTRACION</option>
-      </select>
+      </input>
     </div>
   )}
 />
 {errors.escalafon && <span className="text-red-600">{errors.escalafon.message}</span>}
+
+
+   
+
+
 
 <Controller
   name="grado"
@@ -641,7 +670,7 @@ export default function LegajoProfesional() {
   render={({ field }) => (
     <div className="relative">
       <label htmlFor="destinoJbGrupos" className="block text-sm font-medium text-gray-900">
-        Destino
+        Destino JB Grupos
       </label>
       <select
         {...field}
@@ -652,7 +681,7 @@ export default function LegajoProfesional() {
         <option value="">Seleccionar...</option>
         <option value="JEFATURA">JEFATURA</option>
         <option value="GRUPO BASE">GRUPO BASE</option>
-        <option value="ESCUADRON TECNICO">ESCUADRON TECNICO</option>
+        <option value="GRUPO TECNICO">GRUPO TECNICO</option>
         <option value="GRUPO AEREO">GRUPO AEREO</option>
       </select>
     </div>
@@ -701,10 +730,8 @@ export default function LegajoProfesional() {
         className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
       >
         <option value="">Seleccionar...</option>
-        <option value="JEFE">JEFE</option>
         <option value="ENCARGADO">ENCARGADO</option>
         <option value="AUXILIAR">AUXILIAR</option>
-        <option value="ASESOR">ASESOR</option>
       </select>
     </div>
   )}
@@ -801,7 +828,52 @@ export default function LegajoProfesional() {
   )}
 />
 {errors.rti && <span className="text-red-600">{errors.rti.message}</span>}
+
+
+<Controller
+name="destinoAnterior"
+control={control}
+rules={ValidacionLegajo.destinoAnterior}
+render={({field}) => (
+  <div className="relative">
+    <label htmlFor="destinoAnterior" className="block text-sm font-medium text-gray-900">
+        Destino Anterior
+      </label>
+      <input
+      {...field}
+      type="text"
+      id="destinoAnterior"
+      className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+        />
+  </div>
+)}
+/>
+{errors.destinoAnterior && <span className="text-red-600 ">{errors.destinoAnterior.message}</span>}
+
                     
+<Controller
+  name="correoInstitucional"
+  control={control}
+  rules={ValidacionLegajo.correoInstitucional}
+  render={({ field }) => (
+    <div className="relative">
+      <label htmlFor="correoInstitucional" className="block text-sm font-medium text-gray-900">
+        Correo Institucional
+      </label>
+      <input
+        {...field}
+        type="email"
+        id="correoInstitucional"
+        value={field.value || ''}
+        className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+      />
+    </div>
+  )}
+/>
+{errors.correoInstitucional && <span className="text-red-600">{errors.correoInstitucional.message}</span>}
+
+
+
 
 
 <Controller
@@ -1057,6 +1129,46 @@ export default function LegajoProfesional() {
                 </div>
               </div>
 
+
+
+
+
+{/* //!Situacion de revista */} 
+{/* //!Ver */} 
+<div className="bg-gray-50 p-6 rounded-lg shadow-md mt-6">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Situacion de revista</h2>
+                <div className="space-y-4">
+
+                <Controller
+  name="situacionDeRevista"
+  control={control}
+  rules={ValidacionLegajo.situacionDeRevista}
+  render={({ field }) => (
+    <div>
+      <select
+        {...field}
+        id="situacionDeRevista"
+        className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+      >
+        <option value="">Seleccionar...</option>
+        <option value="SERVICIO EFECTIVO">SERVICIO EFECTIVO</option>
+        <option value="DISPONIBILIDAD">DISPONIBILIDAD</option>
+        <option value="PASIVA">PASIVA</option>
+      </select>
+    </div>
+  )}
+/>
+{errors.situacionDeRevista && (
+  <span className="text-red-600">{errors.situacionDeRevista.message}</span>
+)}
+                </div>
+              </div>
+
+
+
+
+
+
               {/* //!Actuaciones */}
               <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Actuaciones por Enfermedad</h2>
@@ -1084,32 +1196,31 @@ export default function LegajoProfesional() {
   <span className="text-red-600">{errors.actuaciones[index].numeroDeExpediente.message}</span>
 )}
 
+
+ 
+ {/* //!Ver */}
 <Controller
-  name={`actuaciones.${index}.situacionDeRevista`}
-  control={control}
-  rules={ValidacionLegajo.situacionDeRevista}
-  render={({ field }) => (
-    <div>
-      <label htmlFor={`situacionDeRevista-${index}`} className="block text-sm font-medium text-gray-900">
-        Situación de Revista
-      </label>
-      <select
-        {...field}
-        id={`situacionDeRevista-${index}`}
-        className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-      >
-        <option value="">Seleccionar...</option>
-        <option value="SERVICIO EFECTIVO">SERVICIO EFECTIVO</option>
-        <option value="DISPONIBILIDAD">DISPONIBILIDAD</option>
-        <option value="PASIVA">PASIVA</option>
-        <option value="LICENCIA EX 6 MESES">LICENCIA EX 6 MESES</option>
-      </select>
-    </div>
-  )}
-/>
-{errors.actuaciones?.[index]?.situacionDeRevista && (
-  <span className="text-red-600">{errors.actuaciones[index].situacionDeRevista.message}</span>
-)}
+      name={`actuaciones.${index}.afeccion`}
+      control={control}
+      rules={ValidacionLegajo.afeccion}
+      render={({ field }) => (
+        <div>
+          <label htmlFor={`afeccion-${index}`} className="block text-sm font-medium text-gray-900">
+            Afeccion
+          </label>
+          <textarea
+            {...field}
+            id={`actuaciones-${index}`}
+            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          />
+        </div>
+      )}
+    />
+    {errors.actuaciones?.[index]?.afeccion && (
+      <span className="text-red-600">{errors.actuaciones[index].afeccion.message}</span>
+    )}
+
+
 
 
 
@@ -1320,7 +1431,7 @@ export default function LegajoProfesional() {
 <Controller
       name={`juntaMedica.${index}.afeccion`}
       control={control}
-      rules={ValidacionLegajo.afeccion}
+      rules={ValidacionLegajo.juntaMedicaAfeccion}
       render={({ field }) => (
         <div>
           <label htmlFor={`afeccion-${index}`} className="block text-sm font-medium text-gray-900">

@@ -13,6 +13,7 @@ type SearchResult = {
   id: number;
   nombre: string;
   apellido: string;
+  sexo: string;
   fechaDeNacimiento: string;
   grupoSanguineo: string;
   numeroDeDni: string;
@@ -20,11 +21,13 @@ type SearchResult = {
   direccion: string;
   codigoPostal: string;
   correoElectronico: string;
+  correoInstitucional: string;
   usuarioGde: string;
   cbu: string;
   numeroDeCelular: string;
   numeroDeIosfa: string;
   rti: string;
+  destinoAnterior: string;
   institutoDeFormacion: string;
   grado: string;
   destinadoEnLaUnidad: string;
@@ -46,14 +49,15 @@ type SearchResult = {
     personalMilitar: string;
     observaciones: string;
   }>;
+  situacionDeRevista: string;
   actuaciones: Array<{
     numeroDeExpediente: string;
-    situacionDeRevista: string;
+    afeccion: string;
     disponibilidad: { desde?: string; hasta?: string };
     pasiva: { desde?: string; hasta?: string };
   }>;
   juntaMedica: Array<{
-    mensaje: string;
+    mensajeAeronautico: string;
     turnos: string;
     observacion: string;
     afeccion: string;
@@ -272,22 +276,37 @@ export default function LegajoSearch() {
                           <strong>Nombre:</strong> {result.nombre} {result.apellido}
                         </p>
                         <p>
-                          <strong>Fecha de Nacimiento:</strong> {result.fechaDeNacimiento}
+                          <strong>Sexo:</strong> {result.sexo}
                         </p>
                         <p>
-                          <strong>Grupo Sanguíneo:</strong> {result.grupoSanguineo}
+                          <strong>Fecha de Nacimiento:</strong> {result.fechaDeNacimiento}
                         </p>
                         <p>
                           <strong>DNI:</strong> {result.numeroDeDni}
                         </p>
                         <p>
+                        <p>
                           <strong>CUIL:</strong> {result.numeroDeCuil}
+                        </p>
+                          <strong>Grupo Sanguíneo:</strong> {result.grupoSanguineo}
+                        </p>
+                        <p>
+                          <strong>Dirección:</strong> {result.direccion}
+                        </p>
+                        <p>
+                          <strong>Código Postal:</strong> {result.codigoPostal}
                         </p>
                         <p>
                           <strong>Correo Electrónico:</strong> {result.correoElectronico}
                         </p>
                         <p>
+                          <strong>CBU:</strong> {result.cbu}
+                        </p>
+                        <p>
                           <strong>Celular:</strong> {result.numeroDeCelular}
+                        </p>
+                        <p>
+                          <strong>Formación Académica:</strong> {result.formacionAcademica}
                         </p>
                         <p>
                           <strong>Estado Civil:</strong> {result.estadoCivil}
@@ -300,23 +319,53 @@ export default function LegajoSearch() {
                       <h3 className="text-lg font-semibold text-gray-700 mb-2">Información Profesional</h3>
                       <div className="grid grid-cols-4 gap-4 text-black">
                         <p>
-                          <strong>Grado:</strong> {result.grado}
+                          <strong>Destinado en la unidad:</strong> {result.destinadoEnLaUnidad}
                         </p>
                         <p>
-                          <strong>Cargo:</strong> {result.cargo}
-                        </p>
-                        <p>
-                          <strong>Escalafón:</strong> {result.escalafon}
-                        </p>
-                        <p>
-                          <strong>Especialidad:</strong> {result.especialidad}
+                          <strong>Numero de IOSFA:</strong> {result.numeroDeIosfa}
                         </p>
                         <p>
                           <strong>Instituto de Formación:</strong> {result.institutoDeFormacion}
                         </p>
                         <p>
+                          <strong>Escalafón:</strong> {result.escalafon}
+                        </p>
+                        <p>
+                          <strong>Grado:</strong> {result.grado}
+                        </p>
+                        <p>
+                          <strong>Destino:</strong> {result.destinoJbGrupos}
+                        </p>
+                        <p>
+                          <strong>Destino Interno:</strong> {result.destinoInterno}
+                        </p>
+                        <p>
+                          <strong>Cargo:</strong> {result.cargo}
+                        </p>
+                        <p>
+                          <strong>Especialidad:</strong> {result.especialidad}
+                        </p>
+                        <p>
+                          <strong>Especialidad Avanzada:</strong> {result.especialidadAvanzada}
+                        </p>
+                        <p>
                           <strong>Nivel de Inglés:</strong> {result.nivelDeIngles}%
                         </p>
+                        <p>
+                          <strong>RTI:</strong> {result.rti}
+                        </p>
+                        <p>
+                          <strong>Destino anterior:</strong> {result.destinoAnterior}
+                        </p>
+                        <p>
+                          <strong>Correo Institucional:</strong> {result.correoInstitucional}
+                        </p>
+                        <p>
+                          <strong>Usuario GDE:</strong> {result.usuarioGde}
+                        </p>
+
+
+
                         <div className="col-span-4">
                           <h3 className="font-semibold">Cursos Realizados</h3>
                           <ul className="list-disc list-inside">
@@ -339,10 +388,11 @@ export default function LegajoSearch() {
     {result.grupoFamiliar.length > 0 ? (
       result.grupoFamiliar.map((familiar, index) => (
         <div key={index} className="border p-5 rounded bg-white">
-          <p><strong>Parentesco:</strong> {familiar.parentesco}</p>
           <p><strong>Nombre:</strong> {familiar.nombre} {familiar.apellido}</p>
           <p><strong>DNI:</strong> {familiar.dni}</p>
+          <p><strong>Parentesco:</strong> {familiar.parentesco}</p>
           <p><strong>Personal Militar:</strong> {familiar.personalMilitar}</p>
+          <p><strong>Observaciones:</strong> {familiar.observaciones} </p>
         </div>
       ))
     ) : (
@@ -350,6 +400,18 @@ export default function LegajoSearch() {
     )}
   </div>
 </div>
+
+
+  {/* Situacion de revista */}
+  <div className="p-4 rounded-lg mb-4 bg-blue-50 border border-blue-200">
+  <h3 className="text-lg font-semibold text-gray-700 mb-2">Situacion De Revista</h3>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
+        <div className="border p-5 rounded bg-white">
+          <p><strong>Situacion:</strong> {result.situacionDeRevista}</p>
+        </div>
+  </div>
+</div>
+
 
 
                     {/* Actuaciones */}
@@ -360,7 +422,9 @@ export default function LegajoSearch() {
       result.actuaciones.map((act, index) => (
         <div key={index} className="border p-5 rounded bg-white">
           <p><strong>Expediente:</strong> {act.numeroDeExpediente}</p>
-          <p><strong>Situación:</strong> {act.situacionDeRevista}</p>
+          <p>
+            <strong>Afección:</strong> {act.afeccion}
+          </p>
           <p>
             <strong>Disponibilidad:</strong> {act.disponibilidad.desde} - {act.disponibilidad.hasta}
           </p>
@@ -383,7 +447,7 @@ export default function LegajoSearch() {
     {result.juntaMedica.length > 0 ? (
       result.juntaMedica.map((junta, index) => (
         <div key={index} className="border p-5 rounded bg-white">
-          <p><strong>Mensaje:</strong> {junta.mensaje}</p>
+          <p><strong>Mensaje Aeronáutico:</strong> {junta.mensajeAeronautico}</p>
           <p><strong>Turnos:</strong> {junta.turnos}</p>
           <p><strong>Observación:</strong> {junta.observacion}</p>
           <p><strong>Afección:</strong> {junta.afeccion}</p>
