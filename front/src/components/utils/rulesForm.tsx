@@ -39,16 +39,16 @@ export const ValidacionLegajo = {
     required: "El grupo sanguíneo es obligatorio",
     minLength: { value: 2, message: "El grupo sanguíneo debe tener al menos 2 caracteres" },
     pattern: {
-      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
-      message: "Solo se permiten letras en mayúsculas y espacios",
+      value: /^[A-ZÁÉÍÓÚÑ0-9\s\+\-\/]+$/,
+      message: "Solo se permiten letras en mayúsculas, números, espacios y símbolos como + - /",
     }
-  },
+  },  
   direccion: {
     required: "La dirección es obligatoria",
     minLength: { value: 5, message: "La dirección debe tener al menos 5 caracteres" },
     pattern: {
-      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
-      message: "Solo se permiten letras en mayúsculas y espacios",
+      value: /^[A-ZÁÉÍÓÚÑ0-9\s]+$/,
+      message: "Solo se permiten letras en mayúsculas, números y espacios",
     }
   },
   codigoPostal: {
@@ -265,4 +265,66 @@ export const ValidacionLegajo = {
       message: "Solo se permiten letras en mayúsculas y espacios",
     },
   },
+  solicitudObservaciones: {
+    required: "Las observaciones son obligatorias",
+    minLength: { value: 5, message: "Las observaciones deben tener al menos 5 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
+  },
+  solicitudNumeroDeExpediente: {
+    required: "El número de expediente es obligatorio",
+    minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
+  },
+  solicitudDesde: {
+    required: "La fecha de inicio de solicitud es obligatoria",
+  },
+  inicioParteDeEnfermo: {
+    required: "La fecha de inicio del parte de enfermo es obligatoria",
+  },
+  finalizacionParteDeEnfermo: {
+    required: "La fecha de finalización del parte de enfermo es obligatoria",
+    validate: (value: string, context: { inicioParteDeEnfermo: string }) =>
+      new Date(value) >= new Date(context.inicioParteDeEnfermo) ||
+      "La fecha de finalización debe ser posterior a la de inicio",
+  },
+  parteDeEnfermoObservaciones: {
+    required: "Las observaciones son obligatorias",
+    minLength: { value: 5, message: "Las observaciones deben tener al menos 5 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
+  },
+  aptitudPsicofisicaEstado: {
+    required: "El estado es obligatorio",
+    minLength: { value: 3, message: "Debe tener al menos 3 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
+  },
+  aptitudPsicofisicaObservaciones: {
+    required: "La observación es obligatoria",
+    minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
+    pattern: {
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    }
+  },  
+  compromisoDeServicio: {
+    required: "Debe indicar si hay compromiso de servicio",
+  },
+  
+  ultimoAscenso: {
+    required: "Debe ingresar la fecha del último ascenso",
+  },
+  
+  fotoDeLegajo: {
+    required: "Debe indicar si hay foto de legajo",
+  },
+  
 };
+
+

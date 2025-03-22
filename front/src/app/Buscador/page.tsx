@@ -278,9 +278,11 @@ export default function LegajoSearch() {
                         <p>
                           <strong>Sexo:</strong> {result.sexo}
                         </p>
+
                         <p>
-                          <strong>Fecha de Nacimiento:</strong> {result.fechaDeNacimiento}
+                        <strong>Fecha de Nacimiento:</strong>{' '} {result.fechaDeNacimiento ? new Date(result.fechaDeNacimiento).toLocaleDateString('es-AR') : 'No definida'}
                         </p>
+
                         <p>
                           <strong>DNI:</strong> {result.numeroDeDni}
                         </p>

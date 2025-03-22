@@ -45,7 +45,13 @@ export default function LegajoProfesional() {
     estadoCivil: "",
     grupoFamiliar: [],
     situacionDeRevista: "",
+    compromisoDeServicio: "",
+    ultimoAscenso: "",
+    fotoDeLegajo: "",
     actuaciones: [],
+    parteDeEnfermo: [],
+    aptitudPsicofisica: [],
+    solicitudes: [],
     juntaMedica: [],
   })
 
@@ -122,6 +128,63 @@ export default function LegajoProfesional() {
     setUser((prevUser) => ({
       ...prevUser,
       juntaMedica: prevUser.juntaMedica.filter((_, i) => i !== index),
+    }))
+  }
+  
+
+  const agregarParteDeEnfermo = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      parteDeEnfermo: [
+        ...(prevUser.parteDeEnfermo || []),
+        { inicio: undefined, finalizacion: undefined, observaciones: "" },
+      ],
+    }));
+  };
+  
+  const eliminarParteDeEnfermo = (index: number) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      parteDeEnfermo: prevUser.parteDeEnfermo.filter((_, i) => i !== index),
+    }));
+  };
+
+  const agregarAptitudPsicofisica = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      aptitudPsicofisica: [
+        ...prevUser.aptitudPsicofisica,
+        { estado: "", observacion: "" },
+      ],
+    }));
+  };
+  
+  const eliminarAptitudPsicofisica = (index: number) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      aptitudPsicofisica: prevUser.aptitudPsicofisica.filter((_, i) => i !== index),
+    }));
+  };
+  
+
+  const agregarSolicitud = () => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      solicitudes: [
+        ...prevUser.solicitudes,
+        {
+          numeroDeExpediente: "",
+          solicitud: { desde: "", hasta: "" },
+          observaciones: "",
+        },
+      ],
+    }))
+  }
+
+  const eliminarSolicitud= (index: number) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      solicitudes: prevUser.solicitudes.filter((_, i) => i !== index),
     }))
   }
 
@@ -1008,10 +1071,6 @@ render={({field}) => (
         <span className="text-red-600">{errors.grupoFamiliar[index].parentesco.message}</span>
       )}
 
-
-
-
-
 <Controller
   name={`grupoFamiliar.${index}.personalMilitar`}
   control={control}
@@ -1036,11 +1095,6 @@ render={({field}) => (
 {errors.grupoFamiliar?.[index]?.personalMilitar && (
   <span className="text-red-600">{errors.grupoFamiliar[index].personalMilitar.message}</span>
 )}
-
-
-
-
-
 
 
       {errors.grupoFamiliar?.[index]?.personalMilitar && (
@@ -1130,11 +1184,7 @@ render={({field}) => (
               </div>
 
 
-
-
-
-{/* //!Situacion de revista */} 
-{/* //!Ver */} 
+{/* //!Situacion de revista */}  
 <div className="bg-gray-50 p-6 rounded-lg shadow-md mt-6">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">Situacion de revista</h2>
                 <div className="space-y-4">
@@ -1166,6 +1216,198 @@ render={({field}) => (
 
 
 
+
+
+{/* //!Compromiso de Servicio */}
+<div className="bg-gray-50 p-6 rounded-lg shadow-md mt-6">
+  <h2 className="text-2xl font-bold text-gray-800 mb-4">Compromiso de Servicio</h2>
+  <div className="space-y-4">
+
+    {/* Compromiso */}
+    <Controller
+      name="compromisoDeServicio"
+      control={control}
+      rules={ValidacionLegajo.compromisoDeServicio}
+      render={({ field }) => (
+        <div>
+          <label htmlFor="compromisoDeServicio" className="block text-sm font-medium text-gray-900">
+            Compromiso de Servicio
+          </label>
+          <select
+            {...field}
+            id="compromisoDeServicio"
+            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          >
+            <option value="">Seleccionar...</option>
+            <option value="SI">Sí</option>
+            <option value="NO">No</option>
+          </select>
+        </div>
+      )}
+    />
+    {errors.compromisoDeServicio && (
+      <span className="text-red-600">{errors.compromisoDeServicio.message}</span>
+    )}
+
+    {/* Último Ascenso */}
+    <Controller
+      name="ultimoAscenso"
+      control={control}
+      rules={ValidacionLegajo.ultimoAscenso}
+      render={({ field }) => (
+        <div>
+          <label htmlFor="ultimoAscenso" className="block text-sm font-medium text-gray-900">
+            Último Ascenso
+          </label>
+          <input
+            {...field}
+            type="date"
+            id="ultimoAscenso"
+            value={field.value ? new Date(field.value).toISOString().split("T")[0] : ""}
+            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          />
+        </div>
+      )}
+    />
+    {errors.ultimoAscenso && (
+      <span className="text-red-600">{errors.ultimoAscenso.message}</span>
+    )}
+
+    {/* Foto de Legajo */}
+    <Controller
+      name="fotoDeLegajo"
+      control={control}
+      rules={ValidacionLegajo.fotoDeLegajo}
+      render={({ field }) => (
+        <div>
+          <label htmlFor="fotoDeLegajo" className="block text-sm font-medium text-gray-900">
+            Foto de Legajo
+          </label>
+          <select
+            {...field}
+            id="fotoDeLegajo"
+            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          >
+            <option value="">Seleccionar...</option>
+            <option value="SI">Sí</option>
+            <option value="NO">No</option>
+          </select>
+        </div>
+      )}
+    />
+    {errors.fotoDeLegajo && (
+      <span className="text-red-600">{errors.fotoDeLegajo.message}</span>
+    )}
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+{/* //!Solicitudes */}
+<div className="bg-gray-50 p-6 rounded-lg shadow-md">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Solicitudes</h2>
+                {user.solicitudes.map((solicitud, index) => (
+                  <div key={index} className="space-y-4 border p-4 rounded-lg mb-4 bg-white">
+
+                   <Controller
+  name={`solicitudes.${index}.numeroDeExpediente`}
+  control={control}
+  rules={ValidacionLegajo.solicitudNumeroDeExpediente}
+  render={({ field }) => (
+    <div>
+      <label htmlFor={`numeroDeExpediente-${index}`} className="block text-sm font-medium text-gray-900">
+        Número de Expediente
+      </label>
+      <input
+        {...field}
+        value={field.value ?? ''}
+        id={`numeroDeExpediente-${index}`}
+        className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+      />
+    </div>
+  )}
+/>
+{errors.solicitudes?.[index]?.numeroDeExpediente && (
+  <span className="text-red-600">{errors.solicitudes[index].numeroDeExpediente.message}</span>
+)}
+
+
+<Controller
+  name={`solicitudes.${index}.solicitud.desde`}
+  control={control}
+  rules={ValidacionLegajo.solicitudDesde}
+  render={({ field }) => (
+    <div>
+      <label htmlFor={`solicitudesDesde-${index}`} className="block text-sm font-medium text-gray-900">
+        Solicitud Desde
+      </label>
+      <input
+        {...field}
+        type="date"
+        id={`solicitudesDesde-${index}`}
+        className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+        value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''} // Convertimos a string 'YYYY-MM-DD'
+      />
+    </div>
+  )}
+/>
+{errors.solicitudes?.[index]?.solicitud?.desde && (
+  <span className="text-red-600">{errors.solicitudes[index].solicitud.desde?.message}</span>
+)}
+
+<Controller
+      name={`solicitudes.${index}.observaciones`}
+      control={control}
+      rules={ValidacionLegajo.solicitudObservaciones}
+      render={({ field }) => (
+        <div>
+          <label htmlFor={`solicitudes-observaciones-${index}`} className="block text-sm font-medium text-gray-900">
+            Observaciones
+          </label>
+          <textarea
+            {...field}
+            id={`solicitudes-observaciones-${index}`}
+            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          />
+        </div>
+      )}
+    />
+     {errors.solicitudes?.[index]?.observaciones && (
+                      <span className="text-red-600">{errors.solicitudes[index].observaciones.message}</span>
+    )}
+
+
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => eliminarSolicitud(index)}
+                        className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={agregarSolicitud}
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                 Agregar Solicitud
+                </button>
+              </div>
 
 
 
@@ -1356,6 +1598,209 @@ render={({field}) => (
                   Agregar Actuación
                 </button>
               </div>
+
+
+
+
+
+
+
+
+
+
+{/* //!Parte de Enfermo */}
+<div className="bg-gray-50 p-6 rounded-lg shadow-md">
+  <h2 className="text-2xl font-bold text-gray-800 mb-4">Parte de Enfermo</h2>
+  {user.parteDeEnfermo?.map((parte, index) => (
+    <div key={index} className="space-y-4 border p-4 rounded-lg mb-4 bg-white">
+      
+      {/* Inicio */}
+      <Controller
+        name={`parteDeEnfermo.${index}.inicio`}
+        control={control}
+        rules={ValidacionLegajo.inicioParteDeEnfermo}
+        render={({ field }) => (
+          <div>
+            <label htmlFor={`inicio-${index}`} className="block text-sm font-medium text-gray-900">
+              Inicio
+            </label>
+            <input
+              {...field}
+              type="date"
+              id={`inicio-${index}`}
+              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+            />
+          </div>
+        )}
+      />
+      {errors.parteDeEnfermo?.[index]?.inicio && (
+        <span className="text-red-600">{errors.parteDeEnfermo[index].inicio.message}</span>
+      )}
+
+      {/* Finalización */}
+      <Controller
+        name={`parteDeEnfermo.${index}.finalizacion`}
+        control={control}
+        rules={{
+          ...ValidacionLegajo.finalizacionParteDeEnfermo,
+          validate: (value) => {
+            const inicio = getValues(`parteDeEnfermo.${index}.inicio`);
+            if (inicio && value) {
+              return new Date(value) >= new Date(inicio) || "La fecha de finalización debe ser posterior a la de inicio";
+            }
+            return true;
+          },
+        }}
+        render={({ field }) => (
+          <div>
+            <label htmlFor={`finalizacion-${index}`} className="block text-sm font-medium text-gray-900">
+              Finalización
+            </label>
+            <input
+              {...field}
+              type="date"
+              id={`finalizacion-${index}`}
+              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              value={field.value ? new Date(field.value).toISOString().split('T')[0] : ''}
+            />
+          </div>
+        )}
+      />
+      {errors.parteDeEnfermo?.[index]?.finalizacion && (
+        <span className="text-red-600">{errors.parteDeEnfermo[index].finalizacion.message}</span>
+      )}
+
+      {/* Observaciones */}
+      <Controller
+        name={`parteDeEnfermo.${index}.observaciones`}
+        control={control}
+        rules={ValidacionLegajo.parteDeEnfermoObservaciones}
+        render={({ field }) => (
+          <div>
+            <label htmlFor={`observaciones-parte-${index}`} className="block text-sm font-medium text-gray-900">
+              Observaciones
+            </label>
+            <textarea
+              {...field}
+              id={`observaciones-parte-${index}`}
+              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+          </div>
+        )}
+      />
+      {errors.parteDeEnfermo?.[index]?.observaciones && (
+        <span className="text-red-600">{errors.parteDeEnfermo[index].observaciones.message}</span>
+      )}
+
+      {/* Botón eliminar */}
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => eliminarParteDeEnfermo(index)}
+          className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  ))}
+
+  {/* Botón agregar */}
+  <button
+    type="button"
+    onClick={agregarParteDeEnfermo}
+    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+  >
+    Agregar Parte De Enfermo
+  </button>
+</div>
+
+
+
+
+
+
+{/* //!Aptitud Psicofísica */}
+<div className="bg-gray-50 p-6 rounded-lg shadow-md">
+  <h2 className="text-2xl font-bold text-gray-800 mb-4">Aptitud Psicofísica</h2>
+  {user.aptitudPsicofisica?.map((aptitud, index) => (
+    <div key={index} className="space-y-4 border p-4 rounded-lg mb-4 bg-white">
+
+      <Controller
+        name={`aptitudPsicofisica.${index}.estado`}
+        control={control}
+        rules={ValidacionLegajo.aptitudPsicofisicaEstado}
+        render={({ field }) => (
+          <div>
+            <label htmlFor={`estado-${index}`} className="block text-sm font-medium text-gray-900">
+              Estado
+            </label>
+            <input
+              {...field}
+              type="text"
+              id={`estado-${index}`}
+              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+          </div>
+        )}
+      />
+      {errors.aptitudPsicofisica?.[index]?.estado && (
+        <span className="text-red-600">{errors.aptitudPsicofisica[index].estado.message}</span>
+      )}
+
+      <Controller
+        name={`aptitudPsicofisica.${index}.observacion`}
+        control={control}
+        rules={ValidacionLegajo.aptitudPsicofisicaObservaciones}
+        render={({ field }) => (
+          <div>
+            <label htmlFor={`observacion-${index}`} className="block text-sm font-medium text-gray-900">
+              Observaciones
+            </label>
+            <textarea
+              {...field}
+              id={`observacion-${index}`}
+              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+          </div>
+        )}
+      />
+      {errors.aptitudPsicofisica?.[index]?.observacion && (
+        <span className="text-red-600">{errors.aptitudPsicofisica[index].observacion.message}</span>
+      )}
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => eliminarAptitudPsicofisica(index)}
+          className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  ))}
+
+  <button
+    type="button"
+    onClick={agregarAptitudPsicofisica}
+    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+  >
+    Agregar Aptitud Psicofísica
+  </button>
+</div>
+
+
+
+
+
+
+
+
+
 
               {/* //!Junta Médica */}
               <div className="bg-gray-50 p-6 rounded-lg shadow-md">

@@ -56,10 +56,33 @@ export interface IUser {
     disponibilidad: { desde?: Date | string; hasta?: Date | string}
     pasiva: { desde?: Date | string; hasta?: Date | string}
   }>
+
+  solicitudes: Array<{
+    numeroDeExpediente: string
+    solicitud: { desde?: Date | string; hasta?: Date | string}
+    observaciones: string
+  }>
+
+
+  parteDeEnfermo: Array<{
+    inicio?: Date | string;
+    finalizacion?: Date | string;
+    observaciones: string;
+  }>;
+  
+  aptitudPsicofisica: Array<{
+    estado: string;
+    observacion: string;
+  }>;
+
   juntaMedica: Array<{
     mensaje: string
     turnos: Date | string | null
     observacion: string
     afeccion: string
   }>
+
+  compromisoDeServicio: "SI" | "NO" | "";
+  ultimoAscenso: Date | string | null;
+  fotoDeLegajo: "SI" | "NO" | "";
 }

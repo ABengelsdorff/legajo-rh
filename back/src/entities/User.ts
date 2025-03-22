@@ -1,9 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne } from 'typeorm';
 import { IsIn } from 'class-validator';
 
 import { GrupoFamiliar } from './GrupoFamiliar';
 import { Actuacion } from './Actuacion';
 import { JuntaMedica } from './JuntaMedica';
+import { Solicitud } from './Solicitudes';
+import { ParteDeEnfermo } from './ParteDeEnfermo';
+import { AptitudPsicofisica } from './AptitudPsicofisica';
+import { CompromisoDeServicio } from './CompromisoDeServicio';
 
 @Entity()
 export class User {
@@ -116,6 +120,19 @@ export class User {
 
   @OneToMany(() => JuntaMedica, (juntaMedica) => juntaMedica.user, { cascade: true })
   juntaMedica!: JuntaMedica[];
+
+  @OneToMany(() => Solicitud, (solicitudes) => solicitudes.user, { cascade: true })
+  solicitudes!: Solicitud[];
+
+  @OneToMany(() => ParteDeEnfermo, (parteDeEnfermo) => parteDeEnfermo.user, { cascade: true })
+parteDeEnfermo!: ParteDeEnfermo[];
+
+@OneToMany(() => AptitudPsicofisica, (aptitud) => aptitud.user, { cascade: true })
+aptitudPsicofisica!: AptitudPsicofisica[];
+
+@OneToOne(() => CompromisoDeServicio, (compromiso) => compromiso.user, { cascade: true })
+compromisoDeServicio!: CompromisoDeServicio[];
+
 }
 
 

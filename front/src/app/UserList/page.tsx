@@ -7,6 +7,7 @@ interface IUser {
   id: number
   nombre: string
   apellido: string
+  sexo: string
   fechaDeNacimiento: string
   grupoSanguineo: string
   numeroDeDni: string
@@ -103,7 +104,11 @@ const UserList = () => {
                     <h3 className="text-lg font-semibold text-gray-700 mb-2">Información Personal</h3>
                     <div className="grid grid-cols-4 gap-4 text-black">
                       <p>
-                        <strong>Fecha de Nacimiento:</strong> {user.fechaDeNacimiento}
+                        <strong>Sexo:</strong> {user.sexo}
+                      </p>
+                      <p>
+                        <strong>Fecha de Nacimiento:</strong>{' '}
+                          {user.fechaDeNacimiento ? new Date(user.fechaDeNacimiento).toLocaleDateString('es-AR') : 'No definida'}
                       </p>
                       <p>
                         <strong>Grupo Sanguíneo:</strong> {user.grupoSanguineo}
@@ -203,7 +208,7 @@ const UserList = () => {
                               <strong>DNI:</strong> {familiar.dni}
                             </p>
                             <p>
-                              <strong>Personal Militar:</strong> {familiar.personalMilitar ? "Sí" : "No"}
+                              <strong>Personal Militar:</strong> {familiar.personalMilitar}
                             </p>
                             {familiar.observaciones && (
                               <p>
