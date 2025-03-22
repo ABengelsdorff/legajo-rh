@@ -287,9 +287,9 @@ export default function LegajoSearch() {
                           <strong>DNI:</strong> {result.numeroDeDni}
                         </p>
                         <p>
-                        <p>
                           <strong>CUIL:</strong> {result.numeroDeCuil}
                         </p>
+                        <p>
                           <strong>Grupo Sanguíneo:</strong> {result.grupoSanguineo}
                         </p>
                         <p>
