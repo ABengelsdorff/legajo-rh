@@ -4,7 +4,7 @@ import { IsIn } from 'class-validator';
 import { GrupoFamiliar } from './GrupoFamiliar';
 import { Actuacion } from './Actuacion';
 import { JuntaMedica } from './JuntaMedica';
-import { Solicitud } from './Solicitudes';
+import { Solicitud } from './Solicitud';
 import { ParteDeEnfermo } from './ParteDeEnfermo';
 import { AptitudPsicofisica } from './AptitudPsicofisica';
 import { CompromisoDeServicio } from './CompromisoDeServicio';
@@ -100,7 +100,7 @@ export class User {
   cursosRealizados!: string[];
 
   @Column("simple-array")
-  formacionAcademica!: string[];
+  formacionAcademica!: string;
 
   @Column()
   nivelDeIngles!: number;
@@ -131,7 +131,7 @@ parteDeEnfermo!: ParteDeEnfermo[];
 aptitudPsicofisica!: AptitudPsicofisica[];
 
 @OneToOne(() => CompromisoDeServicio, (compromiso) => compromiso.user, { cascade: true })
-compromisoDeServicio!: CompromisoDeServicio[];
+compromisoDeServicio!: CompromisoDeServicio;
 
 }
 

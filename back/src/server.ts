@@ -56,6 +56,8 @@ app.get('*', (req, res) => {
 /**
  * Función para inicializar la conexión a la base de datos.
  */
+console.log("Entidades registradas:", AppDataSource.options.entities);
+
 export async function initializeDatabase(): Promise<void> {
   try {
     await AppDataSource.initialize();
@@ -69,8 +71,13 @@ export async function initializeDatabase(): Promise<void> {
 // Exporta la app y la función de inicialización
 export { app, PORT };
 
-
-
+initializeDatabase().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  });
+}).catch((error) => {
+  console.error("❌ Falló la inicialización de la base de datos:", error);
+});
 
 
 
