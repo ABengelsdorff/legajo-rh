@@ -8,66 +8,13 @@ import {
   getUserByGrado,
   getUserByCurso,
 } from "../../services/userServices";
+import { IUser } from "@/components/interfaces/interfaces";
 
-type SearchResult = {
-  id: number;
-  nombre: string;
-  apellido: string;
-  sexo: string;
-  fechaDeNacimiento: string;
-  grupoSanguineo: string;
-  numeroDeDni: string;
-  numeroDeCuil: string;
-  direccion: string;
-  codigoPostal: string;
-  correoElectronico: string;
-  correoInstitucional: string;
-  usuarioGde: string;
-  cbu: string;
-  numeroDeCelular: string;
-  numeroDeIosfa: string;
-  rti: string;
-  destinoAnterior: string;
-  institutoDeFormacion: string;
-  grado: string;
-  destinadoEnLaUnidad: string;
-  destinoJbGrupos: string;
-  destinoInterno: string;
-  cargo: string;
-  escalafon: string;
-  especialidad: string;
-  especialidadAvanzada: string;
-  cursosRealizados: string[];
-  formacionAcademica: string[];
-  nivelDeIngles: number;
-  estadoCivil: string;
-  grupoFamiliar: Array<{
-    parentesco: string;
-    nombre: string;
-    apellido: string;
-    dni: string;
-    personalMilitar: string;
-    observaciones: string;
-  }>;
-  situacionDeRevista: string;
-  actuaciones: Array<{
-    numeroDeExpediente: string;
-    afeccion: string;
-    disponibilidad: { desde?: string; hasta?: string };
-    pasiva: { desde?: string; hasta?: string };
-  }>;
-  juntaMedica: Array<{
-    mensajeAeronautico: string;
-    turnos: string;
-    observacion: string;
-    afeccion: string;
-  }>;
-};
 
 export default function LegajoSearch() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchType, setSearchType] = useState("iosfa");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchResults, setSearchResults] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -77,7 +24,8 @@ export default function LegajoSearch() {
     setError("");
 
     try {
-      let result;
+      let result: IUser | IUser[];
+
 
       if (searchType === "iosfa") {
         const iosfaNumber = Number(searchQuery);
@@ -428,11 +376,20 @@ export default function LegajoSearch() {
             <strong>Afección:</strong> {act.afeccion}
           </p>
           <p>
-            <strong>Disponibilidad:</strong> {act.disponibilidad.desde} - {act.disponibilidad.hasta}
-          </p>
-          <p>
-            <strong>Pasiva:</strong> {act.pasiva.desde} - {act.pasiva.hasta}
-          </p>
+  <strong>Disponibilidad:</strong>{" "}
+  {act.disponibilidad.desde
+    ? new Date(act.disponibilidad.desde).toLocaleDateString("es-AR")
+    : "No definida"}{" "}
+  -{" "}
+  {act.disponibilidad.hasta
+    ? new Date(act.disponibilidad.hasta).toLocaleDateString("es-AR")
+    : "No definida"}
+</p>
+<p>
+  <strong>Pasiva:</strong>{" "}{act.pasiva.desde? new Date(act.pasiva.desde).toLocaleDateString("es-AR"): "No definida"}{" "}-
+  {" "}{act.pasiva.hasta? new Date(act.pasiva.hasta).toLocaleDateString("es-AR"): "No definida"}
+</p>
+
         </div>
       ))
     ) : (
@@ -449,8 +406,9 @@ export default function LegajoSearch() {
     {result.juntaMedica.length > 0 ? (
       result.juntaMedica.map((junta, index) => (
         <div key={index} className="border p-5 rounded bg-white">
-          <p><strong>Mensaje Aeronáutico:</strong> {junta.mensajeAeronautico}</p>
-          <p><strong>Turnos:</strong> {junta.turnos}</p>
+          <p><strong>Mensaje Aeronáutico:</strong> {junta.mensaje}</p>
+          <p><strong>Turnos:</strong>{" "}{junta.turnos? new Date(junta.turnos).toLocaleDateString("es-AR"): "No definido"}</p>
+
           <p><strong>Observación:</strong> {junta.observacion}</p>
           <p><strong>Afección:</strong> {junta.afeccion}</p>
         </div>

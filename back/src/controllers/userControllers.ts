@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
-import { Like } from 'typeorm';
+import { Like, ILike } from 'typeorm';
 
 // Repositorio de la entidad User
 const userRepository = AppDataSource.getRepository(User);
@@ -11,7 +11,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
   try {
     // Incluyendo la relación 'grupoFamiliar' en la consulta
     const users = await userRepository.find({
-      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], // Cargar la relación grupoFamiliar
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'compromisoDeServicio'], 
     });
     
     res.json(users);
@@ -26,7 +26,7 @@ export const getUserById = async (req: Request, res: Response) => {
   try {
     const user = await userRepository.findOne({
       where: { id: parseInt(req.params.id) },
-      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'compromisoDeServicio'],
     });
     if (user) {
       res.json(user);
@@ -97,7 +97,7 @@ export const getUserByIosfa = async (req: Request, res: Response) => {
 
     const user = await userRepository.findOne({
       where: { numeroDeIosfa: String(iosfa) },
-      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'compromisoDeServicio'],
     });
 
     if (user) {
@@ -117,7 +117,7 @@ export const getUserByDni = async (req: Request, res: Response) => {
 
     const user = await userRepository.findOne({
       where: { numeroDeDni: String(dni) },
-      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'compromisoDeServicio'], 
     });
 
     if (user) {
@@ -135,12 +135,12 @@ export const getUserByApellido = async (req: Request, res: Response) => {
   try {
     const { apellido } = req.params; // Captura el parámetro de la URL
 
-    const user = await userRepository.findOne({
-      where: { apellido: String(apellido) },
-      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+    const user = await userRepository.find({
+      where: { apellido: ILike(`%${apellido}%`) },
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'compromisoDeServicio'],
     });
 
-    if (user) {
+    if (user.length > 0) {
       res.json(user);
     } else {
       res.status(404).json({ message: 'Usuario no encontrado' });
@@ -159,7 +159,7 @@ export const getUserByGrado = async (req: Request, res: Response) => {
       where: { 
         grado: grado as 'CABO' | 'CABO PRIMERO' | 'CABO PRINCIPAL' | 'SUBOFICIAL AUXILIAR' | 'SUBOFICIAL AYUDANTE' | 'SUBOFICIAL PRINCIPAL' | 'SUBOFICIAL MAYOR'
       },
-      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'compromisoDeServicio'], 
     });
 
     if (users.length > 0) {
@@ -180,7 +180,7 @@ export const getUserByCurso = async (req: Request, res: Response) => {
 
     const users = await userRepository.find({
       where: { cursosRealizados: Like(`%${curso}%`) },
-      relations: ['grupoFamiliar', 'actuaciones', 'juntaMedica'], 
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'compromisoDeServicio'],
     });
 
     if (users.length > 0) {

@@ -30,6 +30,12 @@ export default function Navbar() {
                   Buscar Legajo
                 </Link>
                 <Link
+                  href="/Graficos"
+                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                >
+                  Graficos
+                </Link>
+                <Link
                   href="/UserForm"
                   className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
                 >
@@ -85,16 +91,28 @@ export default function Navbar() {
         <div className="md:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
-              href="/buscar"
+              href="/Buscador"
               className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
             >
               Buscar Legajo
             </Link>
             <Link
-              href="/legajo"
+              href="/Graficos"
               className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
             >
-              Formulario de Legajo
+              Graficos
+            </Link>
+            <Link
+              href="/UserForm"
+              className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+            >
+              Cargar Legajo
+            </Link>
+            <Link
+              href="/UserList"
+              className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+            >
+             Ver Usuarios
             </Link>
           </div>
         </div>
