@@ -2,58 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { getAllUsers } from "../../services/userServices"
+import { IUser } from "@/components/interfaces/interfaces"
 
-interface IUser {
-  id: number
-  nombre: string
-  apellido: string
-  sexo: string
-  fechaDeNacimiento: string
-  grupoSanguineo: string
-  numeroDeDni: string
-  numeroDeCuil: string
-  direccion: string
-  codigoPostal: string
-  correoElectronico: string
-  usuarioGde: string
-  cbu: string
-  numeroDeCelular: string
-  numeroDeIosfa: string
-  rti: string
-  institutoDeFormacion: string
-  grado: string
-  destinadoEnLaUnidad: string
-  destinoJbGrupos: string
-  destinoInterno: string
-  cargo: string
-  escalafon: string
-  especialidad: string
-  especialidadAvanzada: string
-  cursosRealizados: string[]
-  formacionAcademica: string[]
-  nivelDeIngles: number
-  estadoCivil: string
-  grupoFamiliar: Array<{
-    parentesco: string
-    nombre: string
-    apellido: string
-    dni: string
-    personalMilitar: boolean
-    observaciones: string
-  }>
-  actuaciones: Array<{
-    numeroDeExpediente: string
-    situacionDeRevista: string
-    disponibilidad: { desde?: string; hasta?: string }
-    pasiva: { desde?: string; hasta?: string }
-  }>
-  juntaMedica: Array<{
-    mensaje: string
-    turnos: string
-    observacion: string
-    afeccion: string
-  }>
-}
 
 const UserList = () => {
   const [users, setUsers] = useState<IUser[]>([])
@@ -138,7 +88,7 @@ const UserList = () => {
                         <strong>Celular:</strong> {user.numeroDeCelular}
                       </p>
                       <p>
-                        <strong>Formación:</strong> {user.formacionAcademica.join(", ")}
+                        <strong>Formación:</strong> {user.formacionAcademica}
                       </p>
                      
                       <p>
@@ -234,14 +184,20 @@ const UserList = () => {
                               <strong>Expediente:</strong> {act.numeroDeExpediente}
                             </p>
                             <p>
-                              <strong>Situación:</strong> {act.situacionDeRevista}
+                              <strong>Situación:</strong> {act.afeccion}
                             </p>
                             <p>
-                              <strong>Disponibilidad:</strong> {act.disponibilidad.desde} - {act.disponibilidad.hasta}
-                            </p>
-                            <p>
-                              <strong>Pasiva:</strong> {act.pasiva.desde} - {act.pasiva.hasta}
-                            </p>
+  <strong>Disponibilidad:</strong>{" "}
+  {act.disponibilidad.desde ? new Date(act.disponibilidad.desde).toLocaleDateString("es-AR") : "No definida"}{" "}
+  -{" "}
+  {act.disponibilidad.hasta ? new Date(act.disponibilidad.hasta).toLocaleDateString("es-AR") : "No definida"}
+</p>
+<p>
+  <strong>Pasiva:</strong>{" "}
+  {act.pasiva.desde ? new Date(act.pasiva.desde).toLocaleDateString("es-AR") : "No definida"}{" "}
+  -{" "}
+  {act.pasiva.hasta ? new Date(act.pasiva.hasta).toLocaleDateString("es-AR") : "No definida"}
+</p>
                           </div>
                         ))}
                       </div>
@@ -261,7 +217,7 @@ const UserList = () => {
                               <strong>Mensaje:</strong> {junta.mensaje}
                             </p>
                             <p>
-                              <strong>Turnos:</strong> {junta.turnos}
+                              <strong>Turnos:</strong> {junta.turnos ? new Date(junta.turnos).toLocaleDateString("es-AR") : "No definido"}
                             </p>
                             <p>
                               <strong>Observación:</strong> {junta.observacion}

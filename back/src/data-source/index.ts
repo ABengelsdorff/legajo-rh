@@ -6,7 +6,6 @@ import { JuntaMedica } from "../entities/JuntaMedica";
 import { Solicitud } from "../entities/Solicitud";
 import { ParteDeEnfermo } from "../entities/ParteDeEnfermo"; 
 import { AptitudPsicofisica } from "../entities/AptitudPsicofisica";
-import { CompromisoDeServicio } from "../entities/CompromisoDeServicio";
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
@@ -20,7 +19,6 @@ export const AppDataSource = new DataSource({
     JuntaMedica,
     Solicitud,
     ParteDeEnfermo,
-    AptitudPsicofisica,
-    CompromisoDeServicio,], 
+    AptitudPsicofisica,], 
 });
  

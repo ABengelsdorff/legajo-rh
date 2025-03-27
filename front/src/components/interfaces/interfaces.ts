@@ -8,13 +8,12 @@ interface IGrupoFamiliar {
 }
 
 
-
 export interface IUser {
   id: number
   nombre: string
   apellido: string
   sexo: "FEMENINO" | "MASCULINO" | "" 
-  fechaDeNacimiento: Date | null
+  fechaDeNacimiento: Date | string
   grupoSanguineo: string
   numeroDeDni: string
   numeroDeCuil: string
@@ -50,6 +49,7 @@ export interface IUser {
   estadoCivil: "SOLTERO" | "CASADO" | "CONCUBINATO" | "DIVORCIADO" | "VIUDO" | ""
   grupoFamiliar: IGrupoFamiliar[];
   situacionDeRevista: "SERVICIO EFECTIVO" | "DISPONIBILIDAD" | "PASIVA" | ""
+
   actuaciones: Array<{
     numeroDeExpediente: string
     afeccion: string 
@@ -59,7 +59,7 @@ export interface IUser {
 
   solicitudes: Array<{
     numeroDeExpediente: string
-    solicitud: { desde?: Date | string; hasta?: Date | string}
+    solicitud: { desde?: Date | string}
     observaciones: string
   }>
 

@@ -7,7 +7,6 @@ import { JuntaMedica } from './JuntaMedica';
 import { Solicitud } from './Solicitud';
 import { ParteDeEnfermo } from './ParteDeEnfermo';
 import { AptitudPsicofisica } from './AptitudPsicofisica';
-import { CompromisoDeServicio } from './CompromisoDeServicio';
 
 @Entity()
 export class User {
@@ -99,11 +98,20 @@ export class User {
   @Column("simple-array")
   cursosRealizados!: string[];
 
-  @Column("simple-array")
+  @Column()
   formacionAcademica!: string;
 
   @Column()
   nivelDeIngles!: number;
+
+  @Column()
+  compromisoDeServicio!: string;
+
+  @Column({ type: 'date', nullable: true })
+  ultimoAscenso!: Date | null;
+
+  @Column()
+  fotoDeLegajo!: string; 
 
   @Column({ type: 'text' })
   @IsIn(['SOLTERO', 'CASADO', 'CONCUBINATO', 'DIVORCIADO', 'VIUDO'])  
@@ -129,9 +137,6 @@ parteDeEnfermo!: ParteDeEnfermo[];
 
 @OneToMany(() => AptitudPsicofisica, (aptitud) => aptitud.user, { cascade: true })
 aptitudPsicofisica!: AptitudPsicofisica[];
-
-@OneToOne(() => CompromisoDeServicio, (compromiso) => compromiso.user, { cascade: true })
-compromisoDeServicio!: CompromisoDeServicio;
 
 }
 

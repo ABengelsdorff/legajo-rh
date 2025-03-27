@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { useState } from "react";
 import {
   getUserByIosfa,
@@ -9,6 +10,20 @@ import {
   getUserByCurso,
 } from "../../services/userServices";
 import { IUser } from "@/components/interfaces/interfaces";
+import { Printer, Edit, ChevronRight, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { printUser } from "@/components/utils/printUser";
+import UserDetail from "@/components/utils/userDetail";
+import { UserEditForm } from "@/components/utils/userEdit";
+import { updateUser } from "../../services/userServices";
+import { Check } from "lucide-react"
 
 
 export default function LegajoSearch() {
@@ -17,7 +32,12 @@ export default function LegajoSearch() {
   const [searchResults, setSearchResults] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
+ 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -25,7 +45,6 @@ export default function LegajoSearch() {
 
     try {
       let result: IUser | IUser[];
-
 
       if (searchType === "iosfa") {
         const iosfaNumber = Number(searchQuery);
@@ -35,8 +54,6 @@ export default function LegajoSearch() {
           return;
         }
         result = await getUserByIosfa(iosfaNumber);
-
-
       } else if (searchType === "dni") {
         const dniNumber = Number(searchQuery);
         if (isNaN(dniNumber) || dniNumber <= 0) {
@@ -45,8 +62,6 @@ export default function LegajoSearch() {
           return;
         }
         result = await getUserByDni(dniNumber);
-
-
       } else if (searchType === "apellido") {
         if (!searchQuery.trim()) {
           setError("Ingrese un apellido válido.");
@@ -54,8 +69,6 @@ export default function LegajoSearch() {
           return;
         }
         result = await getUserByApellido(searchQuery);
-
-
       } else if (searchType === "grado") {
         if (!searchQuery.trim()) {
           setError("Ingrese un grado válido.");
@@ -63,8 +76,6 @@ export default function LegajoSearch() {
           return;
         }
         result = await getUserByGrado(searchQuery);
-
-        
       } else if (searchType === "curso") {
         if (!searchQuery.trim()) {
           setError("Ingrese un curso válido.");
@@ -82,6 +93,21 @@ export default function LegajoSearch() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleViewDetails = (user: IUser) => {
+    setSelectedUser(user);
+    setIsEditMode(false);
+    setIsDialogOpen(true);
+  };
+
+  const handleEditUser = () => {
+    setIsEditMode(true);
+  };
+
+  const handlePrintUser = () => {
+    if (!selectedUser) return;
+    printUser(selectedUser);
   };
 
   return (
@@ -213,69 +239,34 @@ export default function LegajoSearch() {
             {searchResults.length > 0 && (
               <div className="mt-8 space-y-8 text-black">
                 {searchResults.map((result) => (
-                  <div key={result.id} className="bg-white p-6 rounded-lg shadow-md mb-8">
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">Resultado de Búsqueda</h2>
-
-                    {/* Información Personal */}
+                  <div
+                    key={result.id}
+                    className="bg-white p-6 rounded-lg shadow-md mb-8"
+                  >
+                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                      Resultado de Búsqueda
+                    </h2>
                     <div className="bg-blue-50 p-4 border border-blue-200 rounded-lg mb-4">
-                      <h3 className="text-lg font-semibold text-gray-700 mb-2">Información Personal</h3>
+                      <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                        Información Personal
+                      </h3>
                       <div className="grid grid-cols-4 gap-4 text-black">
                         <p>
-                          <strong>Nombre:</strong> {result.nombre} {result.apellido}
+                          <strong>Nombre:</strong> {result.nombre}{" "}
+                          {result.apellido}
                         </p>
                         <p>
                           <strong>Sexo:</strong> {result.sexo}
                         </p>
-
-                        <p>
-                        <strong>Fecha de Nacimiento:</strong>{' '} {result.fechaDeNacimiento ? new Date(result.fechaDeNacimiento).toLocaleDateString('es-AR') : 'No definida'}
-                        </p>
-
                         <p>
                           <strong>DNI:</strong> {result.numeroDeDni}
                         </p>
                         <p>
-                          <strong>CUIL:</strong> {result.numeroDeCuil}
-                        </p>
-                        <p>
-                          <strong>Grupo Sanguíneo:</strong> {result.grupoSanguineo}
-                        </p>
-                        <p>
-                          <strong>Dirección:</strong> {result.direccion}
-                        </p>
-                        <p>
-                          <strong>Código Postal:</strong> {result.codigoPostal}
-                        </p>
-                        <p>
-                          <strong>Correo Electrónico:</strong> {result.correoElectronico}
-                        </p>
-                        <p>
-                          <strong>CBU:</strong> {result.cbu}
+                          <strong>Correo Electrónico:</strong>{" "}
+                          {result.correoElectronico}
                         </p>
                         <p>
                           <strong>Celular:</strong> {result.numeroDeCelular}
-                        </p>
-                        <p>
-                          <strong>Formación Académica:</strong> {result.formacionAcademica}
-                        </p>
-                        <p>
-                          <strong>Estado Civil:</strong> {result.estadoCivil}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Información Profesional */}
-                    <div className="bg-blue-50 p-4 border border-blue-200 rounded-lg mb-4">
-                      <h3 className="text-lg font-semibold text-gray-700 mb-2">Información Profesional</h3>
-                      <div className="grid grid-cols-4 gap-4 text-black">
-                        <p>
-                          <strong>Destinado en la unidad:</strong> {result.destinadoEnLaUnidad}
-                        </p>
-                        <p>
-                          <strong>Numero de IOSFA:</strong> {result.numeroDeIosfa}
-                        </p>
-                        <p>
-                          <strong>Instituto de Formación:</strong> {result.institutoDeFormacion}
                         </p>
                         <p>
                           <strong>Escalafón:</strong> {result.escalafon}
@@ -287,7 +278,8 @@ export default function LegajoSearch() {
                           <strong>Destino:</strong> {result.destinoJbGrupos}
                         </p>
                         <p>
-                          <strong>Destino Interno:</strong> {result.destinoInterno}
+                          <strong>Destino Interno:</strong>{" "}
+                          {result.destinoInterno}
                         </p>
                         <p>
                           <strong>Cargo:</strong> {result.cargo}
@@ -296,129 +288,20 @@ export default function LegajoSearch() {
                           <strong>Especialidad:</strong> {result.especialidad}
                         </p>
                         <p>
-                          <strong>Especialidad Avanzada:</strong> {result.especialidadAvanzada}
+                          <strong>Especialidad Avanzada:</strong>{" "}
+                          {result.especialidadAvanzada}
                         </p>
-                        <p>
-                          <strong>Nivel de Inglés:</strong> {result.nivelDeIngles}%
-                        </p>
-                        <p>
-                          <strong>RTI:</strong> {result.rti}
-                        </p>
-                        <p>
-                          <strong>Destino anterior:</strong> {result.destinoAnterior}
-                        </p>
-                        <p>
-                          <strong>Correo Institucional:</strong> {result.correoInstitucional}
-                        </p>
-                        <p>
-                          <strong>Usuario GDE:</strong> {result.usuarioGde}
-                        </p>
-
-
-
-                        <div className="col-span-4">
-                          <h3 className="font-semibold">Cursos Realizados</h3>
-                          <ul className="list-disc list-inside">
-                            {result.cursosRealizados.length > 0 ? (
-                              result.cursosRealizados.map((curso, index) => (
-                                <li key={index}>{curso}</li>
-                              ))
-                            ) : (
-                              <li>No hay cursos registrados</li>
-                            )}
-                          </ul>
-                        </div>
+                      </div>
+                      <div className="mt-4 flex justify-end">
+                        <Button
+                          onClick={() => handleViewDetails(result)}
+                          className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-md hover:from-blue-700 hover:to-blue-600 transition-all"
+                        >
+                          Ver más información{" "}
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
-
-                    {/* Grupo Familiar */}
-                    <div className="p-4 rounded-lg mb-4 bg-blue-50 border border-blue-200">
-  <h3 className="text-lg font-semibold text-gray-700 mb-2">Grupo Familiar</h3>
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-black">
-    {result.grupoFamiliar.length > 0 ? (
-      result.grupoFamiliar.map((familiar, index) => (
-        <div key={index} className="border p-5 rounded bg-white">
-          <p><strong>Nombre:</strong> {familiar.nombre} {familiar.apellido}</p>
-          <p><strong>DNI:</strong> {familiar.dni}</p>
-          <p><strong>Parentesco:</strong> {familiar.parentesco}</p>
-          <p><strong>Personal Militar:</strong> {familiar.personalMilitar}</p>
-          <p><strong>Observaciones:</strong> {familiar.observaciones} </p>
-        </div>
-      ))
-    ) : (
-      <p>No hay datos familiares.</p>
-    )}
-  </div>
-</div>
-
-
-  {/* Situacion de revista */}
-  <div className="p-4 rounded-lg mb-4 bg-blue-50 border border-blue-200">
-  <h3 className="text-lg font-semibold text-gray-700 mb-2">Situacion De Revista</h3>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
-        <div className="border p-5 rounded bg-white">
-          <p><strong>Situacion:</strong> {result.situacionDeRevista}</p>
-        </div>
-  </div>
-</div>
-
-
-
-                    {/* Actuaciones */}
-                    <div className="p-4 rounded-lg mb-4 bg-blue-50 border border-blue-200">
-  <h3 className="text-lg font-semibold text-gray-700 mb-2">Actuaciones</h3>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
-    {result.actuaciones.length > 0 ? (
-      result.actuaciones.map((act, index) => (
-        <div key={index} className="border p-5 rounded bg-white">
-          <p><strong>Expediente:</strong> {act.numeroDeExpediente}</p>
-          <p>
-            <strong>Afección:</strong> {act.afeccion}
-          </p>
-          <p>
-  <strong>Disponibilidad:</strong>{" "}
-  {act.disponibilidad.desde
-    ? new Date(act.disponibilidad.desde).toLocaleDateString("es-AR")
-    : "No definida"}{" "}
-  -{" "}
-  {act.disponibilidad.hasta
-    ? new Date(act.disponibilidad.hasta).toLocaleDateString("es-AR")
-    : "No definida"}
-</p>
-<p>
-  <strong>Pasiva:</strong>{" "}{act.pasiva.desde? new Date(act.pasiva.desde).toLocaleDateString("es-AR"): "No definida"}{" "}-
-  {" "}{act.pasiva.hasta? new Date(act.pasiva.hasta).toLocaleDateString("es-AR"): "No definida"}
-</p>
-
-        </div>
-      ))
-    ) : (
-      <p>No hay actuaciones registradas.</p>
-    )}
-  </div>
-</div>
-
-
-                    {/* Junta Médica */}
-                    <div className="p-4 rounded-lg mb-4 bg-blue-50 border border-blue-200">
-  <h3 className="text-lg font-semibold text-gray-700 mb-2">Junta Médica</h3>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
-    {result.juntaMedica.length > 0 ? (
-      result.juntaMedica.map((junta, index) => (
-        <div key={index} className="border p-5 rounded bg-white">
-          <p><strong>Mensaje Aeronáutico:</strong> {junta.mensaje}</p>
-          <p><strong>Turnos:</strong>{" "}{junta.turnos? new Date(junta.turnos).toLocaleDateString("es-AR"): "No definido"}</p>
-
-          <p><strong>Observación:</strong> {junta.observacion}</p>
-          <p><strong>Afección:</strong> {junta.afeccion}</p>
-        </div>
-      ))
-    ) : (
-      <p>No hay registros de Junta Médica.</p>
-    )}
-  </div>
-</div>
-
                   </div>
                 ))}
               </div>
@@ -426,9 +309,117 @@ export default function LegajoSearch() {
           </div>
         </div>
       </div>
+
+      {/* Diálogo para mostrar información detallada del usuario */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl flex justify-between items-center">
+              <span>
+                {isEditMode
+                  ? "Editar información de "
+                  : "Información detallada de "}
+                {selectedUser?.nombre} {selectedUser?.apellido}
+              </span>
+              <DialogClose asChild>
+                <Button variant="ghost" size="icon">
+                  <X className="h-6 w-6" />
+                </Button>
+              </DialogClose>
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedUser && (
+            <div className="mt-4">
+              {isEditMode ? (
+                <UserEditForm
+                  user={selectedUser}
+                  onCancel={() => setIsEditMode(false)}
+                  onSave={async (updatedUser) => {
+                    try {
+                      const savedUser = await updateUser(updatedUser.id, updatedUser);
+                      setSelectedUser(savedUser); // actualiza con la respuesta del backend
+                      setIsEditMode(false);
+                  
+                      // 🔁 Actualizar en los resultados de búsqueda también, si está visible
+                      setSearchResults((prevResults) =>
+                        prevResults.map((u) => (u.id === savedUser.id ? savedUser : u))
+                      );
+
+                      setShowSuccessAlert(true);
+
+// ⏳ Esperar 2 segundos antes de cerrar todo y volver a la vista principal
+setTimeout(() => {
+  setShowSuccessAlert(false);
+  setIsDialogOpen(false); // Cierra el modal principal
+  setIsEditMode(false);   // Asegura que vuelve al modo vista
+  setSelectedUser(null);  // Limpia el usuario seleccionado
+}, 2000);
+
+
+
+                    } catch (error) {
+                      console.error("❌ Error al actualizar el usuario:", error);
+                      alert("Ocurrió un error al guardar los cambios.");
+                    }
+                  }}
+                  
+                />
+              ) : (
+                <UserDetail user={selectedUser} />
+              )}
+
+              {!isEditMode && (
+                <div className="mt-6 flex justify-end gap-4">
+                  <Button
+                    onClick={handleEditUser}
+                    className="flex items-center gap-2"
+                    variant="outline"
+                  >
+                    <Edit className="h-4 w-4" /> Editar información
+                  </Button>
+                  <Button
+                    onClick={handlePrintUser}
+                    className="flex items-center gap-2"
+                  >
+                    <Printer className="h-4 w-4" /> Imprimir
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+
+
+      </Dialog>
+      <Dialog open={showSuccessAlert} onOpenChange={setShowSuccessAlert}>
+  <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
+  <div className="relative">
+            {/* Skewed background gradient similar to the user list */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+
+            {/* Main content area */}
+            <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">
+              <div className="flex flex-col items-center">
+                <div className="mx-auto my-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100">
+                  <Check className="h-12 w-12 text-blue-600" strokeWidth={3} />
+                </div>
+
+                <DialogHeader className="pb-2">
+                  <DialogTitle className="text-3xl font-extrabold text-gray-900 text-center">
+                    Cambios realizados con éxito
+                  </DialogTitle>
+                </DialogHeader>
+
+                <p className="text-gray-600 mt-2 mb-6 text-center">
+                  Los cambios han sido guardados correctamente en el sistema
+                </p>
+              </div>
+            </div>
+          </div>
+  </DialogContent>
+</Dialog>
+
     </div>
   );
 }
-
-  
-

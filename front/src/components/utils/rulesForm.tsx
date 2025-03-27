@@ -190,13 +190,15 @@ export const ValidacionLegajo = {
     }
   },
   cursosRealizados: {
-    required: "El nombre del curso es obligatorio",
-    minLength: { value: 2, message: "El nombre del curso debe tener al menos 2 caracteres" },
-    pattern: {
-      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
-      message: "Solo se permiten letras en mayúsculas y espacios",
-    }
-  },
+    validate: (values: string[]) => {
+      return values.every(
+        (curso) =>
+          /^[A-ZÁÉÍÓÚÑ\s]+$/.test(curso) &&
+          curso.length >= 2
+      ) || "Cada curso debe tener al menos 2 caracteres y estar en mayúsculas";
+    },
+  }
+  ,
   situacionDeRevista: {
     required: "La situación de revista es obligatoria",
   },
