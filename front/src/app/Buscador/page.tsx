@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getUserByIosfa,
   getUserByDni,
@@ -21,9 +21,10 @@ import {
 } from "@/components/ui/dialog";
 import { printUser } from "@/components/utils/printUser";
 import UserDetail from "@/components/utils/userDetail";
-import { UserEditForm } from "@/components/utils/userEdit";
 import { updateUser } from "../../services/userServices";
 import { Check } from "lucide-react"
+import LegajoProfesional from "../UserForm/page";
+
 
 
 export default function LegajoSearch() {
@@ -37,7 +38,8 @@ export default function LegajoSearch() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
- 
+  const editFormRef = useRef<HTMLDivElement | null>(null);
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -109,6 +111,13 @@ export default function LegajoSearch() {
     if (!selectedUser) return;
     printUser(selectedUser);
   };
+
+  useEffect(() => {
+    if (isEditMode && editFormRef.current) {
+      editFormRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [isEditMode]);
+  
 
   return (
     <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12 bg-slate-800">
@@ -332,39 +341,33 @@ export default function LegajoSearch() {
           {selectedUser && (
             <div className="mt-4">
               {isEditMode ? (
-                <UserEditForm
-                  user={selectedUser}
-                  onCancel={() => setIsEditMode(false)}
-                  onSave={async (updatedUser) => {
-                    try {
-                      const savedUser = await updateUser(updatedUser.id, updatedUser);
-                      setSelectedUser(savedUser); // actualiza con la respuesta del backend
-                      setIsEditMode(false);
-                  
-                      // 🔁 Actualizar en los resultados de búsqueda también, si está visible
-                      setSearchResults((prevResults) =>
-                        prevResults.map((u) => (u.id === savedUser.id ? savedUser : u))
-                      );
+                <div ref={editFormRef}>
+  <LegajoProfesional
+  initialData={selectedUser}
+  onSave={async (updatedUser) => {
+    try {
+      const savedUser = await updateUser(updatedUser.id, updatedUser);
+      setSelectedUser(savedUser);
+      setIsEditMode(false);
 
-                      setShowSuccessAlert(true);
+      setSearchResults((prev) =>
+        prev.map((u) => (u.id === savedUser.id ? savedUser : u))
+      );
 
-// ⏳ Esperar 2 segundos antes de cerrar todo y volver a la vista principal
-setTimeout(() => {
-  setShowSuccessAlert(false);
-  setIsDialogOpen(false); // Cierra el modal principal
-  setIsEditMode(false);   // Asegura que vuelve al modo vista
-  setSelectedUser(null);  // Limpia el usuario seleccionado
-}, 2000);
-
-
-
-                    } catch (error) {
-                      console.error("❌ Error al actualizar el usuario:", error);
-                      alert("Ocurrió un error al guardar los cambios.");
-                    }
-                  }}
-                  
-                />
+      setShowSuccessAlert(true);
+      setTimeout(() => {
+        setShowSuccessAlert(false);
+        setIsDialogOpen(false);
+        setIsEditMode(false);
+        setSelectedUser(null);
+      }, 2000);
+    } catch (error) {
+      console.error("❌ Error al guardar:", error);
+      alert("Ocurrió un error al guardar los cambios.");
+    }
+  }}
+/>
+</div>
               ) : (
                 <UserDetail user={selectedUser} />
               )}

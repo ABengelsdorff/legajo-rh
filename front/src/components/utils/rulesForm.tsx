@@ -5,7 +5,7 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   apellido: {
     required: "El apellido es obligatorio",
@@ -13,7 +13,7 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   sexo: {
     required: "El sexo es obligatorio",
@@ -37,19 +37,26 @@ export const ValidacionLegajo = {
   },
   grupoSanguineo: {
     required: "El grupo sanguíneo es obligatorio",
-    minLength: { value: 2, message: "El grupo sanguíneo debe tener al menos 2 caracteres" },
+    minLength: {
+      value: 2,
+      message: "El grupo sanguíneo debe tener al menos 2 caracteres",
+    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\+\-\/]+$/,
-      message: "Solo se permiten letras en mayúsculas, números, espacios y símbolos como + - /",
-    }
-  },  
+      message:
+        "Solo se permiten letras en mayúsculas, números, espacios y símbolos como + - /",
+    },
+  },
   direccion: {
     required: "La dirección es obligatoria",
-    minLength: { value: 5, message: "La dirección debe tener al menos 5 caracteres" },
+    minLength: {
+      value: 5,
+      message: "La dirección debe tener al menos 5 caracteres",
+    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s]+$/,
       message: "Solo se permiten letras en mayúsculas, números y espacios",
-    }
+    },
   },
   codigoPostal: {
     required: "El código postal es obligatorio",
@@ -110,7 +117,7 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   grado: {
     required: "El grado es obligatorio",
@@ -123,7 +130,7 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   cargo: {
     required: "El cargo es obligatorio",
@@ -133,14 +140,14 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   especialidadAvanzada: {
     required: "La especialidad avanzada es obligatoria",
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   nivelDeIngles: {
     required: "El nivel de inglés es obligatorio",
@@ -165,7 +172,7 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   usuarioGde: {
     required: "El usuario GDE es obligatorio",
@@ -173,7 +180,7 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   parentesco: {
     required: "El parentesco es obligatorio",
@@ -183,22 +190,20 @@ export const ValidacionLegajo = {
   },
   observaciones: {
     required: "Las observaciones son obligatorias",
-    minLength: { value: 5, message: "Las observaciones deben tener al menos 5 caracteres" },
+    minLength: {
+      value: 5,
+      message: "Las observaciones deben tener al menos 5 caracteres",
+    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   cursosRealizados: {
-    validate: (values: string[]) => {
-      return values.every(
-        (curso) =>
-          /^[A-ZÁÉÍÓÚÑ\s]+$/.test(curso) &&
-          curso.length >= 2
-      ) || "Cada curso debe tener al menos 2 caracteres y estar en mayúsculas";
-    },
-  }
-  ,
+    validate: (curso: string) =>
+      (/^[A-ZÁÉÍÓÚÑ\s]+$/.test(curso) && curso.length >= 2) ||
+      "Cada curso debe tener al menos 2 caracteres y estar en mayúsculas",
+  },
   situacionDeRevista: {
     required: "La situación de revista es obligatoria",
   },
@@ -237,7 +242,7 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   juntaMedicaTurnos: {
     required: "Debe seleccionar una fecha para la junta médica",
@@ -247,7 +252,7 @@ export const ValidacionLegajo = {
       }
       // Si el valor es string, lo convertimos a Date
       const dateValue = new Date(value);
-      
+
       // Comprobamos si la fecha es válida y mayor o igual a la fecha actual
       return dateValue >= new Date() || "La fecha no puede ser pasada";
     },
@@ -256,9 +261,9 @@ export const ValidacionLegajo = {
     required: "La observación es obligatoria",
     minLength: { value: 10, message: "Debe tener al menos 10 caracteres" },
     pattern: {
-  value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
-  message: "Solo se permiten letras en mayúsculas y espacios",
-}
+      value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
+      message: "Solo se permiten letras en mayúsculas y espacios",
+    },
   },
   juntaMedicaAfeccion: {
     required: "La afección es obligatoria",
@@ -269,11 +274,14 @@ export const ValidacionLegajo = {
   },
   solicitudObservaciones: {
     required: "Las observaciones son obligatorias",
-    minLength: { value: 5, message: "Las observaciones deben tener al menos 5 caracteres" },
+    minLength: {
+      value: 5,
+      message: "Las observaciones deben tener al menos 5 caracteres",
+    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   solicitudNumeroDeExpediente: {
     required: "El número de expediente es obligatorio",
@@ -293,11 +301,14 @@ export const ValidacionLegajo = {
   },
   parteDeEnfermoObservaciones: {
     required: "Las observaciones son obligatorias",
-    minLength: { value: 5, message: "Las observaciones deben tener al menos 5 caracteres" },
+    minLength: {
+      value: 5,
+      message: "Las observaciones deben tener al menos 5 caracteres",
+    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   aptitudPsicofisicaEstado: {
     required: "El estado es obligatorio",
@@ -305,7 +316,7 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
+    },
   },
   aptitudPsicofisicaObservaciones: {
     required: "La observación es obligatoria",
@@ -313,20 +324,17 @@ export const ValidacionLegajo = {
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
-    }
-  },  
+    },
+  },
   compromisoDeServicio: {
     required: "Debe indicar si hay compromiso de servicio",
   },
-  
+
   ultimoAscenso: {
     required: "Debe ingresar la fecha del último ascenso",
   },
-  
+
   fotoDeLegajo: {
     required: "Debe indicar si hay foto de legajo",
   },
-  
 };
-
-

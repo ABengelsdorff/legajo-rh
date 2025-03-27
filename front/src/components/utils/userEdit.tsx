@@ -139,8 +139,8 @@ export function UserEditForm({
                 <label className="block text-sm font-medium mb-1">Sexo</label>
                 <select {...field} className="w-full p-2 border rounded-md">
                   <option value="">Seleccionar...</option>
-                  <option value="MASCULINO">Masculino</option>
-                  <option value="FEMENINO">Femenino</option>
+                  <option value="MASCULINO">MASCULINO</option>
+                  <option value="FEMENINO">FEMENINO</option>
                 </select>
                 {errors.sexo && (
                   <span className="text-red-600">{errors.sexo.message}</span>
@@ -339,7 +339,31 @@ export function UserEditForm({
                 <label className="block text-sm font-medium mb-1">
                   Formación Academica
                 </label>
-                <input {...field} className="w-full p-2 border rounded-md" />
+                <select
+                            {...field}
+                            id="formacionAcademica"
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                          >
+                            <option value="">Seleccionar...</option>
+                            <option value="SECUNDARIO INCOMPLETO">
+                              SECUNDARIO INCOMPLETO
+                            </option>
+                            <option value="SECUNDARIO COMPLETO">
+                              SECUNDARIO COMPLETO
+                            </option>
+                            <option value="TERCIARIO INCOMPLETO">
+                              TERCIARIO INCOMPLETO
+                            </option>
+                            <option value="TERCIARIO COMPLETO">
+                              TERCIARIO COMPLETO
+                            </option>
+                            <option value="UNIVERSITARIO INCOMPLETO">
+                              UNIVERSITARIO INCOMPLETO
+                            </option>
+                            <option value="UNIVERSITARIO COMPLETO">
+                              UNIVERSITARIO COMPLETO
+                            </option>
+                          </select>
                 {errors.formacionAcademica && (
                   <span className="text-red-600">
                     {errors.formacionAcademica.message}
@@ -358,7 +382,18 @@ export function UserEditForm({
                 <label className="block text-sm font-medium mb-1">
                   Estado Civil
                 </label>
-                <input {...field} className="w-full p-2 border rounded-md" />
+                <select
+                            {...field}
+                            id="estadoCivil"
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                          >
+                            <option value="">Seleccionar...</option>
+                            <option value="SOLTERO">SOLTERO</option>
+                            <option value="CASADO">CASADO</option>
+                            <option value="CONCUBINATO">CONCUBINATO</option>
+                            <option value="DIVORCIADO">DIVORCIADO</option>
+                            <option value="VIUDO">VIUDO</option>
+                          </select>
                 {errors.estadoCivil && (
                   <span className="text-red-600">
                     {errors.estadoCivil.message}
@@ -387,8 +422,8 @@ export function UserEditForm({
                 </label>
                 <select {...field} className="w-full p-2 border rounded-md">
                   <option value="">Seleccionar...</option>
-                  <option value="SI">Sí</option>
-                  <option value="NO">No</option>
+                  <option value="SI">SÍ</option>
+                  <option value="NO">NO</option>
                 </select>
                 {errors.destinadoEnLaUnidad && (
                   <span className="text-red-600">
@@ -601,12 +636,16 @@ export function UserEditForm({
                 </label>
                 <input
                   type="range"
-                  min={0}
-                  max={100}
-                  step={5}
+                  id="nivelDeIngles"
+                  min="0"
+                  max="100"
+                  step="5"
                   {...field}
-                  className="w-full"
+                  className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                 />
+                 <span className="ml-2 text-sm text-gray-600">
+                              {field.value ?? 0}%
+                            </span>
                 {errors.nivelDeIngles && (
                   <span className="text-red-600">
                     {errors.nivelDeIngles.message}
@@ -882,10 +921,6 @@ export function UserEditForm({
         </Button>
 
       </div>
-
-
-     
-
 
 
 

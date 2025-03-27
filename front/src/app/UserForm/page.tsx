@@ -2,18 +2,18 @@
 
 import React from "react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { ValidacionLegajo } from "../../components/utils/rulesForm";
-import { createUser } from "../../services/userServices";
+import { createUser, updateUser } from "../../services/userServices";
 import { IUser } from "../../components/interfaces/interfaces";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Check } from "lucide-react";
 
 
-export default function LegajoProfesional() {
+export default function LegajoProfesional({ initialData, onSave } : { initialData?: IUser, onSave?:(data: IUser) => void}) {
   const [formSuccess, setFormSuccess] = useState(false);
-  const [user, setUser] = useState<IUser>({
+  const [user, setUser] = useState<IUser>(initialData || {
     id: 0,
     nombre: "",
     apellido: "",
@@ -56,6 +56,7 @@ export default function LegajoProfesional() {
     solicitudes: [],
     juntaMedica: [],
   });
+
 
   const agregarActuacion = () => {
     setUser((prevUser) => ({
@@ -193,33 +194,65 @@ export default function LegajoProfesional() {
     }));
   };
 
-  const {
-    control,
-    handleSubmit,
-    reset,
-    getValues,
-    formState: { errors },
-  } = useForm<IUser>({
+  const { control, handleSubmit, reset, getValues, formState: { errors }, } = useForm<IUser>({
     mode: "onChange",
-    defaultValues: user,
+    defaultValues: initialData || user,
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setUser(initialData);
+      reset(initialData);
+    }
+  }, [initialData, reset]);
+
+
+  // const onSubmit = async (data: IUser) => {
+  //   try {
+  //     if (user.id === 0){
+  //       console.log(data);
+  //       await createUser(data);
+  //     }else {
+  //       await updateUser(user.id, data)
+  //     }
+  //     reset();
+
+  //     setFormSuccess(true);
+  //     setTimeout(() => setFormSuccess(false), 3000);
+  //   } catch (error) {
+  //     console.error(
+  //       "Error en la creación del usuario o en la obtención de usuarios:",
+  //       error
+  //     );
+  //   }
+  // };
 
   const onSubmit = async (data: IUser) => {
     try {
-      console.log(data);
-      await createUser(data);
-
-      reset();
-
+      let savedUser;
+  
+      if (user.id === 0) {
+        savedUser = await createUser(data);
+      } else {
+        savedUser = await updateUser(user.id, data);
+      }
+  
+      reset(data);
+  
+      // Mostrar éxito local (opcional)
       setFormSuccess(true);
       setTimeout(() => setFormSuccess(false), 3000);
+  
+      // 🔁 Llamar a la función onSave si fue pasada como prop
+      if (onSave) {
+        onSave(savedUser); // <<<<< ✅ Devuelve el usuario actualizado
+      }
+  
     } catch (error) {
-      console.error(
-        "Error en la creación del usuario o en la obtención de usuarios:",
-        error
-      );
+      console.error("Error al guardar el usuario:", error);
     }
   };
+  
 
   return (
     <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12 bg-slate-800">
@@ -353,8 +386,8 @@ export default function LegajoProfesional() {
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           >
                             <option value="">Seleccionar...</option>
-                            <option value="MASCULINO">Masculino</option>
-                            <option value="FEMENINO">Femenino</option>
+                            <option value="MASCULINO">MASCULINO</option>
+                            <option value="FEMENINO">FEMENINO</option>
                           </select>
                         </div>
                       )}
@@ -707,7 +740,7 @@ export default function LegajoProfesional() {
                   </div>
                 </div>
 
-                {/* Professional Information Section */}
+                {/* Información Profesional */}
                 <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                   <h2 className="text-2xl font-bold text-gray-800 mb-4">
                     Información Profesional
@@ -731,8 +764,8 @@ export default function LegajoProfesional() {
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           >
                             <option value="">Seleccionar...</option>
-                            <option value="SI">Sí</option>
-                            <option value="NO">No</option>
+                            <option value="SI">SÍ</option>
+                            <option value="NO">NO</option>
                           </select>
                         </div>
                       )}
@@ -810,7 +843,6 @@ export default function LegajoProfesional() {
                       </span>
                     )}
 
-                    {/* //!Ver */}
                     <Controller
                       name="escalafon"
                       control={control}
@@ -990,6 +1022,7 @@ export default function LegajoProfesional() {
                           <input
                             {...field}
                             type="text"
+                            value={field.value || ""}
                             id="especialidad"
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
@@ -1017,6 +1050,7 @@ export default function LegajoProfesional() {
                           <input
                             {...field}
                             type="text"
+                            value={field.value || ""}
                             id="especialidadAvanzada"
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
@@ -1046,6 +1080,7 @@ export default function LegajoProfesional() {
                               {...field}
                               type="range"
                               id="nivelDeIngles"
+                              value={field.value || ""}
                               min="0"
                               max="100"
                               step="5"
@@ -1079,6 +1114,7 @@ export default function LegajoProfesional() {
                           <input
                             {...field}
                             type="text"
+                            value={field.value || ""}
                             id="rti"
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
@@ -1104,6 +1140,7 @@ export default function LegajoProfesional() {
                           <input
                             {...field}
                             type="text"
+                            value={field.value || ""}
                             id="destinoAnterior"
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
@@ -1159,6 +1196,7 @@ export default function LegajoProfesional() {
                           <input
                             {...field}
                             type="text"
+                            value={field.value || ""}
                             id="usuarioGde"
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
@@ -1189,6 +1227,7 @@ export default function LegajoProfesional() {
                         render={({ field }) => (
                           <input
                             {...field}
+                            value={field.value ?? ""}
                             type="text"
                             id={`curso-${index}`}
                             className="text-gray-900 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
@@ -1246,6 +1285,7 @@ export default function LegajoProfesional() {
                             <input
                               {...field}
                               type="text"
+                              value={field.value ?? ""}
                               id={`familiar-nombre-${index}`}
                               className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
@@ -1273,6 +1313,7 @@ export default function LegajoProfesional() {
                             <input
                               {...field}
                               type="text"
+                              value={field.value ?? ""}
                               id={`familiar-apellido-${index}`}
                               className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
@@ -1300,6 +1341,7 @@ export default function LegajoProfesional() {
                             <input
                               {...field}
                               type="text"
+                              value={field.value ?? ""}
                               id={`familiar-dni-${index}`}
                               className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
@@ -1394,6 +1436,7 @@ export default function LegajoProfesional() {
                             <textarea
                               {...field}
                               id={`familiar-observaciones-${index}`}
+                              value={field.value ?? ""}
                               className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
                           </div>
@@ -1653,6 +1696,7 @@ export default function LegajoProfesional() {
                           <textarea
                             {...field}
                             id={`solicitudes-observaciones-${index}`}
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -1736,6 +1780,7 @@ export default function LegajoProfesional() {
                           <textarea
                             {...field}
                             id={`actuaciones-${index}`}
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -2041,6 +2086,7 @@ export default function LegajoProfesional() {
                           <textarea
                             {...field}
                             id={`observaciones-parte-${index}`}
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -2100,6 +2146,7 @@ export default function LegajoProfesional() {
                           <input
                             {...field}
                             type="text"
+                            value={field.value ?? ""}
                             id={`estado-${index}`}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm
               focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
@@ -2128,6 +2175,7 @@ export default function LegajoProfesional() {
                           <textarea
                             {...field}
                             id={`observacion-${index}`}
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm
               focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
@@ -2186,6 +2234,7 @@ export default function LegajoProfesional() {
                           <input
                             {...field}
                             id={`juntaMedicaMensaje-${index}`}
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -2246,6 +2295,7 @@ export default function LegajoProfesional() {
                           <textarea
                             {...field}
                             id={`juntaMedicaObservacion-${index}`}
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -2272,6 +2322,7 @@ export default function LegajoProfesional() {
                           <input
                             {...field}
                             type="text"
+                            value={field.value ?? ""}
                             id={`afeccion-${index}`}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
@@ -2308,7 +2359,7 @@ export default function LegajoProfesional() {
                   type="submit"
                   className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-md shadow-md hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-all"
                 >
-                  Enviar Formulario
+                 {initialData ? "Guardar Cambios" : "Enviar Formulario" } 
                 </button>
               </div>
             </form>
