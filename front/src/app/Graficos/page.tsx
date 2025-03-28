@@ -1,6 +1,4 @@
-"use client";
-
-import EstadisticasPersonal from "@/components/EstadisticasDelPersonal";
+import EstadisticasPersonal from "@/components/utils/estadisticasDelPersonal";
 
 export default function GraficosPage() {
   return (

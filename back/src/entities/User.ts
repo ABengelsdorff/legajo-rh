@@ -7,6 +7,7 @@ import { JuntaMedica } from './JuntaMedica';
 import { Solicitud } from './Solicitud';
 import { ParteDeEnfermo } from './ParteDeEnfermo';
 import { AptitudPsicofisica } from './AptitudPsicofisica';
+import { CursoRealizado } from './CursoRealizado';
 
 @Entity()
 export class User {
@@ -95,9 +96,6 @@ export class User {
   @Column()
   especialidadAvanzada!: string;
 
-  @Column("simple-array")
-  cursosRealizados!: string[];
-
   @Column()
   formacionAcademica!: string;
 
@@ -137,6 +135,10 @@ parteDeEnfermo!: ParteDeEnfermo[];
 
 @OneToMany(() => AptitudPsicofisica, (aptitud) => aptitud.user, { cascade: true })
 aptitudPsicofisica!: AptitudPsicofisica[];
+
+@OneToMany(() => CursoRealizado, (curso) => curso.user, { cascade: true })
+cursosRealizados!: CursoRealizado[];
+
 
 }
 

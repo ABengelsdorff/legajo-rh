@@ -9,9 +9,6 @@ export class ParteDeEnfermo {
   @Column({ type: 'date', nullable: true })
   inicio!: Date;
 
-  @Column({ type: 'date', nullable: true })
-  finalizacion!: Date;
-
   @Column({ type: 'text' })
   observaciones!: string;
 

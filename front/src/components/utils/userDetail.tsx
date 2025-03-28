@@ -51,12 +51,15 @@ const UserDetail: React.FC<Props> = ({ user }) => {
       <div className="p-4 rounded-lg mb-4 bg-blue-50 border border-blue-200">
         <h3 className="font-semibold">Cursos Realizados</h3>
         <ul className="list-disc list-inside">
-          {user.cursosRealizados.length > 0 ? (
-            user.cursosRealizados.map((curso, index) => <li key={index}>{curso}</li>)
-          ) : (
-            <li>No hay datos de Cursos Realizados</li>
-          )}
-        </ul>
+  {user.cursosRealizados.length > 0 ? (
+    user.cursosRealizados.map((curso, index) => (
+      <li key={curso.id || index}>{curso.nombre}</li>
+    ))
+  ) : (
+    <li>No hay datos de Cursos Realizados</li>
+  )}
+</ul>
+
       </div>
 
         {/* Grupo Familiar */}
@@ -176,9 +179,6 @@ const UserDetail: React.FC<Props> = ({ user }) => {
               ? new Date(parte.inicio).toLocaleDateString("es-AR")
               : "No definido"}{" "}
             -{" "}
-            {parte.finalizacion
-              ? new Date(parte.finalizacion).toLocaleDateString("es-AR")
-              : "No definido"}
           </p>
           <p><strong>Observaciones:</strong> {parte.observaciones}</p>
         </div>

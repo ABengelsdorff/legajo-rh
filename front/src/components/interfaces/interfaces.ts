@@ -43,7 +43,7 @@ export interface IUser {
   escalafon: string
   especialidad: string
   especialidadAvanzada: string
-  cursosRealizados: string[]
+  cursosRealizados: { id: number; nombre: string }[]
   formacionAcademica: "SECUNDARIO INCOMPLETO" | "SECUNDARIO COMPLETO" | "TERCIARIO INCOMPLETO" | "TERCIARIO COMPLETO" | "UNIVERSITARIO INCOMPLETO" | "UNIVERSITARIO COMPLETO" | ""
   nivelDeIngles: number
   estadoCivil: "SOLTERO" | "CASADO" | "CONCUBINATO" | "DIVORCIADO" | "VIUDO" | ""
@@ -66,7 +66,6 @@ export interface IUser {
 
   parteDeEnfermo: Array<{
     inicio?: Date | string;
-    finalizacion?: Date | string;
     observaciones: string;
   }>;
   
@@ -85,4 +84,16 @@ export interface IUser {
   compromisoDeServicio: "SI" | "NO" | "";
   ultimoAscenso: Date | string | null;
   fotoDeLegajo: "SI" | "NO" | "";
+}
+
+
+export interface IRegisterData {
+    id?: string
+    nombre: string,
+    apellido: string,
+    grado: string,
+    cargo: string,
+    email: string,
+    password: string
+    confirmPassword?: string
 }
