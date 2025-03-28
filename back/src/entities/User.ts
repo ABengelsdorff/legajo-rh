@@ -114,31 +114,29 @@ export class User {
   @Column({ type: 'text' })
   @IsIn(['SOLTERO', 'CASADO', 'CONCUBINATO', 'DIVORCIADO', 'VIUDO'])  
   estadoCivil!: 'SOLTERO' | 'CASADO' | 'CONCUBINATO' | 'DIVORCIADO' | 'VIUDO';
-
-  @OneToMany(() => GrupoFamiliar, (grupoFamiliar) => grupoFamiliar.user, { cascade: true })
-  grupoFamiliar!: GrupoFamiliar[];
-
+  
   @Column()
   situacionDeRevista!: string;
-
+  @OneToMany(() => GrupoFamiliar, (grupoFamiliar) => grupoFamiliar.user, { cascade: true })
+  grupoFamiliar?: GrupoFamiliar[];
+  
   @OneToMany(() => Actuacion, (actuacion) => actuacion.user, { cascade: true })
-  actuaciones!: Actuacion[];
-
+  actuaciones?: Actuacion[];
+  
   @OneToMany(() => JuntaMedica, (juntaMedica) => juntaMedica.user, { cascade: true })
-  juntaMedica!: JuntaMedica[];
-
-  @OneToMany(() => Solicitud, (solicitudes) => solicitudes.user, { cascade: true })
-  solicitudes!: Solicitud[];
-
+  juntaMedica?: JuntaMedica[];
+  
+  @OneToMany(() => Solicitud, (solicitud) => solicitud.user, { cascade: true })
+  solicitudes?: Solicitud[];
+  
   @OneToMany(() => ParteDeEnfermo, (parteDeEnfermo) => parteDeEnfermo.user, { cascade: true })
-parteDeEnfermo!: ParteDeEnfermo[];
-
-@OneToMany(() => AptitudPsicofisica, (aptitud) => aptitud.user, { cascade: true })
-aptitudPsicofisica!: AptitudPsicofisica[];
-
-@OneToMany(() => CursoRealizado, (curso) => curso.user, { cascade: true })
-cursosRealizados!: CursoRealizado[];
-
+  parteDeEnfermo?: ParteDeEnfermo[];
+  
+  @OneToMany(() => AptitudPsicofisica, (aptitud) => aptitud.user, { cascade: true })
+  aptitudPsicofisica?: AptitudPsicofisica[];
+  
+  @OneToMany(() => CursoRealizado, (curso) => curso.user, { cascade: true })
+  cursosRealizados?: CursoRealizado[];  
 
 }
 

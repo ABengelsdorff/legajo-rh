@@ -213,14 +213,14 @@ export default function LegajoSearch() {
                     }
                     placeholder={
                       searchType === "iosfa"
-                        ? "Ingrese número de IOSFA"
+                        ? "Ingrese Número de IOSFA"
                         : searchType === "dni"
-                        ? "Ingrese DNI"
+                        ? "Ingrese Número de DNI"
                         : searchType === "apellido"
-                        ? "Ingrese apellido"
+                        ? "Ingrese Apellido"
                         : searchType === "grado"
-                        ? "Ingrese grado"
-                        : "Ingrese curso"
+                        ? "Ingrese Grado"
+                        : "Ingrese Curso"
                     }
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}

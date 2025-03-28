@@ -43,12 +43,17 @@ export default function EstadisticasPersonal() {
     const getData = async () => {
       try {
         const users = await getAllUsers();
-        setUsuarios(users);
-        setFilteredUsuarios(users);
+
+        const destinados = users.filter(
+          (user) => user.destinadoEnLaUnidad === "SI"
+        );
+
+        setUsuarios(destinados);
+        setFilteredUsuarios(destinados);
 
         const uniqueDestinos = Array.from(
           new Set(
-            users.map((user) => user.destinoJbGrupos || "No especificado")
+            destinados.map((user) => user.destinoJbGrupos || "No especificado")
           )
         );
         setDestinos(uniqueDestinos);
@@ -118,20 +123,24 @@ export default function EstadisticasPersonal() {
     formacionAcademica: "FORMACIÓN ACADÉMICA",
     destinadoEnLaUnidad: "DESTINADO EN LA UNIDAD",
     cursosRealizados: "CURSOS REALIZADOS",
-  }
-
-  
+  };
 
   const datos = {
     grados: agruparPorCampo(filteredUsuarios, "grado"),
     sexo: agruparPorCampo(filteredUsuarios, "sexo"),
     especialidades: agruparPorCampo(filteredUsuarios, "especialidad"),
-    institutoDeFormacion: agruparPorCampo(filteredUsuarios, "institutoDeFormacion"),
+    institutoDeFormacion: agruparPorCampo(
+      filteredUsuarios,
+      "institutoDeFormacion"
+    ),
     destino: agruparPorCampo(filteredUsuarios, "destinoJbGrupos"),
     grupoSanguineo: agruparPorCampo(filteredUsuarios, "grupoSanguineo"),
     estadoCivil: agruparPorCampo(filteredUsuarios, "estadoCivil"),
     formacionAcademica: agruparPorCampo(filteredUsuarios, "formacionAcademica"),
-    destinadoEnLaUnidad: agruparPorCampo(filteredUsuarios,"destinadoEnLaUnidad"),
+    destinadoEnLaUnidad: agruparPorCampo(
+      filteredUsuarios,
+      "destinadoEnLaUnidad"
+    ),
     cursosRealizados: agruparCursosRealizados(filteredUsuarios),
   };
 
@@ -139,23 +148,23 @@ export default function EstadisticasPersonal() {
     return (
       <Card className="w-full">
         <CardHeader className="mb-1 pb-1 pt-2">
-
-         <CardTitle className="text-xl">
-  {selectedDestino !== "TODOS" ? (
-    <>
-      Distribución del personal de{" "}
-      <span className="text-blue-700 font-semibold">{selectedDestino}</span>{" "}
-      según <span className="text-blue-700 font-semibold">{title}</span>
-    </>
-  ) : (
-    <>
-     Distribución del personal según{" "}
-      <span className="text-blue-700 font-semibold">{title}</span>
-    </>
-  )}
-</CardTitle>
-
-
+          <CardTitle className="text-xl">
+            {selectedDestino !== "TODOS" ? (
+              <>
+                Distribución del personal de{" "}
+                <span className="text-blue-700 font-semibold">
+                  {selectedDestino}
+                </span>{" "}
+                según{" "}
+                <span className="text-blue-700 font-semibold">{title}</span>
+              </>
+            ) : (
+              <>
+                Distribución del personal según{" "}
+                <span className="text-blue-700 font-semibold">{title}</span>
+              </>
+            )}
+          </CardTitle>
         </CardHeader>
         <CardContent className="">
           <div className="h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px]">
@@ -220,7 +229,7 @@ export default function EstadisticasPersonal() {
         <div className="relative bg-stone-100 shadow-lg sm:rounded-3xl sm:p-10">
           <div className="text-center mb-4">
             <h1 className="text-3xl font-extrabold text-gray-900">
-              Estadísticas del Personal
+              Estadísticas del Personal Destinado en la Unidad
             </h1>
           </div>
 
@@ -295,7 +304,10 @@ export default function EstadisticasPersonal() {
             </div>
 
             <div className="w-full">
-              {renderDonutChart(datos[selectedEstadistica], nombresEstadisticas[selectedEstadistica])}
+              {renderDonutChart(
+                datos[selectedEstadistica],
+                nombresEstadisticas[selectedEstadistica]
+              )}
             </div>
           </div>
         </div>
