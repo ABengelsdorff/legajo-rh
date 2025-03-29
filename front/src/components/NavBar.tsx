@@ -3,9 +3,15 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/useAuth";
+
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const router = useRouter()
+  const { logout } = useAuth();
 
   return (
     <nav className="bg-slate-800 shadow-lg">
@@ -45,8 +51,34 @@ export default function Navbar() {
                   href="/UserList"
                   className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
                 >
-                  ver usuarios
+                  Ver Usuarios
                 </Link>
+                
+                <Link
+                  href="/Register"
+                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                >
+                  Register
+                </Link>
+
+                <Link
+                  href="/Login"
+                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                >
+                  Login
+                </Link>
+
+                <button
+      onClick={() => {
+        logout();
+        router.push("/Login");
+      }}
+      className="bg-red-600 text-white px-4 py-2 rounded"
+    >
+      Cerrar sesión
+    </button>
+
+
               </div>
             </div>
           </div>

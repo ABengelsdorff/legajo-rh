@@ -1,13 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne } from 'typeorm';
-import { IsIn } from 'class-validator';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  OneToOne,
+} from "typeorm";
+import { IsIn } from "class-validator";
 
-import { GrupoFamiliar } from './GrupoFamiliar';
-import { Actuacion } from './Actuacion';
-import { JuntaMedica } from './JuntaMedica';
-import { Solicitud } from './Solicitud';
-import { ParteDeEnfermo } from './ParteDeEnfermo';
-import { AptitudPsicofisica } from './AptitudPsicofisica';
-import { CursoRealizado } from './CursoRealizado';
+import { GrupoFamiliar } from "./GrupoFamiliar";
+import { Actuacion } from "./Actuacion";
+import { JuntaMedica } from "./JuntaMedica";
+import { Solicitud } from "./Solicitud";
+import { ParteDeEnfermo } from "./ParteDeEnfermo";
+import { AptitudPsicofisica } from "./AptitudPsicofisica";
+import { CursoRealizado } from "./CursoRealizado";
 
 @Entity()
 export class User {
@@ -21,9 +27,9 @@ export class User {
   apellido!: string;
 
   @Column()
-  sexo!: string
+  sexo!: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: "date", nullable: true })
   fechaDeNacimiento!: Date | null;
 
   @Column()
@@ -39,7 +45,7 @@ export class User {
   direccion!: string;
 
   @Column()
-  codigoPostal!: string; 
+  codigoPostal!: string;
 
   @Column()
   correoElectronico!: string;
@@ -50,7 +56,7 @@ export class User {
   @Column()
   usuarioGde!: string;
 
-  @Column() 
+  @Column()
   cbu!: string;
 
   @Column()
@@ -65,30 +71,64 @@ export class User {
   @Column()
   destinoAnterior!: string;
 
-  @Column({ type: 'text' })
-  @IsIn(['EAM', 'ESFA', 'IFE', 'ESFAC', 'CUPROSO', 'CUSERPRO', 'INCORPORACION TROPA', 'ESFAE', 'BAME'])  
-  institutoDeFormacion!: 'EAM' | 'ESFA' | 'IFE' | 'ESFAC' | 'CUPROSO' | 'CUSERPRO' | 'INCORPORACION TROPA' | 'ESFAE' | 'BAME'; 
+  @Column({ type: "text" })
+  @IsIn([
+    "EAM",
+    "ESFA",
+    "IFE",
+    "ESFAC",
+    "CUPROSO",
+    "CUSERPRO",
+    "INCORPORACION TROPA",
+    "ESFAE",
+    "BAME",
+  ])
+  institutoDeFormacion!:
+    | "EAM"
+    | "ESFA"
+    | "IFE"
+    | "ESFAC"
+    | "CUPROSO"
+    | "CUSERPRO"
+    | "INCORPORACION TROPA"
+    | "ESFAE"
+    | "BAME";
 
-  @Column({ type: 'text' })
-  @IsIn(['CABO', 'CABO PRIMERO', 'CABO PRINCIPAL', 'SUBOFICIAL AUXILIAR', 'SUBOFICIAL AYUDANTE', 'SUBOFICIAL PRINCIPAL', 'SUBOFICIAL MAYOR'])
-  grado!: 'CABO' | 'CABO PRIMERO' | 'CABO PRINCIPAL' | 'SUBOFICIAL AUXILIAR' | 'SUBOFICIAL AYUDANTE' | 'SUBOFICIAL PRINCIPAL' | 'SUBOFICIAL MAYOR';
+  @Column({ type: "text" })
+  @IsIn([
+    "CABO",
+    "CABO PRIMERO",
+    "CABO PRINCIPAL",
+    "SUBOFICIAL AUXILIAR",
+    "SUBOFICIAL AYUDANTE",
+    "SUBOFICIAL PRINCIPAL",
+    "SUBOFICIAL MAYOR",
+  ])
+  grado!:
+    | "CABO"
+    | "CABO PRIMERO"
+    | "CABO PRINCIPAL"
+    | "SUBOFICIAL AUXILIAR"
+    | "SUBOFICIAL AYUDANTE"
+    | "SUBOFICIAL PRINCIPAL"
+    | "SUBOFICIAL MAYOR";
 
   @Column()
   destinadoEnLaUnidad!: string;
 
-  @Column({ type: 'text' })
-  @IsIn(['JEFATURA', 'GRUPO BASE', 'ESCUADRON TECNICO', 'GRUPO AEREO'])
-  destinoJbGrupos!: 'JEFATURA' | 'GRUPO BASE' | 'GRUPO TECNICO' | 'GRUPO AEREO';
+  @Column({ type: "text" })
+  @IsIn(["JEFATURA", "GRUPO BASE", "ESCUADRON TECNICO", "GRUPO AEREO"])
+  destinoJbGrupos!: "JEFATURA" | "GRUPO BASE" | "GRUPO TECNICO" | "GRUPO AEREO";
 
   @Column()
-  destinoInterno!: string; 
+  destinoInterno!: string;
 
-  @Column({ type: 'text' })
-  @IsIn(['ENCARGADO', 'AUXILIAR'])  
-  cargo!:'ENCARGADO' | 'AUXILIAR';
+  @Column({ type: "text" })
+  @IsIn(["ENCARGADO", "AUXILIAR"])
+  cargo!: "ENCARGADO" | "AUXILIAR";
 
   @Column()
-  escalafon!: string; 
+  escalafon!: string;
 
   @Column()
   especialidad!: string;
@@ -105,39 +145,45 @@ export class User {
   @Column()
   compromisoDeServicio!: string;
 
-  @Column({ type: 'date', nullable: true })
+  @Column({ type: "date", nullable: true })
   ultimoAscenso!: Date | null;
 
   @Column()
-  fotoDeLegajo!: string; 
+  fotoDeLegajo!: string;
 
-  @Column({ type: 'text' })
-  @IsIn(['SOLTERO', 'CASADO', 'CONCUBINATO', 'DIVORCIADO', 'VIUDO'])  
-  estadoCivil!: 'SOLTERO' | 'CASADO' | 'CONCUBINATO' | 'DIVORCIADO' | 'VIUDO';
-  
+  @Column({ type: "text" })
+  @IsIn(["SOLTERO", "CASADO", "CONCUBINATO", "DIVORCIADO", "VIUDO"])
+  estadoCivil!: "SOLTERO" | "CASADO" | "CONCUBINATO" | "DIVORCIADO" | "VIUDO";
+
   @Column()
   situacionDeRevista!: string;
-  @OneToMany(() => GrupoFamiliar, (grupoFamiliar) => grupoFamiliar.user, { cascade: true })
+  @OneToMany(() => GrupoFamiliar, (grupoFamiliar) => grupoFamiliar.user, {
+    cascade: true,
+  })
   grupoFamiliar?: GrupoFamiliar[];
-  
+
   @OneToMany(() => Actuacion, (actuacion) => actuacion.user, { cascade: true })
   actuaciones?: Actuacion[];
-  
-  @OneToMany(() => JuntaMedica, (juntaMedica) => juntaMedica.user, { cascade: true })
+
+  @OneToMany(() => JuntaMedica, (juntaMedica) => juntaMedica.user, {
+    cascade: true,
+  })
   juntaMedica?: JuntaMedica[];
-  
+
   @OneToMany(() => Solicitud, (solicitud) => solicitud.user, { cascade: true })
   solicitudes?: Solicitud[];
-  
-  @OneToMany(() => ParteDeEnfermo, (parteDeEnfermo) => parteDeEnfermo.user, { cascade: true })
+
+  @OneToMany(() => ParteDeEnfermo, (parteDeEnfermo) => parteDeEnfermo.user, {
+    cascade: true,
+  })
   parteDeEnfermo?: ParteDeEnfermo[];
-  
-  @OneToMany(() => AptitudPsicofisica, (aptitud) => aptitud.user, { cascade: true })
+
+  @OneToMany(() => AptitudPsicofisica, (aptitud) => aptitud.user, {
+    cascade: true,
+  })
   aptitudPsicofisica?: AptitudPsicofisica[];
-  
+
   @OneToMany(() => CursoRealizado, (curso) => curso.user, { cascade: true })
-  cursosRealizados?: CursoRealizado[];  
+  cursosRealizados?: CursoRealizado[];
 
 }
-
-

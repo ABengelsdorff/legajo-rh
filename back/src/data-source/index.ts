@@ -7,6 +7,7 @@ import { Solicitud } from "../entities/Solicitud";
 import { ParteDeEnfermo } from "../entities/ParteDeEnfermo"; 
 import { AptitudPsicofisica } from "../entities/AptitudPsicofisica";
 import { CursoRealizado } from "../entities/CursoRealizado";
+import { Usuario } from "../entities/Usuario";
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
@@ -14,7 +15,7 @@ export const AppDataSource = new DataSource({
   synchronize: true, // Crea tablas automáticamente (desactivar para produccion)  
   // compara las entidades definidas en el código con la base de datos y realiza los cambios necesarios para que coincidan
   logging: true,
-  entities: [ User,
+  entities: [ User, Usuario, 
     GrupoFamiliar,
     Actuacion,
     JuntaMedica,

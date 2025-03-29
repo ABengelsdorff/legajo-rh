@@ -3,6 +3,8 @@ import cors from 'cors';
 import path from 'path';
 import { AppDataSource } from './data-source';
 import userRoutes from './routes/userRoutes';
+import authRoutes from "./routes/authRoutes";
+import crearAdminSiNoExiste from './utils/crearAdmin';
 
 const app: Express = express();
 const PORT = 3001;
@@ -45,6 +47,8 @@ app.use(
 
 app.use(express.json());
 app.use('/users', userRoutes);
+app.use("/auth", authRoutes);
+
 
 // Ajusta la ruta para servir la UI exportada de Next.js
 const staticDir = path.join(__dirname, '..', '..', 'front', 'out'); // Sube dos niveles para llegar a la raíz
@@ -71,11 +75,13 @@ export async function initializeDatabase(): Promise<void> {
 // Exporta la app y la función de inicialización
 export { app, PORT };
 
-initializeDatabase().then(() => {
+initializeDatabase().then(async () => {
+  await crearAdminSiNoExiste(); // ✅ Ahora sí podés usar await
   app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
   });
-}).catch((error) => {
+})
+.catch((error) => {
   console.error("❌ Falló la inicialización de la base de datos:", error);
 });
 

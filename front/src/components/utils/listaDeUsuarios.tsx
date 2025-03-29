@@ -7,6 +7,7 @@ import type { IUser } from "@/components/interfaces/interfaces";
 import { UserRound, Phone, Mail, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
+
 export default function Users() {
   const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
