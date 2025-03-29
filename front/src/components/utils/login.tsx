@@ -1,30 +1,41 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import { Eye, EyeOff, LogIn } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
-
+import { useState } from "react";
+import Image from "next/image";
+import { Eye, EyeOff, LogIn } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Check } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function LoginForm() {
-  const [nombreUsuario, setNombreUsuario] = useState("")
-  const [contraseña, setContraseña] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const [nombreUsuario, setNombreUsuario] = useState("");
+  const [contraseña, setContraseña] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false);
+
+  const router = useRouter();
+
+  const setToken = useAuthStore((state) => state.setToken);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
 
     if (!nombreUsuario || !contraseña) {
-      setError("Debe completar todos los campos.")
-      return
+      setError("Debe completar todos los campos.");
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
       const response = await fetch("http://localhost:3001/auth/login", {
@@ -32,45 +43,82 @@ export default function LoginForm() {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({ nombreUsuario, contraseña }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Error al iniciar sesión.")
+        throw new Error(data.message || "Error al iniciar sesión.");
       }
 
-      localStorage.setItem("token", data.token); // 💾 Guardamos el token
+      localStorage.setItem("token", data.token);
+      setToken(data.token); // ✅ Ahora sí
 
-      console.log("Login exitoso:", data)
-      // Aquí puedes guardar info del usuario en estado global o localStorage si querés
-      router.push("/Graficos") 
-    }  catch (err) {
+      console.log("Login exitoso:", data);
+      setLoginSuccess(true);
+
+      // Redirige después de 2 segundos
+      setTimeout(() => {
+        router.push("/Graficos");
+      }, 2000);
+    } catch (err) {
       console.error(err);
       setError("Credenciales incorrectas");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12 bg-slate-800">
+      <Dialog open={loginSuccess} onOpenChange={setLoginSuccess}>
+        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+            <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">
+              <div className="flex flex-col items-center">
+                <div className="mx-auto my-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100">
+                  <Check className="h-12 w-12 text-blue-600" strokeWidth={3} />
+                </div>
+                <DialogHeader className="pb-2">
+                  <DialogTitle className="text-3xl font-extrabold text-gray-900 text-center">
+                    ¡Sesión iniciada con éxito!
+                  </DialogTitle>
+                </DialogHeader>
+                {/* <p className="text-gray-600 mt-2 mb-6 text-center">
+            Será redirigido en unos segundos...
+          </p> */}
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="relative py-3 sm:max-w-xl sm:mx-auto px-4">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative bg-stone-100 shadow-lg sm:rounded-3xl sm:p-16">
           <div className="max-w-md mx-auto">
             <div className="flex justify-center mb-8">
-              <Image src="/septima.jpg" alt="Logo Fuerza Aérea" width={120} height={120} />
+              <Image
+                src="/septima.jpg"
+                alt="Logo Fuerza Aérea"
+                width={120}
+                height={120}
+              />
             </div>
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-extrabold text-gray-900">Iniciar Sesión</h1>
+              <h1 className="text-3xl font-extrabold text-gray-900">
+                Iniciar Sesión
+              </h1>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                 <div className="space-y-4">
                   <div>
-                    <label htmlFor="nombreUsuario" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="nombreUsuario"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Nombre de Usuario
                     </label>
                     <input
@@ -84,7 +132,10 @@ export default function LoginForm() {
                   </div>
 
                   <div>
-                    <label htmlFor="contraseña" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label
+                      htmlFor="contraseña"
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
                       Contraseña
                     </label>
                     <div className="relative">
@@ -101,7 +152,11 @@ export default function LoginForm() {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400"
                       >
-                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
                       </button>
                     </div>
                   </div>
@@ -133,5 +188,5 @@ export default function LoginForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }

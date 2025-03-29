@@ -15,7 +15,7 @@ export default function withAuth(Component: React.ComponentType, requireAdmin = 
         if (!isAuthenticated) {
           router.push("/login");
         } else if (requireAdmin && rol !== "ADMIN") {
-          router.push("/unauthorized");
+          router.push("/Unauthorized");
         }
       }
     }, [isAuthenticated, rol, loading, router]); // 👈 incluye loading

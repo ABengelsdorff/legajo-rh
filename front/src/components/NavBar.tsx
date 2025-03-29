@@ -1,17 +1,28 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/hooks/useAuth";
-
+import { useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Check } from "lucide-react";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [logoutSuccess, setLogoutSuccess] = useState(false);
 
-  const router = useRouter()
-  const { logout } = useAuth();
+  const router = useRouter();
+  
+  const nombreUsuario = useAuthStore(state => state.nombreUsuario);
+const isAuthenticated = useAuthStore(state => state.isAuthenticated);
+const logout = useAuthStore(state => state.logout);
+
 
   return (
     <nav className="bg-slate-800 shadow-lg">
@@ -53,7 +64,7 @@ export default function Navbar() {
                 >
                   Ver Usuarios
                 </Link>
-                
+
                 <Link
                   href="/Register"
                   className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
@@ -68,17 +79,31 @@ export default function Navbar() {
                   Login
                 </Link>
 
-                <button
-      onClick={() => {
-        logout();
-        router.push("/Login");
-      }}
-      className="bg-red-600 text-white px-4 py-2 rounded"
-    >
-      Cerrar sesión
-    </button>
+                {isAuthenticated && (
+                  <span className="text-white px-4 font-medium">
+                    👋 Hola, {nombreUsuario}
+                  </span>
+                )}
 
+                {isAuthenticated && (
+                  <button
+                  onClick={() => {
+                   logout();
+                   setLogoutSuccess(true);
+                 
+                   setTimeout(() => {
+                     setLogoutSuccess(false); // Oculta el dialogo antes de redirigir
+                     router.push("/Login");
+                   }, 2000); // 2 segundos para mostrar el modal
+                 }}
+                 
+                   className="bg-red-600 text-white px-4 py-2 rounded"
+                 >
+                   Cerrar sesión
+                 </button>
+                )}
 
+                
               </div>
             </div>
           </div>
@@ -100,7 +125,12 @@ export default function Navbar() {
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               ) : (
                 <svg
@@ -111,7 +141,12 @@ export default function Navbar() {
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               )}
             </button>
@@ -120,36 +155,89 @@ export default function Navbar() {
       </div>
 
       {isMenuOpen && (
-        <div className="md:hidden" id="mobile-menu">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <Link
-              href="/Buscador"
-              className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-            >
-              Buscar Legajo
-            </Link>
-            <Link
-              href="/Graficos"
-              className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-            >
-              Graficos
-            </Link>
-            <Link
-              href="/UserForm"
-              className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-            >
-              Cargar Legajo
-            </Link>
-            <Link
-              href="/UserList"
-              className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-            >
-             Ver Usuarios
-            </Link>
-          </div>
-        </div>
-      )}
-    </nav>
-  )
-}
+  <div className="md:hidden" id="mobile-menu">
+    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <Link
+        href="/Buscador"
+        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+      >
+        Buscar Legajo
+      </Link>
+      <Link
+        href="/Graficos"
+        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+      >
+        Graficos
+      </Link>
+      <Link
+        href="/UserForm"
+        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+      >
+        Cargar Legajo
+      </Link>
+      <Link
+        href="/UserList"
+        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+      >
+        Ver Usuarios
+      </Link>
+      <Link
+        href="/Register"
+        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+      >
+        Register
+      </Link>
+      <Link
+        href="/Login"
+        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+      >
+        Login
+      </Link>
+      {isAuthenticated && (
+  <>
+    <span className="text-white block px-3 py-2">👋 Hola, {nombreUsuario}</span>
+    <button
+      onClick={() => {
+        logout();
+        setLogoutSuccess(true);
+        setTimeout(() => {
+          setLogoutSuccess(false);
+          router.push("/Login");
+        }, 2000);
+      }}
+      className="bg-red-600 text-white px-4 py-2 rounded w-full text-left"
+    >
+      Cerrar sesión
+    </button>
+  </>
+)}
 
+    </div>
+  </div>
+)}
+
+      <Dialog open={logoutSuccess} onOpenChange={setLogoutSuccess}>
+        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+            <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">
+              <div className="flex flex-col items-center">
+                <div className="mx-auto my-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100">
+                  <Check className="h-12 w-12 text-blue-600" strokeWidth={3} />
+                </div>
+                <DialogHeader className="pb-2">
+                  <DialogTitle className="text-3xl font-extrabold text-gray-900 text-center">
+                    ¡Sesión cerrada con éxito!
+                  </DialogTitle>
+                </DialogHeader>
+                <p className="text-gray-600 mt-2 mb-6 text-center">
+                  Redirigiendo al inicio...
+                </p>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </nav>
+  );
+}
