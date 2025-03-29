@@ -6,7 +6,6 @@ import { Controller, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Eye, EyeOff, UserPlus } from "lucide-react"
 import { useState } from "react"
-import Link from "next/link"
 
 
 interface IRegisterData {
@@ -73,7 +72,7 @@ export default function RegisterForm() {
             </div>
             <div className="text-center mb-8">
               <h1 className="text-3xl font-extrabold text-gray-900">Registro</h1>
-              <p className="text-gray-600 mt-2">Ingrese sus credenciales para crear un usuario</p>
+              <p className="text-gray-600 mt-2">Ingrese credenciales para crear un usuario</p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -150,18 +149,11 @@ export default function RegisterForm() {
                 )}
 
                 <Button type="submit" className="w-full">
-                  <UserPlus className="mr-2 h-5 w-5" /> Registrarse
+                  <UserPlus className="mr-2 h-5 w-5" /> Registrar
                 </Button>
               </div>
 
-              <div className="text-center mt-4">
-                <p className="text-gray-600">
-                  ¿Ya tiene una cuenta?{' '}
-                  <Link href="/Login" className="text-blue-600 hover:text-blue-800 font-medium">
-                    Iniciar sesión
-                  </Link>
-                </p>
-              </div>
+              
             </form>
           </div>
         </div>

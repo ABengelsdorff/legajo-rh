@@ -18,11 +18,11 @@ export default function Navbar() {
   const [logoutSuccess, setLogoutSuccess] = useState(false);
 
   const router = useRouter();
-  
-  const nombreUsuario = useAuthStore(state => state.nombreUsuario);
-const isAuthenticated = useAuthStore(state => state.isAuthenticated);
-const logout = useAuthStore(state => state.logout);
 
+  const rol = useAuthStore((state) => state.rol);
+  const nombreUsuario = useAuthStore((state) => state.nombreUsuario);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const logout = useAuthStore((state) => state.logout);
 
   return (
     <nav className="bg-slate-800 shadow-lg">
@@ -40,70 +40,57 @@ const logout = useAuthStore(state => state.logout);
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
-                <Link
-                  href="/Buscador"
-                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
-                >
-                  Buscar Legajo
-                </Link>
-                <Link
-                  href="/Graficos"
-                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
-                >
-                  Graficos
-                </Link>
-                <Link
-                  href="/UserForm"
-                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
-                >
-                  Cargar Legajo
-                </Link>
-                <Link
-                  href="/UserList"
-                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
-                >
-                  Ver Usuarios
-                </Link>
-
-                <Link
-                  href="/Register"
-                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
-                >
-                  Register
-                </Link>
-
-                <Link
-                  href="/Login"
-                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
-                >
-                  Login
-                </Link>
-
-                {isAuthenticated && (
-                  <span className="text-white px-4 font-medium">
-                    👋 Hola, {nombreUsuario}
-                  </span>
+                {!isAuthenticated ? (
+                  <Link
+                    href="/Login"
+                    className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                  >
+                    Login
+                  </Link>
+                ) : rol === "ADMIN" ? (
+                  <>
+                    <Link
+                      href="/Register"
+                      className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                    >
+                      Register
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setLogoutSuccess(true);
+                        setTimeout(() => {
+                          setLogoutSuccess(false);
+                          router.push("/Login");
+                        }, 2000);
+                      }}
+                      className="px-6 py-2 bg-gradient-to-r from-red-600 to-red-300 text-white font-semibold rounded-lg shadow-md hover:from-red-700 hover:to-red-600 transition-all"
+                    >
+                      Cerrar sesión
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/Buscador" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Buscar Legajo</Link>
+                    <Link href="/Graficos" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Graficos</Link>
+                    <Link href="/UserForm" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Cargar Legajo</Link>
+                    <Link href="/UserList" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Ver Usuarios</Link>
+                    <span className="text-white px-4 font-medium">👋 Hola, {nombreUsuario}</span>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setLogoutSuccess(true);
+                        setTimeout(() => {
+                          setLogoutSuccess(false);
+                          router.push("/Login");
+                        }, 2000);
+                      }}
+                      className="px-6 py-2 bg-gradient-to-r from-red-600 to-red-300 text-white font-semibold rounded-lg shadow-md hover:from-red-700 hover:to-red-600 transition-all"
+                    >
+                      Cerrar sesión
+                    </button>
+                  </>
                 )}
-
-                {isAuthenticated && (
-                  <button
-                  onClick={() => {
-                   logout();
-                   setLogoutSuccess(true);
-                 
-                   setTimeout(() => {
-                     setLogoutSuccess(false); // Oculta el dialogo antes de redirigir
-                     router.push("/Login");
-                   }, 2000); // 2 segundos para mostrar el modal
-                 }}
-                 
-                   className="bg-red-600 text-white px-4 py-2 rounded"
-                 >
-                   Cerrar sesión
-                 </button>
-                )}
-
-                
               </div>
             </div>
           </div>
@@ -125,12 +112,7 @@ const logout = useAuthStore(state => state.logout);
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               ) : (
                 <svg
@@ -141,12 +123,7 @@ const logout = useAuthStore(state => state.logout);
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               )}
             </button>
@@ -155,66 +132,62 @@ const logout = useAuthStore(state => state.logout);
       </div>
 
       {isMenuOpen && (
-  <div className="md:hidden" id="mobile-menu">
-    <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <Link
-        href="/Buscador"
-        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-      >
-        Buscar Legajo
-      </Link>
-      <Link
-        href="/Graficos"
-        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-      >
-        Graficos
-      </Link>
-      <Link
-        href="/UserForm"
-        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-      >
-        Cargar Legajo
-      </Link>
-      <Link
-        href="/UserList"
-        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-      >
-        Ver Usuarios
-      </Link>
-      <Link
-        href="/Register"
-        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-      >
-        Register
-      </Link>
-      <Link
-        href="/Login"
-        className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
-      >
-        Login
-      </Link>
-      {isAuthenticated && (
-  <>
-    <span className="text-white block px-3 py-2">👋 Hola, {nombreUsuario}</span>
-    <button
-      onClick={() => {
-        logout();
-        setLogoutSuccess(true);
-        setTimeout(() => {
-          setLogoutSuccess(false);
-          router.push("/Login");
-        }, 2000);
-      }}
-      className="bg-red-600 text-white px-4 py-2 rounded w-full text-left"
-    >
-      Cerrar sesión
-    </button>
-  </>
-)}
-
-    </div>
-  </div>
-)}
+        <div className="md:hidden" id="mobile-menu">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            {!isAuthenticated ? (
+              <Link
+                href="/Login"
+                className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+              >
+                Login
+              </Link>
+            ) : rol === "ADMIN" ? (
+              <>
+                <Link
+                  href="/Register"
+                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+                >
+                  Register
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setLogoutSuccess(true);
+                    setTimeout(() => {
+                      setLogoutSuccess(false);
+                      router.push("/Login");
+                    }, 2000);
+                  }}
+                  className="bg-red-600 text-white px-4 py-2 rounded w-full text-left"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link href="/Buscador" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Buscar Legajo</Link>
+                <Link href="/Graficos" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Graficos</Link>
+                <Link href="/UserForm" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Cargar Legajo</Link>
+                <Link href="/UserList" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Ver Usuarios</Link>
+                <span className="text-white block px-3 py-2">👋 Hola, {nombreUsuario}</span>
+                <button
+                  onClick={() => {
+                    logout();
+                    setLogoutSuccess(true);
+                    setTimeout(() => {
+                      setLogoutSuccess(false);
+                      router.push("/Login");
+                    }, 2000);
+                  }}
+                  className="bg-red-600 text-white px-4 py-2 rounded w-full text-left"
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       <Dialog open={logoutSuccess} onOpenChange={setLogoutSuccess}>
         <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
@@ -230,9 +203,6 @@ const logout = useAuthStore(state => state.logout);
                     ¡Sesión cerrada con éxito!
                   </DialogTitle>
                 </DialogHeader>
-                <p className="text-gray-600 mt-2 mb-6 text-center">
-                  Redirigiendo al inicio...
-                </p>
               </div>
             </div>
           </div>

@@ -57,9 +57,18 @@ export default function LoginForm() {
       console.log("Login exitoso:", data);
       setLoginSuccess(true);
 
+ // 🔐 Decodificamos el token para saber el rol
+ const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
+ const userRole = decodedToken.rol;
+
+
       // Redirige después de 2 segundos
       setTimeout(() => {
-        router.push("/Graficos");
+        if (userRole === "ADMIN") {
+          router.push("/Register");
+        } else {
+          router.push("/Buscador");
+        }
       }, 2000);
     } catch (err) {
       console.error(err);
