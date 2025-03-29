@@ -5,7 +5,7 @@ import { verificarRolAdmin } from "../middlewares/verificarRolAdmin";
 
 const router = Router();
 
-router.use(verificarToken);
+// router.use(verificarToken);
 
 
 // Rutas CRUD para usuarios
@@ -18,7 +18,7 @@ router.get('/', getAllUsers);
 router.get('/:id', getUserById);     
 router.post('/', createUser);        
 router.put('/:id', updateUser);      
-router.delete('/:id', verificarRolAdmin, deleteUser); // Solo ADMIN puede borrar  
+// router.delete('/:id', verificarRolAdmin, deleteUser); // Solo ADMIN puede borrar  
 
 
 export default router;
