@@ -26,7 +26,6 @@ export default function LegajoProfesional({
   const [formSuccess, setFormSuccess] = useState(false);
   const [user, setUser] = useState<IUser>(
     initialData || {
-      id: 0,
       nombre: "",
       apellido: "",
       sexo: "",
@@ -45,7 +44,7 @@ export default function LegajoProfesional({
       rti: "",
       destinoAnterior: "",
       institutoDeFormacion: "",
-      grado: "CABO",
+      grado: "",
       destinadoEnLaUnidad: "",
       destinoJbGrupos: "",
       destinoInterno: "",
@@ -178,27 +177,6 @@ export default function LegajoProfesional({
     }));
   };
 
-  const agregarSolicitud = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      solicitudes: [
-        ...prevUser.solicitudes,
-        {
-          numeroDeExpediente: "",
-          solicitud: { desde: "", hasta: "" },
-          observaciones: "",
-        },
-      ],
-    }));
-  };
-
-  const eliminarSolicitud = (index: number) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      solicitudes: prevUser.solicitudes.filter((_, i) => i !== index),
-    }));
-  };
-
   const {
     control,
     handleSubmit,
@@ -208,6 +186,15 @@ export default function LegajoProfesional({
   } = useForm<IUser>({
     mode: "onChange",
     defaultValues: initialData || user,
+  });
+
+  const {
+    fields: fieldsSolicitudes,
+    append: appendSolicitud,
+    remove: removeSolicitud,
+  } = useFieldArray({
+    control,
+    name: "solicitudes",
   });
 
   const {
@@ -244,6 +231,8 @@ export default function LegajoProfesional({
         institutoDeFormacion:
           (initialData.institutoDeFormacion?.toUpperCase() ??
             "") as IUser["institutoDeFormacion"],
+        destinadoEnLaUnidad: (initialData.destinadoEnLaUnidad?.toUpperCase() ?? "") as "" | "SI" | "NO",
+
       };
 
       setUser(normalizado);
@@ -256,11 +245,12 @@ export default function LegajoProfesional({
     try {
       let savedUser;
 
-      if (user.id === 0) {
+      if (!data.id) {
         savedUser = await createUser(data);
       } else {
-        savedUser = await updateUser(user.id, data);
+        savedUser = await updateUser(data.id, data);
       }
+      
 
       reset(data);
       setFormSuccess(true);
@@ -773,6 +763,7 @@ export default function LegajoProfesional({
                     Información Profesional
                   </h2>
                   <div className="space-y-4">
+                    
                     <Controller
                       name="destinadoEnLaUnidad"
                       control={control}
@@ -791,7 +782,7 @@ export default function LegajoProfesional({
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           >
                             <option value="">Seleccionar...</option>
-                            <option value="SI">SÍ</option>
+                            <option value="SI">SI</option>
                             <option value="NO">NO</option>
                           </select>
                         </div>
@@ -1448,8 +1439,8 @@ export default function LegajoProfesional({
                               className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             >
                               <option value="">Seleccionar...</option>
-                              <option value="SI">Sí</option>
-                              <option value="NO">No</option>
+                              <option value="SI">SI</option>
+                              <option value="NO">NO</option>
                             </select>
                           </div>
                         )}
@@ -1566,8 +1557,8 @@ export default function LegajoProfesional({
               focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                         >
                           <option value="">Seleccionar...</option>
-                          <option value="SI">Sí</option>
-                          <option value="NO">No</option>
+                          <option value="SI">SI</option>
+                          <option value="NO">NO</option>
                         </select>
                       </div>
                     )}
@@ -1632,8 +1623,8 @@ export default function LegajoProfesional({
               focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                         >
                           <option value="">Seleccionar...</option>
-                          <option value="SI">Sí</option>
-                          <option value="NO">No</option>
+                          <option value="SI">SI</option>
+                          <option value="NO">NO</option>
                         </select>
                       </div>
                     )}
@@ -1646,123 +1637,129 @@ export default function LegajoProfesional({
                 </div>
               </div>
 
-              {/* //!Solicitudes */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Solicitudes
-                </h2>
-                {user.solicitudes.map((solicitud, index) => (
-                  <div
-                    key={index}
-                    className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
-                  >
-                    <Controller
-                      name={`solicitudes.${index}.numeroDeExpediente`}
-                      control={control}
-                      rules={ValidacionLegajo.solicitudNumeroDeExpediente}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`numeroDeExpediente-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Número de Expediente
-                          </label>
-                          <input
-                            {...field}
-                            value={field.value ?? ""}
-                            id={`numeroDeExpediente-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.solicitudes?.[index]?.numeroDeExpediente && (
-                      <span className="text-red-600">
-                        {errors.solicitudes[index].numeroDeExpediente.message}
-                      </span>
-                    )}
+             {/* //!Solicitudes */}
+<div className="bg-gray-50 p-6 rounded-lg shadow-md">
+  <h2 className="text-2xl font-bold text-gray-800 mb-4">Solicitudes</h2>
 
-                    <Controller
-                      name={`solicitudes.${index}.solicitud.desde`}
-                      control={control}
-                      rules={ValidacionLegajo.solicitudDesde}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`solicitudesDesde-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Solicitud Desde
-                          </label>
-                          <input
-                            {...field}
-                            type="date"
-                            id={`solicitudesDesde-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                            value={
-                              field.value
-                                ? new Date(field.value)
-                                    .toISOString()
-                                    .split("T")[0]
-                                : ""
-                            } // Convertimos a string 'YYYY-MM-DD'
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.solicitudes?.[index]?.solicitud?.desde && (
-                      <span className="text-red-600">
-                        {errors.solicitudes[index].solicitud.desde?.message}
-                      </span>
-                    )}
+  {fieldsSolicitudes.map((field, index) => (
+    <div
+      key={field.id}
+      className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
+    >
+      <Controller
+        name={`solicitudes.${index}.numeroDeExpediente`}
+        control={control}
+        rules={ValidacionLegajo.solicitudNumeroDeExpediente}
+        render={({ field }) => (
+          <div>
+            <label
+              htmlFor={`numeroDeExpediente-${index}`}
+              className="block text-sm font-medium text-gray-900"
+            >
+              Número de Expediente
+            </label>
+            <input
+              {...field}
+              id={`numeroDeExpediente-${index}`}
+              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            />
+          </div>
+        )}
+      />
+      {errors.solicitudes?.[index]?.numeroDeExpediente && (
+        <span className="text-red-600">
+          {errors.solicitudes[index].numeroDeExpediente?.message}
+        </span>
+      )}
 
-                    <Controller
-                      name={`solicitudes.${index}.observaciones`}
-                      control={control}
-                      rules={ValidacionLegajo.solicitudObservaciones}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`solicitudes-observaciones-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Observaciones
-                          </label>
-                          <textarea
-                            {...field}
-                            id={`solicitudes-observaciones-${index}`}
-                            value={field.value ?? ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.solicitudes?.[index]?.observaciones && (
-                      <span className="text-red-600">
-                        {errors.solicitudes[index].observaciones.message}
-                      </span>
-                    )}
+      <Controller
+        name={`solicitudes.${index}.solicitud.desde`}
+        control={control}
+        rules={ValidacionLegajo.solicitudDesde}
+        render={({ field }) => (
+          <div>
+            <label
+              htmlFor={`solicitudesDesde-${index}`}
+              className="block text-sm font-medium text-gray-900"
+            >
+              Solicitud Desde
+            </label>
+            <input
+              {...field}
+              type="date"
+              id={`solicitudesDesde-${index}`}
+              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              value={
+                field.value
+                  ? new Date(field.value).toISOString().split("T")[0]
+                  : ""
+              }
+            />
+          </div>
+        )}
+      />
+      {errors.solicitudes?.[index]?.solicitud?.desde && (
+        <span className="text-red-600">
+          {errors.solicitudes[index].solicitud.desde?.message}
+        </span>
+      )}
 
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => eliminarSolicitud(index)}
-                        className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={agregarSolicitud}
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  Agregar Solicitud
-                </button>
-              </div>
+      <Controller
+        name={`solicitudes.${index}.observaciones`}
+        control={control}
+        rules={ValidacionLegajo.solicitudObservaciones}
+        render={({ field }) => (
+          <div>
+            <label
+              htmlFor={`solicitudes-observaciones-${index}`}
+              className="block text-sm font-medium text-gray-900"
+            >
+              Observaciones
+            </label>
+            <textarea
+              {...field}
+              id={`solicitudes-observaciones-${index}`}
+              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              value={field.value ?? ""}
+            />
+          </div>
+        )}
+      />
+      {errors.solicitudes?.[index]?.observaciones && (
+        <span className="text-red-600">
+          {errors.solicitudes[index].observaciones?.message}
+        </span>
+      )}
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => removeSolicitud(index)}
+          className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  ))}
+
+  <button
+    type="button"
+    onClick={() =>
+      appendSolicitud({
+        numeroDeExpediente: "",
+        solicitud: { desde: "" },
+        observaciones: "",
+      })
+    }
+    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+  >
+    Agregar Solicitud
+  </button>
+</div>
 
               {/* //!Actuaciones */}
               <div className="bg-gray-50 p-6 rounded-lg shadow-md">

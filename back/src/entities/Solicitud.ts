@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from './User';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { User } from "./User";
 
 @Entity()
 export class Solicitud {
@@ -9,13 +9,14 @@ export class Solicitud {
   @Column()
   numeroDeExpediente!: string;
 
-  @Column({ type: 'date', nullable: true })
-  desde?: Date;
+  @Column("simple-json", { nullable: true })
+  solicitud!: {
+    desde?: Date;
+  };
 
-  @Column({ type: 'date', nullable: true })
-  hasta?: Date;
+  @Column({ type: "text" })
+  observaciones!: string;
 
   @ManyToOne(() => User, (user) => user.solicitudes)
   user!: User;
-
 }

@@ -95,26 +95,7 @@ export class User {
     | "BAME";
 
   @Column({ type: "text" })
-  @IsIn([
-    "CABO",
-    "CABO PRIMERO",
-    "CABO PRINCIPAL",
-    "SUBOFICIAL AUXILIAR",
-    "SUBOFICIAL AYUDANTE",
-    "SUBOFICIAL PRINCIPAL",
-    "SUBOFICIAL MAYOR",
-  ])
-  grado!:
-    | "CABO"
-    | "CABO PRIMERO"
-    | "CABO PRINCIPAL"
-    | "SUBOFICIAL AUXILIAR"
-    | "SUBOFICIAL AYUDANTE"
-    | "SUBOFICIAL PRINCIPAL"
-    | "SUBOFICIAL MAYOR";
-
-  @Column()
-  destinadoEnLaUnidad!: string;
+  grado!: string;
 
   @Column({ type: "text" })
   @IsIn(["JEFATURA", "GRUPO BASE", "ESCUADRON TECNICO", "GRUPO AEREO"])
@@ -122,6 +103,10 @@ export class User {
 
   @Column()
   destinoInterno!: string;
+
+  @Column({ type: "text" })
+  @IsIn(["SI", "NO"])
+  destinadoEnLaUnidad!: "SI" | "NO";
 
   @Column({ type: "text" })
   @IsIn(["ENCARGADO", "AUXILIAR"])
@@ -185,5 +170,4 @@ export class User {
 
   @OneToMany(() => CursoRealizado, (curso) => curso.user, { cascade: true })
   cursosRealizados?: CursoRealizado[];
-
 }

@@ -1,27 +1,21 @@
 import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
-import { Like, ILike } from 'typeorm';
+import { ILike } from 'typeorm';
 
-// Repositorio de la entidad User
 const userRepository = AppDataSource.getRepository(User);
 
-// Obtener todos los usuarios
 export const getAllUsers = async (req: Request, res: Response) => {
   try {
-    // Incluyendo la relación 'grupoFamiliar' en la consulta
     const users = await userRepository.find({
-      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'], 
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'],
     });
-    
     res.json(users);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener usuarios' });
   }
 };
 
-
-// Obtener un usuario por ID
 export const getUserById = async (req: Request, res: Response) => {
   try {
     const user = await userRepository.findOne({
@@ -38,10 +32,10 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
-
-// Crear un nuevo usuario
 export const createUser = async (req: Request, res: Response) => {
   try {
+    const { id, ...userData } = req.body;
+    
     const newUser = userRepository.create(req.body);
     const result = await userRepository.save(newUser);
     res.status(201).json(result);
@@ -51,7 +45,6 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
-// Actualizar un usuario existente
 export const updateUser = async (req: Request, res: Response) => {
   try {
     const user = await userRepository.findOneBy({ id: parseInt(req.params.id) });
@@ -67,15 +60,13 @@ export const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-
-// Eliminar un usuario
 export const deleteUser = async (req: Request, res: Response) => {
   try {
-    const userId = parseInt(req.params.id); // Convierte el id a número
-    const user = await userRepository.findOneBy({ id: userId }); // Verifica si existe el usuario
+    const userId = parseInt(req.params.id);
+    const user = await userRepository.findOneBy({ id: userId });
 
     if (user) {
-      const result = await userRepository.delete(userId); // Elimina al usuario
+      const result = await userRepository.delete(userId);
       if (result.affected) {
         res.json({ message: 'Usuario eliminado' });
       } else {
@@ -89,19 +80,15 @@ export const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
-
-//Buscar por numero de iosfa
 export const getUserByIosfa = async (req: Request, res: Response) => {
   try {
-    const { iosfa  } = req.params; // Captura el parámetro de la URL
-
-    const user = await userRepository.findOne({
-      where: { numeroDeIosfa: String(iosfa) },
+    const { iosfa } = req.params;
+    const users = await userRepository.find({
+      where: { numeroDeIosfa: ILike(`%${iosfa}%`) },
       relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'],
     });
-
-    if (user) {
-      res.json(user);
+    if (users.length > 0) {
+      res.json(users);
     } else {
       res.status(404).json({ message: 'Usuario no encontrado' });
     }
@@ -110,18 +97,15 @@ export const getUserByIosfa = async (req: Request, res: Response) => {
   }
 };
 
-//Buscar por numero de DNI
 export const getUserByDni = async (req: Request, res: Response) => {
   try {
-    const { dni } = req.params; // Captura el parámetro de la URL
-
-    const user = await userRepository.findOne({
-      where: { numeroDeDni: String(dni) },
-      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'], 
+    const { dni } = req.params;
+    const users = await userRepository.find({
+      where: { numeroDeDni: ILike(`%${dni}%`) },
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'],
     });
-
-    if (user) {
-      res.json(user);
+    if (users.length > 0) {
+      res.json(users);
     } else {
       res.status(404).json({ message: 'Usuario no encontrado' });
     }
@@ -130,18 +114,15 @@ export const getUserByDni = async (req: Request, res: Response) => {
   }
 };
 
-//Buscar por numero de apellido
 export const getUserByApellido = async (req: Request, res: Response) => {
   try {
-    const { apellido } = req.params; // Captura el parámetro de la URL
-
-    const user = await userRepository.find({
+    const { apellido } = req.params;
+    const users = await userRepository.find({
       where: { apellido: ILike(`%${apellido}%`) },
       relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'],
     });
-
-    if (user.length > 0) {
-      res.json(user);
+    if (users.length > 0) {
+      res.json(users);
     } else {
       res.status(404).json({ message: 'Usuario no encontrado' });
     }
@@ -150,18 +131,13 @@ export const getUserByApellido = async (req: Request, res: Response) => {
   }
 };
 
-//Buscar por numero de grado
 export const getUserByGrado = async (req: Request, res: Response) => {
   try {
-    const { grado } = req.params; // Captura el parámetro de la URL
-
+    const { grado } = req.params;
     const users = await userRepository.find({
-      where: { 
-        grado: grado as 'CABO' | 'CABO PRIMERO' | 'CABO PRINCIPAL' | 'SUBOFICIAL AUXILIAR' | 'SUBOFICIAL AYUDANTE' | 'SUBOFICIAL PRINCIPAL' | 'SUBOFICIAL MAYOR'
-      },
-      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados' ], 
+      where: { grado: ILike(`%${grado}%`) },
+      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'],
     });
-
     if (users.length > 0) {
       res.json(users);
     } else {
@@ -172,16 +148,21 @@ export const getUserByGrado = async (req: Request, res: Response) => {
   }
 };
 
-
-//Buscar por numero de curso
 export const getUserByCurso = async (req: Request, res: Response) => {
   try {
-    const { curso } = req.params; // Captura el parámetro de la URL
+    const { curso } = req.params;
 
-    const users = await userRepository.find({
-      where: { cursosRealizados: Like(`%${curso}%`) },
-      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'],
-    });
+    const users = await userRepository
+      .createQueryBuilder("user")
+      .leftJoinAndSelect("user.cursosRealizados", "curso")
+      .leftJoinAndSelect("user.grupoFamiliar", "grupoFamiliar")
+      .leftJoinAndSelect("user.actuaciones", "actuaciones")
+      .leftJoinAndSelect("user.solicitudes", "solicitudes")
+      .leftJoinAndSelect("user.juntaMedica", "juntaMedica")
+      .leftJoinAndSelect("user.parteDeEnfermo", "parteDeEnfermo")
+      .leftJoinAndSelect("user.aptitudPsicofisica", "aptitudPsicofisica")
+      .where("LOWER(curso.nombre) LIKE :nombre", { nombre: `%${curso.toLowerCase()}%` })
+      .getMany();
 
     if (users.length > 0) {
       res.json(users);
@@ -189,6 +170,7 @@ export const getUserByCurso = async (req: Request, res: Response) => {
       res.status(404).json({ message: 'Usuario no encontrado' });
     }
   } catch (error) {
+    console.error("Error en getUserByCurso:", error);
     res.status(500).json({ error: 'Error al obtener el usuario' });
   }
 };

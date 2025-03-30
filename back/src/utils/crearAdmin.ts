@@ -22,5 +22,4 @@ export async function crearAdminSiNoExiste() {
   }
 }
 
-// export por defecto si querés usarlo en otro lugar también
 export default crearAdminSiNoExiste;

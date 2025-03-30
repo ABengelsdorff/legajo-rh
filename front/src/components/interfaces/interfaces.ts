@@ -9,7 +9,7 @@ interface IGrupoFamiliar {
 
 
 export interface IUser {
-  id: number
+  id?: number
   nombre: string
   apellido: string
   sexo: "FEMENINO" | "MASCULINO" | "" 
@@ -36,6 +36,7 @@ export interface IUser {
     | "SUBOFICIAL AYUDANTE"
     | "SUBOFICIAL PRINCIPAL"
     | "SUBOFICIAL MAYOR"
+    | ""
   destinadoEnLaUnidad: "" | "SI" | "NO"
   destinoJbGrupos: "JEFATURA" | "GRUPO BASE" | "GRUPO TECNICO" | "GRUPO AEREO" | ""
   destinoInterno: string
