@@ -45,7 +45,7 @@ export default function Navbar() {
                     href="/Login"
                     className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
                   >
-                    Login
+                    Iniciar Sesión
                   </Link>
                 ) : rol === "ADMIN" ? (
                   <>
@@ -53,7 +53,7 @@ export default function Navbar() {
                       href="/Register"
                       className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
                     >
-                      Register
+                      Panel de Administración
                     </Link>
                     <button
                       onClick={() => {
@@ -139,7 +139,7 @@ export default function Navbar() {
                 href="/Login"
                 className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
               >
-                Login
+                Iniciar Sesión
               </Link>
             ) : rol === "ADMIN" ? (
               <>
@@ -147,7 +147,7 @@ export default function Navbar() {
                   href="/Register"
                   className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
                 >
-                  Register
+                  Panel de Administración
                 </Link>
                 <button
                   onClick={() => {
