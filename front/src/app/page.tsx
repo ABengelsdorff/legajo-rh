@@ -1,7 +1,7 @@
-import LegajoSearch from "./Buscador/page";
+import Login from "./Login/page";
 
 export default function Home() {
   return (
-    <LegajoSearch/>
+    <Login/>
   );
 }
