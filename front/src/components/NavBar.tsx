@@ -55,6 +55,7 @@ export default function Navbar() {
                     >
                       Panel de Administración
                     </Link>
+                    <span className="text-white px-4 font-medium">👋 Hola, {nombreUsuario}</span>
                     <button
                       onClick={() => {
                         logout();
@@ -72,9 +73,9 @@ export default function Navbar() {
                 ) : (
                   <>
                     <Link href="/Buscador" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Buscar Legajo</Link>
-                    <Link href="/Graficos" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Graficos</Link>
                     <Link href="/UserForm" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Cargar Legajo</Link>
                     <Link href="/UserList" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Ver Usuarios</Link>
+                    <Link href="/Graficos" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Estadísticas</Link>
                     <span className="text-white px-4 font-medium">👋 Hola, {nombreUsuario}</span>
                     <button
                       onClick={() => {
@@ -149,6 +150,7 @@ export default function Navbar() {
                 >
                   Panel de Administración
                 </Link>
+                <span className="text-white px-4 font-medium">👋 Hola, {nombreUsuario}</span>
                 <button
                   onClick={() => {
                     logout();
@@ -166,9 +168,9 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/Buscador" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Buscar Legajo</Link>
-                <Link href="/Graficos" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Graficos</Link>
                 <Link href="/UserForm" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Cargar Legajo</Link>
                 <Link href="/UserList" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Ver Usuarios</Link>
+                <Link href="/Graficos" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Estadísticas</Link>
                 <span className="text-white block px-3 py-2">👋 Hola, {nombreUsuario}</span>
                 <button
                   onClick={() => {

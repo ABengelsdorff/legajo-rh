@@ -6,11 +6,11 @@ import { generarToken } from "../utils/generarToken";
 
 const usuarioRepository = AppDataSource.getRepository(Usuario);
 
-// NO ANOTES COMO `RequestHandler`, usá los tipos normales de Express
+
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { nombreUsuario, contraseña, confirmarContraseña } = req.body;
-    if (!nombreUsuario || !contraseña || !confirmarContraseña) {
+    const { nombreUsuario, contraseña, confirmarContraseña, rol } = req.body;
+    if (!nombreUsuario || !contraseña || !confirmarContraseña || !rol) {
       return res.status(400).json({ message: "Faltan campos requeridos" });
     }
     if (contraseña !== confirmarContraseña) {
@@ -26,7 +26,7 @@ export const registerUser = async (req: Request, res: Response) => {
     const nuevoUsuario = usuarioRepository.create({
       nombreUsuario,
       contraseña: hashedPassword,
-      rol: "USUARIO",
+      rol,
     });
 
     await usuarioRepository.save(nuevoUsuario);
@@ -106,9 +106,9 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     await usuarioRepository.remove(user);
 
-    res.status(200).json({ message: "Usuario eliminado con éxito" });
+    return res.status(200).json({ message: "Usuario eliminado con éxito" });
   } catch (error) {
     console.error("Error al eliminar usuario:", error);
-    res.status(500).json({ message: "Error al eliminar usuario" });
+    return res.status(500).json({ message: "Error al eliminar usuario" });
   }
 };

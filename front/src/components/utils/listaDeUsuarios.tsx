@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { getAllUsers } from "../../services/userServices";
 import type { IUser } from "@/components/interfaces/interfaces";
-import { UserRound, Phone, Mail, ChevronRight } from "lucide-react";
+import { UserRound, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
 
@@ -126,23 +126,21 @@ export default function Users() {
                                   {user.apellido} {user.nombre}, {user.grado}
                                 </h3>
                                 <p className="text-gray-600">
-                                  {user.cargo || "Sin cargo asignado"}
+                                 DESTINADO EN LA UNIDAD: {user.destinadoEnLaUnidad}
                                 </p>
                               </div>
                             </div>
 
                             <div className="flex flex-col sm:flex-row gap-3 sm:items-cente">
-                              {user.numeroDeCelular && (
+                              {user.numeroDeIosfa && (
                                 <div className="flex items-center text-gray-600">
-                                  <Phone className="h-4 w-4 mr-1" />
-                                  <span>{user.numeroDeCelular}</span>
+                                  <span>IOSFA: {user.numeroDeIosfa}</span>
                                 </div>
                               )}
 
-                              {user.correoElectronico && (
+                              {user.especialidad && (
                                 <div className="flex items-center text-gray-600">
-                                  <Mail className="h-4 w-4 mr-1" />
-                                  <span>{user.correoElectronico}</span>
+                                  <span>ESPECIALIDAD: {user.especialidad}</span>
                                 </div>
                               )}
 

@@ -268,23 +268,24 @@ export default function LegajoSearch() {
                           {result.apellido}
                         </p>
                         <p>
-                          <strong>Sexo:</strong> {result.sexo}
+                          <strong>Número de IOSFA:</strong>{" "}
+                          {result.numeroDeIosfa}
                         </p>
                         <p>
-                          <strong>DNI:</strong> {result.numeroDeDni}
+                          <strong>Grado:</strong> {result.grado}
                         </p>
                         <p>
-                          <strong>Correo Electrónico:</strong>{" "}
-                          {result.correoElectronico}
-                        </p>
-                        <p>
-                          <strong>Celular:</strong> {result.numeroDeCelular}
+                          <strong>Cargo:</strong> {result.cargo}
                         </p>
                         <p>
                           <strong>Escalafón:</strong> {result.escalafon}
                         </p>
                         <p>
-                          <strong>Grado:</strong> {result.grado}
+                          <strong>Especialidad:</strong> {result.especialidad}
+                        </p>
+                        <p>
+                          <strong>Especialidad Avanzada:</strong>{" "}
+                          {result.especialidadAvanzada}
                         </p>
                         <p>
                           <strong>Destino:</strong> {result.destinoJbGrupos}
@@ -294,14 +295,13 @@ export default function LegajoSearch() {
                           {result.destinoInterno}
                         </p>
                         <p>
-                          <strong>Cargo:</strong> {result.cargo}
+                          <strong>Celular:</strong> {result.numeroDeCelular}
                         </p>
                         <p>
-                          <strong>Especialidad:</strong> {result.especialidad}
+                          <strong>DNI:</strong> {result.numeroDeDni}
                         </p>
                         <p>
-                          <strong>Especialidad Avanzada:</strong>{" "}
-                          {result.especialidadAvanzada}
+                          <strong>Sexo:</strong> {result.sexo}
                         </p>
                       </div>
                       <div className="mt-4 flex justify-end">

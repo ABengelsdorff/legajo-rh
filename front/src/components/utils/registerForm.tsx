@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -35,12 +35,14 @@ interface IRegisterData {
   nombreUsuario: string;
   contraseña: string;
   confirmarContraseña: string;
+  rol: "ADMIN" | "USUARIO";
 }
 
 interface IUser {
   id: string;
   nombreUsuario: string;
   createdAt: string;
+  rol: "ADMIN" | "USUARIO";
 }
 
 export default function AdminPanel() {
@@ -68,10 +70,11 @@ export default function AdminPanel() {
       nombreUsuario: "",
       contraseña: "",
       confirmarContraseña: "",
+      rol: "USUARIO"
     },
   });
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
@@ -83,11 +86,11 @@ export default function AdminPanel() {
         },
         credentials: "include",
       });
-
+  
       if (!response.ok) {
         throw new Error("Error al obtener usuarios");
       }
-
+  
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -96,11 +99,13 @@ export default function AdminPanel() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [fetchUsers]);
+  
+
 
   const showNotification = (type: "success" | "error", message: string) => {
     setNotification({ type, message });
@@ -378,6 +383,36 @@ export default function AdminPanel() {
                           )}
                         </div>
 
+                        <div>
+  <label
+    htmlFor="rol"
+    className="block text-sm font-medium text-gray-700 mb-1"
+  >
+    Rol del Usuario
+  </label>
+  <Controller
+    name="rol"
+    control={control}
+    defaultValue="USUARIO"
+    rules={{ required: "El rol es requerido" }}
+    render={({ field }) => (
+      <select
+        {...field}
+        id="rol"
+        className="w-full px-4 py-2 rounded-lg border border-gray-300"
+      >
+        <option value="USUARIO">USUARIO</option>
+        <option value="ADMIN">ADMINISTRADOR</option>
+      </select>
+    )}
+  />
+  {errors.rol && (
+    <span className="text-red-600 text-sm">{errors.rol.message}</span>
+  )}
+</div>
+
+
+
                         <Button type="submit" className="w-full">
                           <UserPlus className="mr-2 h-5 w-5" /> Registrar
                           Usuario
@@ -397,11 +432,6 @@ export default function AdminPanel() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    {/* <div className="mb-4">
-                      <Button variant="outline" onClick={fetchUsers} className="flex items-center">
-                        <UserCog className="mr-2 h-4 w-4" /> Actualizar Lista
-                      </Button>
-                    </div> */}
 
                     {loading ? (
                       <div className="text-center py-8">
@@ -417,6 +447,7 @@ export default function AdminPanel() {
                           <TableHeader>
                             <TableRow>
                               <TableHead>Nombre de Usuario</TableHead>
+                              <TableHead>Rol</TableHead>
                               <TableHead className="text-right">
                                 Eliminar
                               </TableHead>
@@ -428,6 +459,7 @@ export default function AdminPanel() {
                                 <TableCell className="font-medium">
                                   {user.nombreUsuario}
                                 </TableCell>
+                                <TableCell>{user.rol}</TableCell>
                                 <TableCell className="text-right">
                                   <Button
                                     size="sm"

@@ -1,7 +1,6 @@
 export const ValidacionLegajo = {
   nombre: {
     required: "El nombre es obligatorio",
-    minLength: { value: 3, message: "Debe tener al menos 3 caracteres" },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
@@ -9,7 +8,6 @@ export const ValidacionLegajo = {
   },
   apellido: {
     required: "El apellido es obligatorio",
-    minLength: { value: 3, message: "Debe tener al menos 3 caracteres" },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ\s]+$/,
       message: "Solo se permiten letras en mayúsculas y espacios",
@@ -49,10 +47,6 @@ export const ValidacionLegajo = {
   },
   direccion: {
     required: "La dirección es obligatoria",
-    minLength: {
-      value: 5,
-      message: "La dirección debe tener al menos 5 caracteres",
-    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
@@ -182,7 +176,6 @@ export const ValidacionLegajo = {
   },
   usuarioGde: {
     required: "El usuario GDE es obligatorio",
-    minLength: { value: 3, message: "Debe tener al menos 3 caracteres" },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
@@ -197,10 +190,6 @@ export const ValidacionLegajo = {
   },
   observaciones: {
     required: "Las observaciones son obligatorias",
-    minLength: {
-      value: 5,
-      message: "Las observaciones deben tener al menos 5 caracteres",
-    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
@@ -217,7 +206,6 @@ export const ValidacionLegajo = {
   },
   numeroDeExpediente: {
     required: "El número de expediente es obligatorio",
-    minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
   },
   afeccion: {
     required: "La afección es obligatoria",
@@ -247,7 +235,6 @@ export const ValidacionLegajo = {
   },
   juntaMedicaMensaje: {
     required: "El mensaje aeronáutico es obligatorio",
-    minLength: { value: 10, message: "Debe tener al menos 10 caracteres" },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
@@ -266,7 +253,6 @@ export const ValidacionLegajo = {
   },
   juntaMedicaObservacion: {
     required: "La observación es obligatoria",
-    minLength: { value: 10, message: "Debe tener al menos 10 caracteres" },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
@@ -283,10 +269,6 @@ export const ValidacionLegajo = {
   },
   solicitudObservaciones: {
     required: "Las observaciones son obligatorias",
-    minLength: {
-      value: 5,
-      message: "Las observaciones deben tener al menos 5 caracteres",
-    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
@@ -295,7 +277,6 @@ export const ValidacionLegajo = {
   },
   solicitudNumeroDeExpediente: {
     required: "El número de expediente es obligatorio",
-    minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
   },
   solicitudDesde: {
     required: "La fecha de inicio de solicitud es obligatoria",
@@ -305,10 +286,6 @@ export const ValidacionLegajo = {
   },
   parteDeEnfermoObservaciones: {
     required: "Las observaciones son obligatorias",
-    minLength: {
-      value: 5,
-      message: "Las observaciones deben tener al menos 5 caracteres",
-    },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
@@ -317,7 +294,6 @@ export const ValidacionLegajo = {
   },
   aptitudPsicofisicaEstado: {
     required: "El estado es obligatorio",
-    minLength: { value: 3, message: "Debe tener al menos 3 caracteres" },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
@@ -326,7 +302,6 @@ export const ValidacionLegajo = {
   },
   aptitudPsicofisicaObservaciones: {
     required: "La observación es obligatoria",
-    minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
       message:
