@@ -7,19 +7,20 @@ import { generarToken } from "../utils/generarToken";
 const usuarioRepository = AppDataSource.getRepository(Usuario);
 
 
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response): Promise<void> => {
+
   try {
     const { nombreUsuario, contraseña, confirmarContraseña, rol } = req.body;
     if (!nombreUsuario || !contraseña || !confirmarContraseña || !rol) {
-      return res.status(400).json({ message: "Faltan campos requeridos" });
+     res.status(400).json({ message: "Faltan campos requeridos" });
     }
     if (contraseña !== confirmarContraseña) {
-      return res.status(400).json({ message: "Las contraseñas no coinciden" });
+       res.status(400).json({ message: "Las contraseñas no coinciden" });
     }
 
     const existingUser = await usuarioRepository.findOne({ where: { nombreUsuario } });
     if (existingUser) {
-      return res.status(400).json({ message: "Ese nombre de usuario ya está en uso" });
+      res.status(400).json({ message: "Ese nombre de usuario ya está en uso" });
     }
 
     const hashedPassword = await bcrypt.hash(contraseña, 10);
@@ -30,16 +31,16 @@ export const registerUser = async (req: Request, res: Response) => {
     });
 
     await usuarioRepository.save(nuevoUsuario);
-    return res.status(201).json({ message: "Usuario creado correctamente" });
+     res.status(201).json({ message: "Usuario creado correctamente" });
 
   } catch (error) {
     console.error("Error al registrar usuario:", error);
-    return res.status(500).json({ message: "Error interno del servidor" });
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 };
 
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { nombreUsuario, contraseña } = req.body;
 
@@ -76,20 +77,20 @@ export const loginUser = async (req: Request, res: Response) => {
 
 
 // Obtener todos los usuarios
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (req: Request, res: Response): Promise<Response> => {
   try {
     // Incluyendo la relación 'grupoFamiliar' en la consulta
     const users = await usuarioRepository.find();
     
-    res.json(users);
+    return res.json(users);
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener usuarios' });
+    return res.status(500).json({ error: 'Error al obtener usuarios' });
   }
 };
 
 
 // Eliminar usuario por ID (solo para admins)
-export const deleteUser = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response): Promise<Response> => {
   try {
     const userId = parseInt(req.params.id, 10);
 

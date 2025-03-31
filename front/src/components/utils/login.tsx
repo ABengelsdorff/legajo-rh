@@ -57,10 +57,9 @@ export default function LoginForm() {
       console.log("Login exitoso:", data);
       setLoginSuccess(true);
 
- // 🔐 Decodificamos el token para saber el rol
- const decodedToken = JSON.parse(atob(data.token.split('.')[1]));
- const userRole = decodedToken.rol;
-
+      // 🔐 Decodificamos el token para saber el rol
+      const decodedToken = JSON.parse(atob(data.token.split(".")[1]));
+      const userRole = decodedToken.rol;
 
       // Redirige después de 2 segundos
       setTimeout(() => {
@@ -81,7 +80,7 @@ export default function LoginForm() {
   return (
     <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12 bg-slate-800">
       <Dialog open={loginSuccess} onOpenChange={setLoginSuccess}>
-        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
+        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent [&>button]:hidden">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
             <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">

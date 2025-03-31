@@ -55,7 +55,9 @@ export default function Navbar() {
                     >
                       Panel de Administración
                     </Link>
-                    <span className="text-white px-4 font-medium">👋 Hola, {nombreUsuario}</span>
+                    <span className="text-white px-4 font-medium">
+                      👋 Hola, {nombreUsuario}
+                    </span>
                     <button
                       onClick={() => {
                         logout();
@@ -72,11 +74,33 @@ export default function Navbar() {
                   </>
                 ) : (
                   <>
-                    <Link href="/Buscador" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Buscar Legajo</Link>
-                    <Link href="/UserForm" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Cargar Legajo</Link>
-                    <Link href="/UserList" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Ver Usuarios</Link>
-                    <Link href="/Graficos" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all">Estadísticas</Link>
-                    <span className="text-white px-4 font-medium">👋 Hola, {nombreUsuario}</span>
+                    <Link
+                      href="/Buscador"
+                      className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                    >
+                      Buscar Legajo
+                    </Link>
+                    <Link
+                      href="/UserForm"
+                      className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                    >
+                      Cargar Legajo
+                    </Link>
+                    <Link
+                      href="/UserList"
+                      className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                    >
+                      Ver Usuarios
+                    </Link>
+                    <Link
+                      href="/Graficos"
+                      className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white px-3 py-2 rounded-md text-base font-medium transition-all"
+                    >
+                      Estadísticas
+                    </Link>
+                    <span className="text-white px-4 font-medium">
+                      👋 Hola, {nombreUsuario}
+                    </span>
                     <button
                       onClick={() => {
                         logout();
@@ -113,7 +137,12 @@ export default function Navbar() {
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               ) : (
                 <svg
@@ -124,7 +153,12 @@ export default function Navbar() {
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               )}
             </button>
@@ -150,7 +184,9 @@ export default function Navbar() {
                 >
                   Panel de Administración
                 </Link>
-                <span className="text-white px-4 font-medium">👋 Hola, {nombreUsuario}</span>
+                <span className="text-white px-4 font-medium">
+                  👋 Hola, {nombreUsuario}
+                </span>
                 <button
                   onClick={() => {
                     logout();
@@ -167,11 +203,33 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/Buscador" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Buscar Legajo</Link>
-                <Link href="/UserForm" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Cargar Legajo</Link>
-                <Link href="/UserList" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Ver Usuarios</Link>
-                <Link href="/Graficos" className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all">Estadísticas</Link>
-                <span className="text-white block px-3 py-2">👋 Hola, {nombreUsuario}</span>
+                <Link
+                  href="/Buscador"
+                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+                >
+                  Buscar Legajo
+                </Link>
+                <Link
+                  href="/UserForm"
+                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+                >
+                  Cargar Legajo
+                </Link>
+                <Link
+                  href="/UserList"
+                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+                >
+                  Ver Usuarios
+                </Link>
+                <Link
+                  href="/Graficos"
+                  className="text-gray-300 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium transition-all"
+                >
+                  Estadísticas
+                </Link>
+                <span className="text-white block px-3 py-2">
+                  👋 Hola, {nombreUsuario}
+                </span>
                 <button
                   onClick={() => {
                     logout();
@@ -192,7 +250,7 @@ export default function Navbar() {
       )}
 
       <Dialog open={logoutSuccess} onOpenChange={setLogoutSuccess}>
-        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
+        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent [&>button]:hidden">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
             <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">

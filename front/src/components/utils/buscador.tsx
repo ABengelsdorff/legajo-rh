@@ -11,24 +11,20 @@ import {
   getUserByCurso,
 } from "../../services/userServices";
 import { IUser } from "@/components/interfaces/interfaces";
-import { Printer, Edit, ChevronRight, X } from "lucide-react";
+import { Printer, Edit, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose,
-  DialogDescription
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { printUser } from "@/components/utils/printUser";
 import UserDetail from "@/components/utils/userDetail";
 import { updateUser } from "../../services/userServices";
-import { Check } from "lucide-react"
+import { Check } from "lucide-react";
 import LegajoProfesional from "./legajoProfesional";
-
-
-
 
 export default function LegajoSearch() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -117,10 +113,12 @@ export default function LegajoSearch() {
 
   useEffect(() => {
     if (isEditMode && editFormRef.current) {
-      editFormRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      editFormRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
   }, [isEditMode]);
-  
 
   return (
     <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12 bg-slate-800">
@@ -333,52 +331,50 @@ export default function LegajoSearch() {
                   : "Información detallada de "}
                 {selectedUser?.nombre} {selectedUser?.apellido}
               </span>
-              <DialogClose asChild>
-                <Button variant="ghost" size="icon">
-                  <X className="h-6 w-6" />
-                </Button>
-              </DialogClose>
             </DialogTitle>
 
-            <DialogDescription>
+            {/* <DialogDescription className="text-base">
     {isEditMode
       ? "Aquí podés editar el legajo del usuario seleccionado."
       : "Vista detallada del legajo profesional."}
-  </DialogDescription>
-
-
+  </DialogDescription> */}
           </DialogHeader>
 
           {selectedUser && (
             <div className="mt-4">
               {isEditMode ? (
                 <div ref={editFormRef}>
-  <LegajoProfesional
-  initialData={selectedUser}
-  onSave={async (updatedUser) => {
-    try {
-      const savedUser = await updateUser(updatedUser.id, updatedUser);
-      setSelectedUser(savedUser);
-      setIsEditMode(false);
+                  <LegajoProfesional
+                    initialData={selectedUser}
+                    onSave={async (updatedUser) => {
+                      try {
+                        const savedUser = await updateUser(
+                          updatedUser.id,
+                          updatedUser
+                        );
+                        setSelectedUser(savedUser);
+                        setIsEditMode(false);
 
-      setSearchResults((prev) =>
-        prev.map((u) => (u.id === savedUser.id ? savedUser : u))
-      );
+                        setSearchResults((prev) =>
+                          prev.map((u) =>
+                            u.id === savedUser.id ? savedUser : u
+                          )
+                        );
 
-      setShowSuccessAlert(true);
-      setTimeout(() => {
-        setShowSuccessAlert(false);
-        setIsDialogOpen(false);
-        setIsEditMode(false);
-        setSelectedUser(null);
-      }, 2000);
-    } catch (error) {
-      console.error("❌ Error al guardar:", error);
-      alert("Ocurrió un error al guardar los cambios.");
-    }
-  }}
-/>
-</div>
+                        setShowSuccessAlert(true);
+                        setTimeout(() => {
+                          setShowSuccessAlert(false);
+                          setIsDialogOpen(false);
+                          setIsEditMode(false);
+                          setSelectedUser(null);
+                        }, 2000);
+                      } catch (error) {
+                        console.error("❌ Error al guardar:", error);
+                        alert("Ocurrió un error al guardar los cambios.");
+                      }
+                    }}
+                  />
+                </div>
               ) : (
                 <UserDetail user={selectedUser} />
               )}
@@ -403,16 +399,12 @@ export default function LegajoSearch() {
             </div>
           )}
         </DialogContent>
-
-
       </Dialog>
       <Dialog open={showSuccessAlert} onOpenChange={setShowSuccessAlert}>
-  <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
-  <div className="relative">
-            {/* Skewed background gradient similar to the user list */}
+        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent [&>button]:hidden">
+          <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
 
-            {/* Main content area */}
             <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">
               <div className="flex flex-col items-center">
                 <div className="mx-auto my-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100">
@@ -424,19 +416,14 @@ export default function LegajoSearch() {
                     Cambios realizados con éxito
                   </DialogTitle>
                   <DialogDescription className="text-center text-gray-600">
-                  Los cambios han sido guardados correctamente en el sistema
+                    Los cambios han sido guardados correctamente en el sistema
                   </DialogDescription>
                 </DialogHeader>
-
-                {/* <p className="text-gray-600 mt-2 mb-6 text-center">
-                  Los cambios han sido guardados correctamente en el sistema
-                </p> */}
               </div>
             </div>
           </div>
-  </DialogContent>
-</Dialog>
-
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

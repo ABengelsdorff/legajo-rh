@@ -1,7 +1,5 @@
 import { Router } from 'express';
 import { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByIosfa, getUserByDni, getUserByApellido, getUserByGrado, getUserByCurso } from "../controllers/userControllers";
-import { verificarToken } from '../middlewares/authMiddlewares';
-import { verificarRolAdmin } from "../middlewares/verificarRolAdmin";
 
 const router = Router();
 

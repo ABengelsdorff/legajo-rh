@@ -70,7 +70,7 @@ export default function AdminPanel() {
       nombreUsuario: "",
       contraseña: "",
       confirmarContraseña: "",
-      rol: "USUARIO"
+      rol: "USUARIO",
     },
   });
 
@@ -86,11 +86,11 @@ export default function AdminPanel() {
         },
         credentials: "include",
       });
-  
+
       if (!response.ok) {
         throw new Error("Error al obtener usuarios");
       }
-  
+
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -104,8 +104,6 @@ export default function AdminPanel() {
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
-  
-
 
   const showNotification = (type: "success" | "error", message: string) => {
     setNotification({ type, message });
@@ -384,34 +382,34 @@ export default function AdminPanel() {
                         </div>
 
                         <div>
-  <label
-    htmlFor="rol"
-    className="block text-sm font-medium text-gray-700 mb-1"
-  >
-    Rol del Usuario
-  </label>
-  <Controller
-    name="rol"
-    control={control}
-    defaultValue="USUARIO"
-    rules={{ required: "El rol es requerido" }}
-    render={({ field }) => (
-      <select
-        {...field}
-        id="rol"
-        className="w-full px-4 py-2 rounded-lg border border-gray-300"
-      >
-        <option value="USUARIO">USUARIO</option>
-        <option value="ADMIN">ADMINISTRADOR</option>
-      </select>
-    )}
-  />
-  {errors.rol && (
-    <span className="text-red-600 text-sm">{errors.rol.message}</span>
-  )}
-</div>
-
-
+                          <label
+                            htmlFor="rol"
+                            className="block text-sm font-medium text-gray-700 mb-1"
+                          >
+                            Rol del Usuario
+                          </label>
+                          <Controller
+                            name="rol"
+                            control={control}
+                            defaultValue="USUARIO"
+                            rules={{ required: "El rol es requerido" }}
+                            render={({ field }) => (
+                              <select
+                                {...field}
+                                id="rol"
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300"
+                              >
+                                <option value="USUARIO">USUARIO</option>
+                                <option value="ADMIN">ADMINISTRADOR</option>
+                              </select>
+                            )}
+                          />
+                          {errors.rol && (
+                            <span className="text-red-600 text-sm">
+                              {errors.rol.message}
+                            </span>
+                          )}
+                        </div>
 
                         <Button type="submit" className="w-full">
                           <UserPlus className="mr-2 h-5 w-5" /> Registrar
@@ -432,7 +430,6 @@ export default function AdminPanel() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-
                     {loading ? (
                       <div className="text-center py-8">
                         Cargando usuarios...
@@ -483,7 +480,7 @@ export default function AdminPanel() {
       </div>
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
+        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent [&>button]:hidden">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
             <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">
@@ -525,7 +522,7 @@ export default function AdminPanel() {
       </Dialog>
 
       <Dialog open={registerSuccess} onOpenChange={setRegisterSuccess}>
-        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
+        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent [&>button]:hidden">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
             <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">
@@ -545,7 +542,7 @@ export default function AdminPanel() {
       </Dialog>
 
       <Dialog open={deleteSuccess} onOpenChange={setDeleteSuccess}>
-        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent">
+        <DialogContent className="max-w-md p-0 overflow-hidden border-none shadow-lg bg-transparent [&>button]:hidden">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-300 to-blue-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
             <div className="relative bg-stone-100 shadow-lg rounded-3xl p-8">

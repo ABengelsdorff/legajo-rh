@@ -11,7 +11,7 @@ interface DecodedToken {
 export function useAuth() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [rol, setRol] = useState("");
-  const [nombreUsuario, setNombreUsuario] = useState("")
+  const [nombreUsuario, setNombreUsuario] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,12 +21,12 @@ export function useAuth() {
         const decoded = jwtDecode<DecodedToken>(token);
         setIsAuthenticated(true);
         setRol(decoded.rol || "");
-        setNombreUsuario(decoded.nombreUsuario || "")
+        setNombreUsuario(decoded.nombreUsuario || "");
       } catch (e) {
         console.error("Token inválido", e);
         setIsAuthenticated(false);
         setRol("");
-        setNombreUsuario("")
+        setNombreUsuario("");
       }
     }
     setLoading(false); // 👈 ya terminó de verificar
@@ -36,8 +36,7 @@ export function useAuth() {
     localStorage.removeItem("token");
     setIsAuthenticated(false);
     setRol("");
-    setNombreUsuario("")
-    
+    setNombreUsuario("");
   };
 
   return { isAuthenticated, rol, nombreUsuario, loading, logout };

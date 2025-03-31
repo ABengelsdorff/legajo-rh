@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 
-export function verificarRolAdmin(req: Request, res: Response, next: NextFunction) {
+export function verificarRolAdmin(req: Request, res: Response, next: NextFunction): void | Response {
   if (!req.usuario || req.usuario.rol !== "ADMIN") {
-    return res.status(403).json({ message: "Acceso denegado: se requiere rol de administrador" });
+   res.status(403).json({ message: "Acceso denegado: se requiere rol de administrador" });
+   return 
   }
 
-  return next();
+  next();
 }
