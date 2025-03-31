@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { AppDataSource } from '../data-source';
 import { User } from '../entities/User';
 import { ILike } from 'typeorm';
+import { In } from "typeorm";
+import { quitarTildes } from '../utils/removeAccents';
 
 const userRepository = AppDataSource.getRepository(User);
 
@@ -117,17 +119,33 @@ export const getUserByDni = async (req: Request, res: Response) => {
 export const getUserByApellido = async (req: Request, res: Response) => {
   try {
     const { apellido } = req.params;
-    const users = await userRepository.find({
-      where: { apellido: ILike(`%${apellido}%`) },
-      relations: ['grupoFamiliar', 'actuaciones', 'solicitudes', 'juntaMedica', 'parteDeEnfermo', 'aptitudPsicofisica', 'cursosRealizados'],
+    const apellidoNormalizado = quitarTildes(apellido.toLowerCase());
+
+    // Obtener todos los usuarios (con relaciones necesarias)
+    const allUsers = await userRepository.find({
+      relations: [
+        "grupoFamiliar",
+        "actuaciones",
+        "solicitudes",
+        "juntaMedica",
+        "parteDeEnfermo",
+        "aptitudPsicofisica",
+        "cursosRealizados",
+      ],
     });
-    if (users.length > 0) {
-      res.json(users);
+
+    // Filtrar comparando sin tildes
+    const filtered = allUsers.filter((user) =>
+      quitarTildes(user.apellido.toLowerCase()).includes(apellidoNormalizado)
+    );
+
+    if (filtered.length > 0) {
+      res.json(filtered);
     } else {
-      res.status(404).json({ message: 'Usuario no encontrado' });
+      res.status(404).json({ message: "Usuario no encontrado" });
     }
   } catch (error) {
-    res.status(500).json({ error: 'Error al obtener el usuario' });
+    res.status(500).json({ error: "Error al obtener el usuario" });
   }
 };
 
@@ -152,17 +170,29 @@ export const getUserByCurso = async (req: Request, res: Response) => {
   try {
     const { curso } = req.params;
 
-    const users = await userRepository
+    // Obtener usuarios que tienen un curso que coincida
+    const usuariosConCurso = await userRepository
       .createQueryBuilder("user")
-      .leftJoinAndSelect("user.cursosRealizados", "curso")
-      .leftJoinAndSelect("user.grupoFamiliar", "grupoFamiliar")
-      .leftJoinAndSelect("user.actuaciones", "actuaciones")
-      .leftJoinAndSelect("user.solicitudes", "solicitudes")
-      .leftJoinAndSelect("user.juntaMedica", "juntaMedica")
-      .leftJoinAndSelect("user.parteDeEnfermo", "parteDeEnfermo")
-      .leftJoinAndSelect("user.aptitudPsicofisica", "aptitudPsicofisica")
+      .leftJoin("user.cursosRealizados", "curso")
       .where("LOWER(curso.nombre) LIKE :nombre", { nombre: `%${curso.toLowerCase()}%` })
+      .select(["user.id"])
       .getMany();
+
+    const ids = usuariosConCurso.map(u => u.id);
+
+    // Traer usuarios completos por ID, con TODAS las relaciones
+    const users = await userRepository.find({
+      where: { id: In(ids) },
+      relations: [
+        "grupoFamiliar",
+        "actuaciones",
+        "solicitudes",
+        "juntaMedica",
+        "parteDeEnfermo",
+        "aptitudPsicofisica",
+        "cursosRealizados"
+      ],
+    });
 
     if (users.length > 0) {
       res.json(users);

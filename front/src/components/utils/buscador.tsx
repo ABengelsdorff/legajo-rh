@@ -333,11 +333,6 @@ export default function LegajoSearch() {
               </span>
             </DialogTitle>
 
-            {/* <DialogDescription className="text-base">
-    {isEditMode
-      ? "Aquí podés editar el legajo del usuario seleccionado."
-      : "Vista detallada del legajo profesional."}
-  </DialogDescription> */}
           </DialogHeader>
 
           {selectedUser && (
