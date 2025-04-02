@@ -34,18 +34,42 @@ export const getUserById = async (req: Request, res: Response) => {
   }
 };
 
+
+
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { id, ...userData } = req.body;
-    
-    const newUser = userRepository.create(req.body);
+
+    // Crear el usuario incluyendo las relaciones
+    const newUser = userRepository.create({
+      ...userData,
+      grupoFamiliar: userData.grupoFamiliar || [],
+      actuaciones: userData.actuaciones || [],
+      solicitudes: userData.solicitudes || [],
+      juntaMedica: userData.juntaMedica || [],
+      parteDeEnfermo: userData.parteDeEnfermo || [],
+      aptitudPsicofisica: userData.aptitudPsicofisica || null,
+      cursosRealizados: userData.cursosRealizados || [],
+    });
+
     const result = await userRepository.save(newUser);
+
+    console.log("📩 Datos recibidos:", req.body);
+
+    
     res.status(201).json(result);
   } catch (error) {
     console.error("❌ Error al crear el usuario:", error);
-    res.status(500).json({ error: 'Error al crear el usuario' });
+    res.status(500).json({ error: 'Error al crear el usuario', detalles: error });
   }
 };
+
+
+
+
+
+
+
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
