@@ -1,9 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 
-export function verificarRolAdmin(req: Request, res: Response, next: NextFunction): void | Response {
+export async function verificarRolAdmin(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   if (!req.usuario || req.usuario.rol !== "ADMIN") {
-   res.status(403).json({ message: "Acceso denegado: se requiere rol de administrador" });
-   return 
+    res.status(403).json({ message: "Acceso denegado: se requiere rol de administrador" });
+    return;
   }
 
   next();
