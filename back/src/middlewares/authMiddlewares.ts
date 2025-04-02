@@ -8,16 +8,17 @@ declare global {
     }
   }
 }
-export function verificarToken(
+
+export async function verificarToken(
   req: Request,
   res: Response,
   next: NextFunction
-): void  {
+): Promise<void> {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-     res.status(401).json({ message: "Token no proporcionado" });
-     return
+    res.status(401).json({ message: "Token no proporcionado" });
+    return;
   }
 
   const token = authHeader.split(" ")[1];
@@ -25,8 +26,8 @@ export function verificarToken(
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || "secreto123");
     req.usuario = decoded;
-   next(); // esto sigue siendo void, así que está bien
+    next();
   } catch (error) {
-   res.status(401).json({ message: "Token inválido o expirado" });
+    res.status(401).json({ message: "Token inválido o expirado" });
   }
 }
