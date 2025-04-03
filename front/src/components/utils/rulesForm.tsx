@@ -56,8 +56,8 @@ export const ValidacionLegajo = {
   codigoPostal: {
     required: "El código postal es obligatorio",
     pattern: {
-      value: /^[0-9]{4}$/, // Formato de código postal argentino (4 dígitos)
-      message: "El código postal debe ser un número de 4 dígitos",
+      value: /^[A-Za-z0-9]{4,8}$/,
+      message: "Debe tener entre 4 y 8 caracteres alfanuméricos",
     },
   },
   correoElectronico: {
@@ -320,3 +320,4 @@ export const ValidacionLegajo = {
     required: "Debe indicar si hay foto de legajo",
   },
 };
+

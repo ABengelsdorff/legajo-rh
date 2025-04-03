@@ -22,6 +22,7 @@ import { Filter } from "lucide-react";
 export default function EstadisticasPersonal() {
   const [usuarios, setUsuarios] = useState<IUser[]>([]);
   const [filteredUsuarios, setFilteredUsuarios] = useState<IUser[]>([]);
+  const [destinadoEnUnidad, setDestinadoEnUnidad] = useState<string>("SI");
   const [selectedDestino, setSelectedDestino] = useState<string>("TODOS");
   const [destinos, setDestinos] = useState<string[]>([]);
   const [selectedEstadistica, setSelectedEstadistica] =
@@ -44,18 +45,14 @@ export default function EstadisticasPersonal() {
       try {
         const users = await getAllUsers();
 
-        const destinados = users.filter(
-          (user) => user.destinadoEnLaUnidad === "SI"
-        );
-
-        setUsuarios(destinados);
-        setFilteredUsuarios(destinados);
+        setUsuarios(users);
 
         const uniqueDestinos = Array.from(
           new Set(
-            destinados.map((user) => user.destinoJbGrupos || "No especificado")
+            users.map((user) => user.destinoJbGrupos || "No especificado")
           )
         );
+
         setDestinos(uniqueDestinos);
       } catch (err) {
         console.error("Error:", err);
@@ -66,14 +63,15 @@ export default function EstadisticasPersonal() {
   }, []);
 
   useEffect(() => {
-    if (selectedDestino === "TODOS") {
-      setFilteredUsuarios(usuarios);
-    } else {
-      setFilteredUsuarios(
-        usuarios.filter((user) => user.destinoJbGrupos === selectedDestino)
-      );
-    }
-  }, [selectedDestino, usuarios]);
+    const filtrados = usuarios.filter((user) => {
+      const coincideDestino =
+        selectedDestino === "TODOS" || user.destinoJbGrupos === selectedDestino;
+      const coincideUnidad = user.destinadoEnLaUnidad === destinadoEnUnidad;
+      return coincideDestino && coincideUnidad;
+    });
+
+    setFilteredUsuarios(filtrados);
+  }, [usuarios, selectedDestino, destinadoEnUnidad]);
 
   const agruparPorCampo = (usuarios: IUser[], campo: keyof IUser) => {
     const conteo: Record<string, number> = {};
@@ -123,6 +121,7 @@ export default function EstadisticasPersonal() {
     formacionAcademica: "FORMACIÓN ACADÉMICA",
     destinadoEnLaUnidad: "DESTINADO EN LA UNIDAD",
     cursosRealizados: "CURSOS REALIZADOS",
+    nivelDeIngles: "NIVEL DE INGLES",
   };
 
   const datos = {
@@ -142,6 +141,7 @@ export default function EstadisticasPersonal() {
       "destinadoEnLaUnidad"
     ),
     cursosRealizados: agruparCursosRealizados(filteredUsuarios),
+    nivelDeIngles: agruparPorCampo(filteredUsuarios, "nivelDeIngles"),
   };
 
   const renderDonutChart = (data: ChartDataItem[], title: string) => {
@@ -229,7 +229,9 @@ export default function EstadisticasPersonal() {
         <div className="relative bg-stone-100 shadow-lg sm:rounded-3xl sm:p-10">
           <div className="text-center mb-4">
             <h1 className="text-3xl font-extrabold text-gray-900">
-              Estadísticas del Personal Destinado en la Unidad
+              Estadísticas del Personal{" "}
+              {destinadoEnUnidad === "SI" ? "Destinado" : "NO Destinado"} en la
+              Unidad
             </h1>
           </div>
 
@@ -239,6 +241,28 @@ export default function EstadisticasPersonal() {
                 <Filter size={18} />
                 <h2 className="text-lg">Filtros</h2>
               </div>
+
+              <div>
+                <label
+                  htmlFor="destinado-filter"
+                  className="block text-lg font-medium text-gray-700 mb-1"
+                >
+                  Destinado en la unidad
+                </label>
+                <Select
+                  value={destinadoEnUnidad}
+                  onValueChange={(value) => setDestinadoEnUnidad(value)}
+                >
+                  <SelectTrigger className="w-full bg-blue-50 border-blue-200">
+                    <SelectValue placeholder="Seleccionar opción" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="SI">SI</SelectItem>
+                    <SelectItem value="NO">NO</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="space-y-4">
                 <div>
                   <label
@@ -315,3 +339,4 @@ export default function EstadisticasPersonal() {
     </div>
   );
 }
+
