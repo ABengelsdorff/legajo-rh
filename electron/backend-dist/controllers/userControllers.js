@@ -60,13 +60,15 @@ exports.getUserById = getUserById;
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const _a = req.body, { id } = _a, userData = __rest(_a, ["id"]);
-        const newUser = userRepository.create(req.body);
+        // Crear el usuario incluyendo las relaciones
+        const newUser = userRepository.create(Object.assign(Object.assign({}, userData), { grupoFamiliar: userData.grupoFamiliar || [], actuaciones: userData.actuaciones || [], solicitudes: userData.solicitudes || [], juntaMedica: userData.juntaMedica || [], parteDeEnfermo: userData.parteDeEnfermo || [], aptitudPsicofisica: userData.aptitudPsicofisica || null, cursosRealizados: userData.cursosRealizados || [] }));
         const result = yield userRepository.save(newUser);
+        console.log("📩 Datos recibidos:", req.body);
         res.status(201).json(result);
     }
     catch (error) {
         console.error("❌ Error al crear el usuario:", error);
-        res.status(500).json({ error: 'Error al crear el usuario' });
+        res.status(500).json({ error: 'Error al crear el usuario', detalles: error });
     }
 });
 exports.createUser = createUser;

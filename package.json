@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "description": "Aplicación de escritorio para gestión de legajos",
   "main": "dist-electron/main.js",
-  "author": "Tu Nombre",
+  "author": "Sandoval Angel",
   "license": "MIT",
-"scripts": {
-  "copy-backend": "xcopy /E /I /Y back\\dist electron\\backend-dist",
-  "build": "npm --prefix front run build && npm run build:electron && npm run copy-backend && electron-builder",
-  "build:electron": "tsc -p tsconfig.electron.json",
-  "start:electron": "electron dist-electron/main.js",
-  "dev": "npm run build:electron && npm run start:electron"
-},
+  "scripts": {
+    "copy-backend": "xcopy /E /I /Y back\\dist electron\\backend-dist && xcopy /E /I /Y back\\node_modules electron\\backend-dist\\node_modules",
+    "build": "npm --prefix front run build && npm --prefix back run build && npm run build:electron && npm run copy-backend && npm run rebuild && electron-builder",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "start:electron": "electron dist-electron/main.js",
+    "dev": "npm run build:electron && npm run start:electron"
+  },
   "build": {
     "appId": "com.legajo.app",
     "productName": "Legajo",
@@ -19,13 +20,16 @@
       "buildResources": "assets",
       "output": "dist"
     },
-   "files": [
-  "dist-electron/**/*",
-  "electron/backend-dist/**/*",
-  "front/out/**/*",
-  "database.sqlite"
-],
-
+    "files": [
+      "dist-electron/**/*",
+      "electron/backend-dist/**/*",
+      "front/out/**/*",
+      "database.sqlite",
+      {
+        "from": "back/node_modules",
+        "to": "electron/backend-dist/node_modules"
+      }
+    ],
     "extraMetadata": {
       "main": "dist-electron/main.js"
     },
@@ -41,6 +45,7 @@
     "cacheable-lookup": "^5.0.4",
     "cacheable-request": "^7.0.4",
     "clone-response": "^1.0.3",
+    "cors": "^2.8.5",
     "debug": "^4.4.0",
     "decompress-response": "^6.0.0",
     "defer-to-connect": "^2.0.1",
@@ -53,7 +58,7 @@
     "es-errors": "^1.3.0",
     "es6-error": "^4.1.1",
     "escape-string-regexp": "^4.0.0",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "extract-zip": "^2.0.1",
     "fd-slicer": "^1.1.0",
     "fs-extra": "^8.1.0",
@@ -100,6 +105,7 @@
     "@types/express": "^5.0.1",
     "electron": "^35.1.2",
     "electron-builder": "^26.0.12",
+    "electron-rebuild": "^3.2.9",
     "typescript": "^5.3.3"
   }
 }

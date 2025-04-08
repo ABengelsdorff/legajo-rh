@@ -47,7 +47,7 @@ const Usuario_1 = require("../entities/Usuario");
 const path = __importStar(require("path"));
 exports.AppDataSource = new typeorm_1.DataSource({
     type: "sqlite",
-    database: path.join(__dirname, "..", "database.sqlite"),
+    database: path.join(__dirname, '../../database.sqlite'),
     synchronize: true, // Crea tablas automáticamente (desactivar para produccion)  
     // compara las entidades definidas en el código con la base de datos y realiza los cambios necesarios para que coincidan
     logging: true,

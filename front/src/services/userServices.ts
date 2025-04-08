@@ -1,6 +1,22 @@
-import { IUser } from "../components/interfaces/interfaces"; 
+import { IUser } from "../components/interfaces/interfaces";
 
-const API_URL = 'http://localhost:3001'; 
+// Detecta si estás en Electron
+declare global {
+  interface Window {
+    process?: {
+      type?: string;
+    };
+  }
+}
+
+const isElectron = Boolean(
+  typeof process !== "undefined" &&
+  process.versions &&
+  process.versions.electron
+);
+
+// Si estás en Electron, usá rutas relativas. Si no, usá el backend local (desarrollo).
+const API_URL = isElectron ? "" : "http://localhost:3001";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
@@ -21,7 +37,6 @@ export const getAllUsers = async (): Promise<IUser[]> => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const getUserById = async (id: number): Promise<IUser> => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     headers: getAuthHeaders(),
@@ -31,7 +46,6 @@ export const getUserById = async (id: number): Promise<IUser> => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const getUserByIosfa = async (iosfa: number): Promise<IUser> => {
   const response = await fetch(`${API_URL}/users/iosfa/${iosfa}`, {
     headers: getAuthHeaders(),
@@ -41,7 +55,6 @@ export const getUserByIosfa = async (iosfa: number): Promise<IUser> => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const getUserByDni = async (dni: number): Promise<IUser> => {
   const response = await fetch(`${API_URL}/users/dni/${dni}`, {
     headers: getAuthHeaders(),
@@ -51,7 +64,6 @@ export const getUserByDni = async (dni: number): Promise<IUser> => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const getUserByApellido = async (apellido: string): Promise<IUser[]> => {
   const response = await fetch(`${API_URL}/users/apellido/${apellido}`, {
     headers: getAuthHeaders(),
@@ -61,7 +73,6 @@ export const getUserByApellido = async (apellido: string): Promise<IUser[]> => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const getUserByGrado = async (grado: string): Promise<IUser[]> => {
   const response = await fetch(`${API_URL}/users/grado/${grado}`, {
     headers: getAuthHeaders(),
@@ -71,7 +82,6 @@ export const getUserByGrado = async (grado: string): Promise<IUser[]> => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const getUserByCurso = async (curso: string): Promise<IUser[]> => {
   const response = await fetch(`${API_URL}/users/curso/${curso}`, {
     headers: getAuthHeaders(),
@@ -81,7 +91,6 @@ export const getUserByCurso = async (curso: string): Promise<IUser[]> => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const createUser = async (userData: IUser) => {
   const response = await fetch(`${API_URL}/users`, {
     method: "POST",
@@ -93,7 +102,6 @@ export const createUser = async (userData: IUser) => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const updateUser = async (id: number, userData: IUser) => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     method: "PUT",
@@ -105,7 +113,6 @@ export const updateUser = async (id: number, userData: IUser) => {
   return response.json();
 };
 
-// 🔐 PROTEGIDA
 export const deleteUser = async (id: number) => {
   const response = await fetch(`${API_URL}/users/${id}`, {
     method: "DELETE",
