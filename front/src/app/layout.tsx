@@ -15,12 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <head>
+      {/* <head>
         <link
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
           rel="stylesheet"
         />
-      </head>
+      </head> */}
       <body className="font-sans antialiased">
         <AuthProvider>
           <Navbar />
