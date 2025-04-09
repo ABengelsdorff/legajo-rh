@@ -1405,12 +1405,12 @@ export default function LegajoProfesional({
                               className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             >
                               <option value="">Seleccionar...</option>
-                              <option value="CONYUGUE">Cónyuge</option>
-                              <option value="MADRE">Madre</option>
-                              <option value="PADRE">Padre</option>
-                              <option value="HIJO">Hijo</option>
-                              <option value="HIJA">Hija</option>
-                              <option value="OTRO">Otro</option>
+                              <option value="CONYUGUE">CÓNYUGUE</option>
+                              <option value="MADRE">MADRE</option>
+                              <option value="PADRE">PADRE</option>
+                              <option value="HIJO">HIJO</option>
+                              <option value="HIJA">HIJA</option>
+                              <option value="OTRO">OTRO</option>
                             </select>
                           </div>
                         )}

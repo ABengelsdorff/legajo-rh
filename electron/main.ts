@@ -4,7 +4,6 @@ import { spawn } from "child_process";
 import express from "express";
 
 let mainWindow: BrowserWindow | null = null;
-let expressServerStarted = false; // 🔐 para evitar múltiples servidores
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -37,9 +36,9 @@ function startFrontendStaticServer() {
 
   const backend = spawn("node", [backendPath], {
     cwd: path.dirname(backendPath),
-    stdio: "ignore",
-    detached: true,
-    windowsHide: true,
+    stdio: "inherit",
+     detached: true,
+     windowsHide: true,
   });
   backend.unref(); // 🔥 clave para que no lo cierre al cerrar Electron
   

@@ -78,12 +78,14 @@ export default function Users() {
               </div>
               <div className="mt-4 sm:mt-0">
                 <button
-                  onClick={() =>
-                    window.open(
-                      "http://localhost:3001/users/export/excel",
-                      "_blank"
-                    )
-                  }
+                  onClick={() => {
+                    const link = document.createElement("a");
+                    link.href = "http://localhost:3001/users/export/excel";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  
                   className="flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-sm hover:from-blue-700 hover:to-blue-600 transition-all ml-auto"
                 >
                   Exportar a Excel

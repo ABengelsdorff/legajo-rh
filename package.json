@@ -6,13 +6,16 @@
   "author": "Sandoval Angel",
   "license": "MIT",
   "scripts": {
-    "copy-backend": "xcopy /E /I /Y back\\dist electron\\backend-dist && xcopy /E /I /Y back\\node_modules electron\\backend-dist\\node_modules",
-    "build": "npm --prefix front run build && npm --prefix back run build && npm run build:electron && npm run copy-backend && npm run rebuild && electron-builder",
-    "build:electron": "tsc -p tsconfig.electron.json",
-    "rebuild": "electron-rebuild -f -w sqlite3",
-    "start:electron": "electron dist-electron/main.js",
-    "dev": "npm run build:electron && npm run start:electron"
-  },
+  "clean": "rimraf dist dist-electron electron/backend-dist front/out back/dist",
+  "copy-backend": "xcopy /E /I /Y back\\dist electron\\backend-dist && xcopy /E /I /Y back\\node_modules electron\\backend-dist\\node_modules",
+  "build:front": "npm --prefix front run build",
+  "build:back": "npm --prefix back run build",
+  "build:electron": "tsc -p tsconfig.electron.json",
+  "rebuild": "electron-rebuild -f -w sqlite3",
+  "start:electron": "electron dist-electron/main.js",
+  "dev": "npm run build:electron && npm run start:electron",
+  "build": "npm run clean && npm run build:front && npm run build:back && npm run build:electron && npm run copy-backend && npm run rebuild && electron-builder"
+},
   "build": {
     "appId": "com.legajo.app",
     "productName": "Legajo",
@@ -106,6 +109,7 @@
     "electron": "^35.1.2",
     "electron-builder": "^26.0.12",
     "electron-rebuild": "^3.2.9",
+    "rimraf": "^6.0.1",
     "typescript": "^5.3.3"
   }
 }

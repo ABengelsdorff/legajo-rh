@@ -15,7 +15,7 @@ export const AppDataSource = new DataSource({
   type: "sqlite",
   database: path.join(__dirname, '../../database.sqlite'),
 
-  synchronize: false, // Crea tablas automáticamente (desactivar para produccion)  
+  synchronize: true, // Crea tablas automáticamente (desactivar para produccion)  
   // compara las entidades definidas en el código con la base de datos y realiza los cambios necesarios para que coincidan
   logging: true,
   entities: [ User, Usuario, 

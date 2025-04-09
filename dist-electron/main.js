@@ -41,7 +41,6 @@ const path = __importStar(require("path"));
 const child_process_1 = require("child_process");
 const express_1 = __importDefault(require("express"));
 let mainWindow = null;
-let expressServerStarted = false; // 🔐 para evitar múltiples servidores
 function createWindow() {
     mainWindow = new electron_1.BrowserWindow({
         width: 1280,
@@ -54,9 +53,8 @@ function createWindow() {
     mainWindow.loadURL("http://localhost:3000");
 }
 function startFrontendStaticServer() {
-    if (expressServerStarted)
-        return; // ✅ evita múltiples instancias
-    expressServerStarted = true;
+    // if (expressServerStarted) return; // ✅ evita múltiples instancias
+    // expressServerStarted = true;
     const appExpress = (0, express_1.default)();
     const frontendPath = path.join(__dirname, "..", "front", "out");
     appExpress.use(express_1.default.static(frontendPath));
@@ -66,20 +64,20 @@ function startFrontendStaticServer() {
 }
 function startBackend() {
     const backendPath = path.join(__dirname, "..", "electron", "backend-dist", "server.js");
-    //   const backend = spawn("node", [backendPath], {
-    //     cwd: path.dirname(backendPath),
-    //     stdio: "ignore",
-    //     detached: true,
-    //     windowsHide: true,
-    //   });
-    //   backend.unref(); // 🔥 clave para que no lo cierre al cerrar Electron
-    const backend = (0, child_process_1.spawn)(process.execPath, [backendPath], {
+    const backend = (0, child_process_1.spawn)("node", [backendPath], {
         cwd: path.dirname(backendPath),
-        stdio: "ignore",
+        stdio: "inherit",
         detached: true,
         windowsHide: true,
     });
-    backend.unref();
+    backend.unref(); // 🔥 clave para que no lo cierre al cerrar Electron
+    // const backend = spawn(process.execPath, [backendPath], {
+    //   cwd: path.dirname(backendPath),
+    //   stdio: "ignore",
+    //   detached: true,
+    //   windowsHide: true,
+    // });
+    // backend.unref();
     backend.stderr?.on("data", (data) => {
         console.error(`🛑 Backend error: ${data}`);
     });

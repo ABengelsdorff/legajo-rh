@@ -14,5 +14,6 @@ router.get('/', userControllers_1.getAllUsers);
 router.get('/:id', userControllers_1.getUserById);
 router.post('/', userControllers_1.createUser);
 router.put('/:id', userControllers_1.updateUser);
+router.get("/export/excel", userControllers_1.exportarUsuariosExcel);
 // router.delete('/:id', verificarRolAdmin, deleteUser); // Solo ADMIN puede borrar  
 exports.default = router;
