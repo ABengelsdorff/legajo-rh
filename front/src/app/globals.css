@@ -81,6 +81,16 @@
   }
 }
 
+@media print {
+  .pdf-page-break-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    display: block;
+  }
+}
+
+
+
 @layer base {
   * {
     @apply border-border;

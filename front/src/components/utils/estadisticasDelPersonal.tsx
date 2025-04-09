@@ -18,6 +18,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Filter } from "lucide-react";
+import { toPng } from "html-to-image";
+import { useRef } from "react";
 
 export default function EstadisticasPersonal() {
   const [usuarios, setUsuarios] = useState<IUser[]>([]);
@@ -39,6 +41,7 @@ export default function EstadisticasPersonal() {
     "#00B894",
     "#FAB1A0",
   ];
+  const chartRef = useRef(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -146,79 +149,81 @@ export default function EstadisticasPersonal() {
 
   const renderDonutChart = (data: ChartDataItem[], title: string) => {
     return (
-      <Card className="w-full">
-        <CardHeader className="mb-1 pb-1 pt-2">
-          <CardTitle className="text-xl">
-            {selectedDestino !== "TODOS" ? (
-              <>
-                Distribución del personal de{" "}
-                <span className="text-blue-700 font-semibold">
-                  {selectedDestino}
-                </span>{" "}
-                según{" "}
-                <span className="text-blue-700 font-semibold">{title}</span>
-              </>
-            ) : (
-              <>
-                Distribución del personal según{" "}
-                <span className="text-blue-700 font-semibold">{title}</span>
-              </>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="">
-          <div className="h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px]">
-            <ChartContainer
-              config={data.reduce(
-                (
-                  acc: Record<string, { label: string; color: string }>,
-                  item: ChartDataItem
-                ) => {
-                  acc[item.name] = {
-                    label: item.name,
-                    color: item.color,
-                  };
-                  return acc;
-                },
-                {}
+      <div ref={chartRef}>
+        <Card className="w-full">
+          <CardHeader className="mb-1 pb-1 pt-2">
+            <CardTitle className="text-xl justify-center text-center">
+              {selectedDestino !== "TODOS" ? (
+                <>
+                  Distribución del personal de{" "}
+                  <span className="text-blue-700 font-semibold">
+                    {selectedDestino}
+                  </span>{" "}
+                  según{" "}
+                  <span className="text-blue-700 font-semibold">{title}</span>
+                </>
+              ) : (
+                <>
+                  Distribución del personal según{" "}
+                  <span className="text-blue-700 font-semibold">{title}</span>
+                </>
               )}
-            >
-              <PieChart>
-                <Pie
-                  data={data}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius="50%"
-                  outerRadius="78%"
-                  paddingAngle={2}
-                  dataKey="value"
-                  nameKey="name"
-                  labelLine={false}
-                >
-                  {data.map((entry, index: number) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <ChartTooltip content={<ChartTooltipContent />} />
-              </PieChart>
-            </ChartContainer>
-          </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="">
+            <div className="h-[250px] sm:h-[300px] md:h-[400px] lg:h-[500px]">
+              <ChartContainer
+                config={data.reduce(
+                  (
+                    acc: Record<string, { label: string; color: string }>,
+                    item: ChartDataItem
+                  ) => {
+                    acc[item.name] = {
+                      label: item.name,
+                      color: item.color,
+                    };
+                    return acc;
+                  },
+                  {}
+                )}
+              >
+                <PieChart>
+                  <Pie
+                    data={data}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius="50%"
+                    outerRadius="78%"
+                    paddingAngle={2}
+                    dataKey="value"
+                    nameKey="name"
+                    labelLine={false}
+                  >
+                    {data.map((entry, index: number) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                </PieChart>
+              </ChartContainer>
+            </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-            {data.map((item: ChartDataItem, index: number) => (
-              <div key={index} className="flex items-center">
-                <div
-                  className="mr-5 h-5 w-5 rounded-full"
-                  style={{ backgroundColor: item.color }}
-                />
-                <span className="text-xl text-muted-foreground">
-                  {item.name}: {item.value}
-                </span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-3">
+              {data.map((item: ChartDataItem, index: number) => (
+                <div key={index} className="flex items-center gap-2">
+                  <div
+                    className="h-4 w-4 min-w-[16px] rounded-full"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-base text-muted-foreground break-words ">
+                    {item.name}: {item.value}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   };
 
@@ -314,7 +319,7 @@ export default function EstadisticasPersonal() {
                 </div>
 
                 <div className="pt-2 border-t border-gray-200">
-                  <p className="text-lg text-gray-500 mb-2">Estadísticas:</p>
+                  <p className="text-lg text-gray-500 mb-2">Estadísticas de:</p>
                   <div className="bg-blue-50 text-blue-800 px-3 py-2 rounded-md font-medium text-sm">
                     {selectedDestino === "TODOS"
                       ? "Todos los destinos"
@@ -323,6 +328,41 @@ export default function EstadisticasPersonal() {
                   <p className="text-lg text-blue-700 font-semibold mt-3 ">
                     Total de personal: {filteredUsuarios.length}
                   </p>
+
+                  {/*funcion para descargar el gráfico como imagen*/}
+                  <button
+                    onClick={() => {
+                      if (!chartRef.current) return;
+                      toPng(chartRef.current, {
+                        cacheBust: true,
+                        filter: (node) => {
+                          return !(
+                            node instanceof HTMLLinkElement &&
+                            node.rel === "stylesheet"
+                          );
+                        },
+                      })
+                        .then((dataUrl) => {
+                          const destinoActual = selectedDestino
+                            .replace(/\s+/g, "-")
+                            .toLowerCase();
+                          const estadisticaActual = selectedEstadistica
+                            .replace(/\s+/g, "-")
+                            .toLowerCase();
+
+                          const link = document.createElement("a");
+                          link.download = `estadistica-${destinoActual}-${estadisticaActual}.png`;
+                          link.href = dataUrl;
+                          link.click();
+                        })
+                        .catch((err) => {
+                          console.error("Error al generar imagen:", err);
+                        });
+                    }}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-sm hover:from-blue-700 hover:to-blue-600 transition-all mt-4"
+                  >
+                    Descargar Gráfico
+                  </button>
                 </div>
               </div>
             </div>
@@ -339,4 +379,3 @@ export default function EstadisticasPersonal() {
     </div>
   );
 }
-

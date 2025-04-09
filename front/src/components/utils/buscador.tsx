@@ -38,6 +38,7 @@ export default function LegajoSearch() {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
   const editFormRef = useRef<HTMLDivElement | null>(null);
+  const resultadoRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,6 +120,72 @@ export default function LegajoSearch() {
       });
     }
   }, [isEditMode]);
+
+  const handleDownloadPDF = async () => {
+    const jsPDF = (await import("jspdf")).default;
+    const html2canvas = (await import("html2canvas")).default;
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const anchoPDF = pdf.internal.pageSize.getWidth(); // 210 mm
+    const altoPDF = pdf.internal.pageSize.getHeight(); // 297 mm
+
+    const nombre = searchQuery.replace(/\s+/g, "-").toLowerCase();
+    const titulo = `Resultado de búsqueda según: ${searchType.toUpperCase()} - ${searchQuery}`;
+
+    let posicionY = 20; // Dejamos espacio para el título
+    const margenLateral = 10;
+    const espacioEntreFichas = 5;
+
+    const drawHeader = () => {
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(12);
+      pdf.text(titulo, anchoPDF / 2, 10, { align: "center" });
+    };
+
+    drawHeader(); // Imprimimos el título en la primera página
+
+    for (let i = 0; i < resultadoRefs.current.length; i++) {
+      const div = resultadoRefs.current[i];
+      if (!div) continue;
+
+      // Ocultar botones
+      const botones = div.querySelectorAll("button");
+      botones.forEach((btn) => btn.classList.add("hidden"));
+
+      const canvas = await html2canvas(div, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+      });
+
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgWidth = anchoPDF - 2 * margenLateral;
+      const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+      // Si no entra, agregamos una página y redibujamos el título
+      if (posicionY + imgHeight > altoPDF - 10) {
+        pdf.addPage();
+        drawHeader();
+        posicionY = 20;
+      }
+
+      pdf.addImage(
+        imgData,
+        "JPEG",
+        margenLateral,
+        posicionY,
+        imgWidth,
+        imgHeight
+      );
+      posicionY += imgHeight + espacioEntreFichas;
+
+      // Restaurar botones
+      botones.forEach((btn) => btn.classList.remove("hidden"));
+    }
+
+    pdf.save(`legajo-${nombre}.pdf`);
+  };
 
   return (
     <div className="min-h-screen py-6 flex flex-col justify-center sm:py-12 bg-slate-800">
@@ -247,23 +314,42 @@ export default function LegajoSearch() {
             )}
 
             {searchResults.length > 0 && (
-              <div className="mt-8 space-y-8 text-black">
-                {searchResults.map((result) => (
+              <div
+                id="resultados-container"
+                className="mt-8 space-y-8 text-black"
+              >
+                <div className="flex justify-between">
+                  <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                    Resultado de Búsqueda
+                  </h2>
+
+                  <Button
+                    onClick={handleDownloadPDF}
+                    className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-md hover:from-blue-700 hover:to-blue-600 transition-all"
+                  >
+                    Descargar PDF
+                  </Button>
+                </div>
+
+                {searchResults.map((result, index) => (
                   <div
                     key={result.id}
-                    className="bg-white p-6 rounded-lg shadow-md mb-8"
+                    ref={(el) => {
+                      resultadoRefs.current[index] = el;
+                    }}
+                    className="bg-white p-6 rounded-lg shadow-md mb-8 "
                   >
-                    <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                      Resultado de Búsqueda
-                    </h2>
                     <div className="bg-blue-50 p-4 border border-blue-200 rounded-lg mb-4">
-                      <h3 className="text-lg font-semibold text-gray-700 mb-2">
-                        Información Personal
+                      <h3 className="text-xl font-semibold text-gray-700 mb-4">
+                        Información Personal de{" "}
+                        <strong>
+                          {result.apellido} {result.nombre}
+                        </strong>
                       </h3>
                       <div className="grid grid-cols-4 gap-4 text-black">
                         <p>
-                          <strong>Nombre:</strong> {result.nombre}{" "}
-                          {result.apellido}
+                          <strong>Destinado en la Unidad:</strong>{" "}
+                          {result.destinadoEnLaUnidad}
                         </p>
                         <p>
                           <strong>Número de IOSFA:</strong>{" "}
@@ -305,7 +391,7 @@ export default function LegajoSearch() {
                       <div className="mt-4 flex justify-end">
                         <Button
                           onClick={() => handleViewDetails(result)}
-                          className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-md hover:from-blue-700 hover:to-blue-600 transition-all"
+                          className="print:hidden px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-md hover:from-blue-700 hover:to-blue-600 transition-all"
                         >
                           Ver más información{" "}
                           <ChevronRight className="h-4 w-4" />
@@ -332,7 +418,6 @@ export default function LegajoSearch() {
                 {selectedUser?.nombre} {selectedUser?.apellido}
               </span>
             </DialogTitle>
-
           </DialogHeader>
 
           {selectedUser && (
