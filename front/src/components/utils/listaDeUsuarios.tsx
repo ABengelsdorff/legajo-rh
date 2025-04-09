@@ -7,7 +7,6 @@ import type { IUser } from "@/components/interfaces/interfaces";
 import { UserRound, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-
 export default function Users() {
   const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -67,13 +66,29 @@ export default function Users() {
                 className="drop-shadow-md"
               />
             </div>
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-extrabold text-gray-900">
-                Listado de Personal
-              </h1>
-              <p className="text-gray-600 mt-2">
-                Ordenado alfabéticamente por apellido
-              </p>
+
+            <div className="mb-8  ">
+              <div>
+                <h1 className="text-4xl font-extrabold text-gray-900 justify-center items-center flex">
+                  Listado de Personal
+                </h1>
+                <p className="text-gray-600 mt-2 justify-center items-center flex">
+                  Ordenado alfabéticamente por apellido
+                </p>
+              </div>
+              <div className="mt-4 sm:mt-0">
+                <button
+                  onClick={() =>
+                    window.open(
+                      "http://localhost:3001/users/export/excel",
+                      "_blank"
+                    )
+                  }
+                  className="flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-sm hover:from-blue-700 hover:to-blue-600 transition-all ml-auto"
+                >
+                  Exportar a Excel
+                </button>
+              </div>
             </div>
 
             {loading && (
@@ -126,7 +141,8 @@ export default function Users() {
                                   {user.apellido} {user.nombre}, {user.grado}
                                 </h3>
                                 <p className="text-gray-600">
-                                 DESTINADO EN LA UNIDAD: {user.destinadoEnLaUnidad}
+                                  DESTINADO EN LA UNIDAD:{" "}
+                                  {user.destinadoEnLaUnidad}
                                 </p>
                               </div>
                             </div>

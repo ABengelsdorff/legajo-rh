@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser, getUserByIosfa, getUserByDni, getUserByApellido, getUserByGrado, getUserByCurso } from "../controllers/userControllers";
+import { getAllUsers, getUserById, createUser, updateUser, getUserByIosfa, getUserByDni, getUserByApellido, getUserByGrado, getUserByCurso, exportarUsuariosExcel } from "../controllers/userControllers";
 
 const router = Router();
 
@@ -15,7 +15,8 @@ router.get('/curso/:curso', getUserByCurso);
 router.get('/', getAllUsers);        
 router.get('/:id', getUserById);     
 router.post('/', createUser);        
-router.put('/:id', updateUser);      
+router.put('/:id', updateUser);   
+router.get("/export/excel", exportarUsuariosExcel);
 // router.delete('/:id', verificarRolAdmin, deleteUser); // Solo ADMIN puede borrar  
 
 
