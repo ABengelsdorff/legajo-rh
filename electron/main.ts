@@ -4,6 +4,7 @@ import { spawn } from "child_process";
 import express from "express";
 
 let mainWindow: BrowserWindow | null = null;
+let expressServerStarted = false; // 🔐 para evitar múltiples servidores
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -19,6 +20,9 @@ function createWindow() {
 }
 
 function startFrontendStaticServer() {
+  // if (expressServerStarted) return; // ✅ evita múltiples instancias
+  // expressServerStarted = true;
+  
   const appExpress = express();
   const frontendPath = path.join(__dirname, "..", "front", "out");
   appExpress.use(express.static(frontendPath));
@@ -28,8 +32,8 @@ function startFrontendStaticServer() {
   });
 }
 
-function startBackend() {
-  const backendPath = path.join(__dirname, "..", "electron", "backend-dist", "server.js");
+ function startBackend() {
+   const backendPath = path.join(__dirname, "..", "electron", "backend-dist", "server.js");
 
   const backend = spawn("node", [backendPath], {
     cwd: path.dirname(backendPath),
@@ -39,6 +43,14 @@ function startBackend() {
   });
   backend.unref(); // 🔥 clave para que no lo cierre al cerrar Electron
   
+// const backend = spawn(process.execPath, [backendPath], {
+//   cwd: path.dirname(backendPath),
+//   stdio: "ignore",
+//   detached: true,
+//   windowsHide: true,
+// });
+// backend.unref();
+
 
   backend.stderr?.on("data", (data) => {
     console.error(`🛑 Backend error: ${data}`);

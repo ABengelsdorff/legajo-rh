@@ -7,7 +7,16 @@ export function printUser(user: IUser) {
   const formatDate = (date: string | Date | undefined) =>
     date ? new Date(date).toLocaleDateString("es-AR") : "-";
 
-  const now = new Date().toLocaleString("es-AR");
+  const now = new Date().toLocaleString("es-AR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false, 
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+  
 
   const userInfo = `
 
@@ -34,6 +43,12 @@ export function printUser(user: IUser) {
       margin-left: 0;
     }
 
+    .break-wrap {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+
 
     header, footer {
       display: none;
@@ -50,7 +65,9 @@ export function printUser(user: IUser) {
         ul { padding-left: 20px; }
         li { margin-bottom: 4px; }
       </style>
+
     </head>
+
     <body>
     <p style="text-align:left; color:#6b7280; font-size: 14px; margin-top: 4px;">Impreso el ${now}</p>
 
@@ -176,7 +193,7 @@ export function printUser(user: IUser) {
             <li>${f.parentesco}: ${f.nombre} ${f.apellido} </li>
             <li>DNI: ${f.dni}</li>
             <li>Personal Militar: ${f.personalMilitar}</li>
-            <li>Observaciones: ${f.observaciones}</li>
+            <li class="break-wrap">Observaciones: ${f.observaciones}</li>
           `
               )
               .join("<br>") || "<li>-</li>"
@@ -210,7 +227,7 @@ export function printUser(user: IUser) {
               ?.map(
                 (a) => `
             <li>Expediente: ${a.numeroDeExpediente}</li>
-            <li>Afección: ${a.afeccion}</li>
+            <li class="break-wrap">Afección: ${a.afeccion}</li>
             <li>Afección: Disponibilidad: ${formatDate(
               a.disponibilidad?.desde
             )} al ${formatDate(a.disponibilidad?.hasta)}</li>
@@ -233,7 +250,7 @@ export function printUser(user: IUser) {
                 (s) => `
             <li>Expediente: ${s.numeroDeExpediente}</li>
             <li>Desde: ${formatDate(s.solicitud?.desde)}</li>
-            <li>Observaciones: ${s.observaciones}</li>
+            <li class="break-wrap">Observaciones: ${s.observaciones}</li>
           `
               )
               .join("<br>") || "<li>-</li>"
@@ -249,7 +266,7 @@ export function printUser(user: IUser) {
               ?.map(
                 (p) => `
             <li>Inicio: ${formatDate(p.inicio)}</li>
-            <li>Observaciones: ${p.observaciones}</li>
+            <li class="break-wrap">Observaciones: ${p.observaciones}</li>
           `
               )
               .join("<br>") || "<li>-</li>"
@@ -265,7 +282,7 @@ export function printUser(user: IUser) {
               ?.map(
                 (a) => `
             <li>Estado: ${a.estado}</li>
-            <li>Observación: ${a.observacion}</li>
+            <li class="break-wrap">Observación: ${a.observacion}</li>
           `
               )
               .join("<br>") || "<li>-</li>"
@@ -280,10 +297,10 @@ export function printUser(user: IUser) {
             user.juntaMedica
               ?.map(
                 (j) => `
-            <li>Mensaje: ${j.mensaje}</li>
+            <li class="break-wrap">Mensaje: ${j.mensaje}</li>
             <li>Turnos: ${formatDate(j.turnos)}</li>
-            <li>Observación: ${j.observacion}</li>
-            <li>Afección: ${j.afeccion}</li>
+            <li class="break-wrap">Observación: ${j.observacion}</li>
+            <li class="break-wrap">Afección: ${j.afeccion}</li>
           `
               )
               .join("<br>") || "<li>-</li>"

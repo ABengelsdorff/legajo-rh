@@ -22,16 +22,16 @@ export const ValidacionLegajo = {
   numeroDeDni: {
     required: "El número de DNI es obligatorio",
     pattern: {
-      value: /^[0-9]{7,8}$/, // Asume un formato de DNI de 7 u 8 dígitos
-      message: "El DNI debe ser un número válido de 7 u 8 dígitos",
+      value: /^[0-9]+$/,
+      message: "Solo se permiten números",
     },
-  },
-  numeroDeCuil: {
-    required: "El número de CUIL es obligatorio",
-    pattern: {
-      value: /^\d{2}-\d{8}-\d{1}$/, // Formato CUIL válido
-      message: "El CUIL debe tener el formato XX-XXXXXXXX-X",
-    },
+      },
+      numeroDeCuil: {
+        required: "El número de CUIL es obligatorio",
+        pattern: {
+          value: /^\d{2}-\d{8}-\d{1}$/,
+          message: "Debe tener formato XX-XXXXXXXX-X",
+        },
   },
   grupoSanguineo: {
     required: "El grupo sanguíneo es obligatorio",
@@ -77,15 +77,15 @@ export const ValidacionLegajo = {
   cbu: {
     required: "El CBU es obligatorio",
     pattern: {
-      value: /^[0-9]{22}$/, // Formato de CBU argentino (22 dígitos)
-      message: "El CBU debe ser un número de 22 dígitos",
+      value: /^[0-9]+$/,
+      message: "Solo se permiten números",
     },
   },
   numeroDeCelular: {
     required: "El número de celular es obligatorio",
     pattern: {
-      value: /^[0-9]{10}$/, // Formato de número celular con 10 dígitos
-      message: "El número de celular debe tener 10 dígitos",
+      value: /^[0-9]+$/,
+      message: "Solo se permiten números",
     },
   },
   formacionAcademica: {
@@ -162,8 +162,8 @@ export const ValidacionLegajo = {
   rti: {
     required: "El RTI es obligatorio",
     pattern: {
-      value: /^[A-Za-z0-9]+$/, // Asegura que el RTI sea alfanumérico
-      message: "El RTI debe ser válido",
+      value: /^[0-9]+$/,
+      message: "Solo se permiten números",
     },
   },
   destinoAnterior: {
