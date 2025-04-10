@@ -71,112 +71,6 @@ export default function LegajoProfesional({
 
   const router = useRouter();
 
-  const agregarActuacion = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      actuaciones: [
-        ...prevUser.actuaciones,
-        {
-          numeroDeExpediente: "",
-          afeccion: "",
-          // situacionDeRevista: "SERVICIO EFECTIVO",
-          disponibilidad: { desde: undefined, hasta: undefined },
-          pasiva: { desde: undefined, hasta: undefined },
-        },
-      ],
-    }));
-  };
-
-  const eliminarActuacion = (index: number) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      actuaciones: prevUser.actuaciones.filter((_, i) => i !== index),
-    }));
-  };
-
-  const addFamilyMember = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      grupoFamiliar: [
-        ...prevUser.grupoFamiliar,
-        {
-          parentesco: "",
-          nombre: "",
-          apellido: "",
-          dni: "",
-          personalMilitar: "",
-          observaciones: "",
-        },
-      ],
-    }));
-  };
-
-  const removeFamilyMember = (index: number) => {
-    const updatedFamily = user.grupoFamiliar.filter((_, i) => i !== index);
-    setUser((prevUser) => ({
-      ...prevUser,
-      grupoFamiliar: updatedFamily,
-    }));
-  };
-
-  const agregarJuntaMedica = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      juntaMedica: [
-        ...prevUser.juntaMedica,
-        {
-          mensaje: "",
-          turnos: null,
-          observacion: "",
-          afeccion: "",
-        },
-      ],
-    }));
-  };
-
-  const eliminarJuntaMedica = (index: number) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      juntaMedica: prevUser.juntaMedica.filter((_, i) => i !== index),
-    }));
-  };
-
-  const agregarParteDeEnfermo = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      parteDeEnfermo: [
-        ...(prevUser.parteDeEnfermo || []),
-        { inicio: undefined, finalizacion: undefined, observaciones: "" },
-      ],
-    }));
-  };
-
-  const eliminarParteDeEnfermo = (index: number) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      parteDeEnfermo: prevUser.parteDeEnfermo.filter((_, i) => i !== index),
-    }));
-  };
-
-  const agregarAptitudPsicofisica = () => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      aptitudPsicofisica: [
-        ...prevUser.aptitudPsicofisica,
-        { estado: "", observacion: "" },
-      ],
-    }));
-  };
-
-  const eliminarAptitudPsicofisica = (index: number) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      aptitudPsicofisica: prevUser.aptitudPsicofisica.filter(
-        (_, i) => i !== index
-      ),
-    }));
-  };
-
   const {
     control,
     handleSubmit,
@@ -186,6 +80,51 @@ export default function LegajoProfesional({
   } = useForm<IUser>({
     mode: "onChange",
     defaultValues: initialData || user,
+  });
+
+  const {
+    fields: grupoFamiliarFields,
+    append: appendGrupoFamiliar,
+    remove: removeGrupoFamiliar,
+  } = useFieldArray({
+    control,
+    name: "grupoFamiliar",
+  });
+
+  const {
+    fields: fieldsParteEnfermo,
+    append: appendParteEnfermo,
+    remove: removeParteEnfermo,
+  } = useFieldArray({
+    control,
+    name: "parteDeEnfermo",
+  });
+
+  const {
+    fields: fieldsAptitud,
+    append: appendAptitud,
+    remove: removeAptitud,
+  } = useFieldArray({
+    control,
+    name: "aptitudPsicofisica",
+  });
+
+  const {
+    fields: fieldsJunta,
+    append: appendJunta,
+    remove: removeJunta,
+  } = useFieldArray({
+    control,
+    name: "juntaMedica",
+  });
+
+  const {
+    fields: fieldsActuaciones,
+    append: appendActuacion,
+    remove: removeActuacion,
+  } = useFieldArray({
+    control,
+    name: "actuaciones",
   });
 
   const {
@@ -231,15 +170,14 @@ export default function LegajoProfesional({
         institutoDeFormacion:
           (initialData.institutoDeFormacion?.toUpperCase() ??
             "") as IUser["institutoDeFormacion"],
-        destinadoEnLaUnidad: (initialData.destinadoEnLaUnidad?.toUpperCase() ?? "") as "" | "SI" | "NO",
-
+        destinadoEnLaUnidad: (initialData.destinadoEnLaUnidad?.toUpperCase() ??
+          "") as "" | "SI" | "NO",
       };
 
       setUser(normalizado);
       reset(normalizado);
     }
   }, [initialData, reset]);
-
 
   const onSubmit = async (data: IUser) => {
     try {
@@ -250,7 +188,6 @@ export default function LegajoProfesional({
       } else {
         savedUser = await updateUser(data.id, data);
       }
-      
 
       reset(data);
       setFormSuccess(true);
@@ -432,16 +369,28 @@ export default function LegajoProfesional({
                             id="fechaDeNacimiento"
                             value={
                               field.value
-                                ? typeof field.value === "string"
-                                  ? field.value
-                                  : field.value.toISOString().split("T")[0]
+                                ? new Date(field.value)
+                                    .toISOString()
+                                    .split("T")[0]
                                 : ""
-                            } // Asegúrate de convertir la fecha a formato de cadena para el input
-                            onChange={(e) =>
-                              field.onChange(
-                                e.target.value ? new Date(e.target.value) : null
-                              )
-                            } // Actualiza el valor correctamente
+                            }
+                            // Asegúrate de convertir la fecha a formato de cadena para el input
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value) {
+                                const [year, month, day] = value.split("-");
+                                const fixedDate = new Date(
+                                  Number(year),
+                                  Number(month) - 1,
+                                  Number(day),
+                                  12
+                                ); // 👈 12:00 hs
+                                field.onChange(fixedDate);
+                              } else {
+                                field.onChange(null);
+                              }
+                            }}
+                            // Actualiza el valor correctamente
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -763,7 +712,6 @@ export default function LegajoProfesional({
                     Información Profesional
                   </h2>
                   <div className="space-y-4">
-                    
                     <Controller
                       name="destinadoEnLaUnidad"
                       control={control}
@@ -1293,7 +1241,7 @@ export default function LegajoProfesional({
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                   Grupo Familiar
                 </h2>
-                {user.grupoFamiliar.map((familiar, index) => (
+                {grupoFamiliarFields.map((familiar, index) => (
                   <div
                     key={index}
                     className="grid grid-cols-2 gap-6 mb-4 p-4 bg-white rounded-lg"
@@ -1480,7 +1428,7 @@ export default function LegajoProfesional({
 
                       <button
                         type="button"
-                        onClick={() => removeFamilyMember(index)}
+                        onClick={() => removeGrupoFamiliar(index)}
                         className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
                       >
                         Eliminar
@@ -1490,7 +1438,16 @@ export default function LegajoProfesional({
                 ))}
                 <button
                   type="button"
-                  onClick={addFamilyMember}
+                  onClick={() =>
+                    appendGrupoFamiliar({
+                      parentesco: "",
+                      nombre: "",
+                      apellido: "",
+                      dni: "",
+                      personalMilitar: "",
+                      observaciones: "",
+                    })
+                  }
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   Agregar Familiar
@@ -1574,28 +1531,27 @@ export default function LegajoProfesional({
                     control={control}
                     rules={ValidacionLegajo.ultimoAscenso}
                     render={({ field }) => (
-                      <div>
-                        <label
-                          htmlFor="ultimoAscenso"
-                          className="block text-sm font-medium text-gray-900"
-                        >
-                          Último Ascenso
-                        </label>
-                        <input
-                          {...field}
-                          type="date"
-                          id="ultimoAscenso"
-                          value={
-                            field.value
-                              ? new Date(field.value)
-                                  .toISOString()
-                                  .split("T")[0]
-                              : ""
+                      <input
+                        {...field}
+                        type="date"
+                        value={
+                          field.value
+                            ? new Date(field.value).toISOString().split("T")[0]
+                            : ""
+                        }
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value) {
+                            const [y, m, d] = value.split("-");
+                            const fixedDate = new Date(+y, +m - 1, +d, 12);
+                            field.onChange(fixedDate);
+                          } else {
+                            field.onChange(null);
                           }
-                          className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                        }}
+                        className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
               focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        />
-                      </div>
+                      />
                     )}
                   />
                   {errors.ultimoAscenso && (
@@ -1637,136 +1593,138 @@ export default function LegajoProfesional({
                 </div>
               </div>
 
-             {/* //!Solicitudes */}
-<div className="bg-gray-50 p-6 rounded-lg shadow-md">
-  <h2 className="text-2xl font-bold text-gray-800 mb-4">Solicitudes</h2>
+              {/* //!Solicitudes */}
+              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                  Solicitudes
+                </h2>
 
-  {fieldsSolicitudes.map((field, index) => (
-    <div
-      key={field.id}
-      className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
-    >
-      <Controller
-        name={`solicitudes.${index}.numeroDeExpediente`}
-        control={control}
-        rules={ValidacionLegajo.solicitudNumeroDeExpediente}
-        render={({ field }) => (
-          <div>
-            <label
-              htmlFor={`numeroDeExpediente-${index}`}
-              className="block text-sm font-medium text-gray-900"
-            >
-              Número de Expediente
-            </label>
-            <input
-              {...field}
-              id={`numeroDeExpediente-${index}`}
-              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                {fieldsSolicitudes.map((field, index) => (
+                  <div
+                    key={field.id}
+                    className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
+                  >
+                    <Controller
+                      name={`solicitudes.${index}.numeroDeExpediente`}
+                      control={control}
+                      rules={ValidacionLegajo.solicitudNumeroDeExpediente}
+                      render={({ field }) => (
+                        <div>
+                          <label
+                            htmlFor={`numeroDeExpediente-${index}`}
+                            className="block text-sm font-medium text-gray-900"
+                          >
+                            Número de Expediente
+                          </label>
+                          <input
+                            {...field}
+                            id={`numeroDeExpediente-${index}`}
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
               focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-            />
-          </div>
-        )}
-      />
-      {errors.solicitudes?.[index]?.numeroDeExpediente && (
-        <span className="text-red-600">
-          {errors.solicitudes[index].numeroDeExpediente?.message}
-        </span>
-      )}
+                          />
+                        </div>
+                      )}
+                    />
+                    {errors.solicitudes?.[index]?.numeroDeExpediente && (
+                      <span className="text-red-600">
+                        {errors.solicitudes[index].numeroDeExpediente?.message}
+                      </span>
+                    )}
 
-      <Controller
-        name={`solicitudes.${index}.solicitud.desde`}
-        control={control}
-        rules={ValidacionLegajo.solicitudDesde}
-        render={({ field }) => (
-          <div>
-            <label
-              htmlFor={`solicitudesDesde-${index}`}
-              className="block text-sm font-medium text-gray-900"
-            >
-              Solicitud Desde
-            </label>
-            <input
-              {...field}
-              type="date"
-              id={`solicitudesDesde-${index}`}
-              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                    <Controller
+                      name={`solicitudes.${index}.solicitud.desde`}
+                      control={control}
+                      rules={ValidacionLegajo.solicitudDesde}
+                      render={({ field }) => (
+                        <input
+                          type="date"
+                          value={
+                            field.value
+                              ? new Date(field.value)
+                                  .toISOString()
+                                  .split("T")[0]
+                              : ""
+                          }
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            if (value) {
+                              const [y, m, d] = value.split("-");
+                              const fixedDate = new Date(+y, +m - 1, +d, 12);
+                              field.onChange(fixedDate);
+                            } else {
+                              field.onChange(null);
+                            }
+                          }}
+                        />
+                      )}
+                    />
+                    {errors.solicitudes?.[index]?.solicitud?.desde && (
+                      <span className="text-red-600">
+                        {errors.solicitudes[index].solicitud.desde?.message}
+                      </span>
+                    )}
+
+                    <Controller
+                      name={`solicitudes.${index}.observaciones`}
+                      control={control}
+                      rules={ValidacionLegajo.solicitudObservaciones}
+                      render={({ field }) => (
+                        <div>
+                          <label
+                            htmlFor={`solicitudes-observaciones-${index}`}
+                            className="block text-sm font-medium text-gray-900"
+                          >
+                            Observaciones
+                          </label>
+                          <textarea
+                            {...field}
+                            id={`solicitudes-observaciones-${index}`}
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
               focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-              value={
-                field.value
-                  ? new Date(field.value).toISOString().split("T")[0]
-                  : ""
-              }
-            />
-          </div>
-        )}
-      />
-      {errors.solicitudes?.[index]?.solicitud?.desde && (
-        <span className="text-red-600">
-          {errors.solicitudes[index].solicitud.desde?.message}
-        </span>
-      )}
+                            value={field.value ?? ""}
+                          />
+                        </div>
+                      )}
+                    />
+                    {errors.solicitudes?.[index]?.observaciones && (
+                      <span className="text-red-600">
+                        {errors.solicitudes[index].observaciones?.message}
+                      </span>
+                    )}
 
-      <Controller
-        name={`solicitudes.${index}.observaciones`}
-        control={control}
-        rules={ValidacionLegajo.solicitudObservaciones}
-        render={({ field }) => (
-          <div>
-            <label
-              htmlFor={`solicitudes-observaciones-${index}`}
-              className="block text-sm font-medium text-gray-900"
-            >
-              Observaciones
-            </label>
-            <textarea
-              {...field}
-              id={`solicitudes-observaciones-${index}`}
-              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
-              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-              value={field.value ?? ""}
-            />
-          </div>
-        )}
-      />
-      {errors.solicitudes?.[index]?.observaciones && (
-        <span className="text-red-600">
-          {errors.solicitudes[index].observaciones?.message}
-        </span>
-      )}
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeSolicitud(index)}
+                        className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                ))}
 
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={() => removeSolicitud(index)}
-          className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
-        >
-          Eliminar
-        </button>
-      </div>
-    </div>
-  ))}
-
-  <button
-    type="button"
-    onClick={() =>
-      appendSolicitud({
-        numeroDeExpediente: "",
-        solicitud: { desde: "" },
-        observaciones: "",
-      })
-    }
-    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-  >
-    Agregar Solicitud
-  </button>
-</div>
+                <button
+                  type="button"
+                  onClick={() =>
+                    appendSolicitud({
+                      numeroDeExpediente: "",
+                      solicitud: { desde: "" },
+                      observaciones: "",
+                    })
+                  }
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                >
+                  Agregar Solicitud
+                </button>
+              </div>
 
               {/* //!Actuaciones */}
               <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                   Actuaciones por Enfermedad
                 </h2>
-                {user.actuaciones.map((actuacion, index) => (
+                {fieldsActuaciones.map((actuacion, index) => (
                   <div
                     key={index}
                     className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
@@ -1841,18 +1799,29 @@ export default function LegajoProfesional({
                             {...field}
                             type="date"
                             id={`disponibilidadDesde-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+        focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             value={
                               field.value
                                 ? new Date(field.value)
                                     .toISOString()
                                     .split("T")[0]
                                 : ""
-                            } // Convertimos a string 'YYYY-MM-DD'
+                            }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value) {
+                                const [y, m, d] = value.split("-");
+                                field.onChange(new Date(+y, +m - 1, +d, 12));
+                              } else {
+                                field.onChange(null);
+                              }
+                            }}
                           />
                         </div>
                       )}
                     />
+
                     {errors.actuaciones?.[index]?.disponibilidad?.desde && (
                       <span className="text-red-600">
                         {errors.actuaciones[index].disponibilidad.desde.message}
@@ -1897,6 +1866,15 @@ export default function LegajoProfesional({
                                     .split("T")[0]
                                 : ""
                             }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value) {
+                                const [y, m, d] = value.split("-");
+                                field.onChange(new Date(+y, +m - 1, +d, 12));
+                              } else {
+                                field.onChange(null);
+                              }
+                            }}
                           />
                         </div>
                       )}
@@ -1931,6 +1909,15 @@ export default function LegajoProfesional({
                                     .split("T")[0]
                                 : ""
                             }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value) {
+                                const [y, m, d] = value.split("-");
+                                field.onChange(new Date(+y, +m - 1, +d, 12));
+                              } else {
+                                field.onChange(null);
+                              }
+                            }}
                           />
                         </div>
                       )}
@@ -1979,6 +1966,15 @@ export default function LegajoProfesional({
                                     .split("T")[0]
                                 : ""
                             }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value) {
+                                const [y, m, d] = value.split("-");
+                                field.onChange(new Date(+y, +m - 1, +d, 12));
+                              } else {
+                                field.onChange(null);
+                              }
+                            }}
                           />
                         </div>
                       )}
@@ -1992,7 +1988,7 @@ export default function LegajoProfesional({
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        onClick={() => eliminarActuacion(index)}
+                        onClick={() => removeActuacion(index)}
                         className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
                       >
                         Eliminar
@@ -2002,7 +1998,14 @@ export default function LegajoProfesional({
                 ))}
                 <button
                   type="button"
-                  onClick={agregarActuacion}
+                  onClick={() =>
+                    appendActuacion({
+                      numeroDeExpediente: "",
+                      afeccion: "",
+                      disponibilidad: { desde: "", hasta: "" },
+                      pasiva: { desde: "", hasta: "" },
+                    })
+                  }
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   Agregar Actuación
@@ -2014,7 +2017,7 @@ export default function LegajoProfesional({
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                   Parte de Enfermo
                 </h2>
-                {user.parteDeEnfermo?.map((parte, index) => (
+                {fieldsParteEnfermo.map((parte, index) => (
                   <div
                     key={index}
                     className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
@@ -2044,10 +2047,20 @@ export default function LegajoProfesional({
                                     .split("T")[0]
                                 : ""
                             }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value) {
+                                const [y, m, d] = value.split("-");
+                                field.onChange(new Date(+y, +m - 1, +d, 12));
+                              } else {
+                                field.onChange(null);
+                              }
+                            }}
                           />
                         </div>
                       )}
                     />
+
                     {errors.parteDeEnfermo?.[index]?.inicio && (
                       <span className="text-red-600">
                         {errors.parteDeEnfermo[index].inicio.message}
@@ -2086,7 +2099,7 @@ export default function LegajoProfesional({
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        onClick={() => eliminarParteDeEnfermo(index)}
+                        onClick={() => removeParteEnfermo(index)}
                         className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
                       >
                         Eliminar
@@ -2098,7 +2111,12 @@ export default function LegajoProfesional({
                 {/* Botón agregar */}
                 <button
                   type="button"
-                  onClick={agregarParteDeEnfermo}
+                  onClick={() =>
+                    appendParteEnfermo({
+                      inicio: "",
+                      observaciones: "",
+                    })
+                  }
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   Agregar Parte De Enfermo
@@ -2110,7 +2128,7 @@ export default function LegajoProfesional({
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                   Aptitud Psicofísica
                 </h2>
-                {user.aptitudPsicofisica?.map((aptitud, index) => (
+                {fieldsAptitud.map((aptitud, index) => (
                   <div
                     key={index}
                     className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
@@ -2175,7 +2193,7 @@ export default function LegajoProfesional({
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        onClick={() => eliminarAptitudPsicofisica(index)}
+                        onClick={() => removeAptitud(index)}
                         className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
                       >
                         Eliminar
@@ -2186,7 +2204,12 @@ export default function LegajoProfesional({
 
                 <button
                   type="button"
-                  onClick={agregarAptitudPsicofisica}
+                  onClick={() =>
+                    appendAptitud({
+                      estado: "",
+                      observacion: "",
+                    })
+                  }
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   Agregar Aptitud Psicofísica
@@ -2198,7 +2221,7 @@ export default function LegajoProfesional({
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                   Junta Médica
                 </h2>
-                {user.juntaMedica.map((junta, index) => (
+                {fieldsJunta.map((junta, index) => (
                   <div
                     key={index}
                     className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
@@ -2246,7 +2269,8 @@ export default function LegajoProfesional({
                             {...field}
                             type="date"
                             id={`juntaMedicaTurnos-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+        focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             value={
                               field.value
                                 ? new Date(field.value)
@@ -2254,10 +2278,20 @@ export default function LegajoProfesional({
                                     .split("T")[0]
                                 : ""
                             }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value) {
+                                const [y, m, d] = value.split("-");
+                                field.onChange(new Date(+y, +m - 1, +d, 12));
+                              } else {
+                                field.onChange(null);
+                              }
+                            }}
                           />
                         </div>
                       )}
                     />
+
                     {errors.juntaMedica?.[index]?.turnos && (
                       <span className="text-red-600">
                         {errors.juntaMedica[index].turnos.message}
@@ -2321,7 +2355,7 @@ export default function LegajoProfesional({
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        onClick={() => eliminarJuntaMedica(index)}
+                        onClick={() => removeJunta(index)}
                         className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
                       >
                         Eliminar
@@ -2331,7 +2365,14 @@ export default function LegajoProfesional({
                 ))}
                 <button
                   type="button"
-                  onClick={agregarJuntaMedica}
+                  onClick={() =>
+                    appendJunta({
+                      mensaje: "",
+                      turnos: null,
+                      observacion: "",
+                      afeccion: "",
+                    })
+                  }
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
                   Agregar Junta Médica
