@@ -1,6 +1,6 @@
 {
   "name": "legajo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Aplicación de escritorio para gestión de legajos",
   "main": "dist-electron/main.js",
   "author": "Sandoval Angel",
@@ -40,7 +40,15 @@
     "win": {
       "target": "nsis",
       "icon": "assets/icon.ico"
-    }
+    },
+    "nsis": {
+    "oneClick": false,                           
+    "perMachine": false,                        
+    "allowToChangeInstallationDirectory": true,  
+    "createDesktopShortcut": true,               
+    "createStartMenuShortcut": true,             
+    "shortcutName": "Legajo"                     
+  }
   },
   "dependencies": {
     "boolean": "^3.2.0",
