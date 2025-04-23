@@ -2,20 +2,23 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { User } from "./User";
 
 @Entity()
-export class CursoRealizado {
+export class EvaluacionMedica {
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  nombre!: string;
-
-  @Column()
-  institucion!: string;
+  resultado!: string;
 
   @Column({ type: "date", nullable: true })
-  fechaFinalizacion!: Date;
+  fecha!: Date;
 
-  @ManyToOne(() => User, (user) => user.cursosRealizados, {
+  @Column({ type: "text" })
+  observacion!: string;
+
+  @Column()
+  profesional!: string;
+
+  @ManyToOne(() => User, (user) => user.evaluacionesMedicas, {
     onDelete: "CASCADE",
   })
   user!: User;

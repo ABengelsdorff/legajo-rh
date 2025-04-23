@@ -140,22 +140,16 @@ export default function Users() {
                               </div>
                               <div className="m-4">
                                 <h3 className="text-lg font-bold text-gray-800">
-                                  {user.apellido} {user.nombre}, {user.grado}
+                                  {user.apellido} {user.nombre}, {user.cargo}
                                 </h3>
                                 <p className="text-gray-600">
-                                  DESTINADO EN LA UNIDAD:{" "}
-                                  {user.destinadoEnLaUnidad}
+                                  ACTIVO:{" "}
+                                  {user.activo}
                                 </p>
                               </div>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row gap-3 sm:items-cente">
-                              {user.numeroDeIosfa && (
-                                <div className="flex items-center text-gray-600">
-                                  <span>IOSFA: {user.numeroDeIosfa}</span>
-                                </div>
-                              )}
-
+                            
                               {user.especialidad && (
                                 <div className="flex items-center text-gray-600">
                                   <span>ESPECIALIDAD: {user.especialidad}</span>
@@ -170,7 +164,7 @@ export default function Users() {
                               </Link>
                             </div>
                           </div>
-                        </div>
+                       
                       ))}
                     </div>
                   </div>

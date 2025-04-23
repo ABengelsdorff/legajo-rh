@@ -12,13 +12,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
   try {
     const users = await userRepository.find({
       relations: [
-        "grupoFamiliar",
-        "actuaciones",
-        "solicitudes",
-        "juntaMedica",
-        "parteDeEnfermo",
-        "aptitudPsicofisica",
         "cursosRealizados",
+        "evaluacionesMedicas",
+        "grupoFamiliar",
+        "licencias"
       ],
     });
     res.json(users);
@@ -32,13 +29,10 @@ export const getUserById = async (req: Request, res: Response) => {
     const user = await userRepository.findOne({
       where: { id: parseInt(req.params.id) },
       relations: [
-        "grupoFamiliar",
-        "actuaciones",
-        "solicitudes",
-        "juntaMedica",
-        "parteDeEnfermo",
-        "aptitudPsicofisica",
         "cursosRealizados",
+        "evaluacionesMedicas",
+        "grupoFamiliar",
+        "licencias"
       ],
     });
     if (user) {
@@ -58,14 +52,12 @@ export const createUser = async (req: Request, res: Response) => {
     // Crear el usuario incluyendo las relaciones
     const newUser = userRepository.create({
       ...userData,
-      grupoFamiliar: userData.grupoFamiliar || [],
-      actuaciones: userData.actuaciones || [],
-      solicitudes: userData.solicitudes || [],
-      juntaMedica: userData.juntaMedica || [],
-      parteDeEnfermo: userData.parteDeEnfermo || [],
-      aptitudPsicofisica: userData.aptitudPsicofisica || null,
       cursosRealizados: userData.cursosRealizados || [],
+      evaluacionesMedicas: userData.evaluacionesMedicas || [],
+      grupoFamiliar: userData.grupoFamiliar || [],
+      licencias: userData.licencias || [],
     });
+    
 
     const result = await userRepository.save(newUser);
 
@@ -79,6 +71,8 @@ export const createUser = async (req: Request, res: Response) => {
       .json({ error: "Error al crear el usuario", detalles: error });
   }
 };
+
+// Actualizar un usuario por ID
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
@@ -117,44 +111,18 @@ export const updateUser = async (req: Request, res: Response) => {
 //   }
 // };
 
-export const getUserByIosfa = async (req: Request, res: Response) => {
-  try {
-    const { iosfa } = req.params;
-    const users = await userRepository.find({
-      where: { numeroDeIosfa: ILike(`%${iosfa}%`) },
-      relations: [
-        "grupoFamiliar",
-        "actuaciones",
-        "solicitudes",
-        "juntaMedica",
-        "parteDeEnfermo",
-        "aptitudPsicofisica",
-        "cursosRealizados",
-      ],
-    });
-    if (users.length > 0) {
-      res.json(users);
-    } else {
-      res.status(404).json({ message: "Usuario no encontrado" });
-    }
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener el usuario" });
-  }
-};
 
+// Obtener usuario por DNI
 export const getUserByDni = async (req: Request, res: Response) => {
   try {
     const { dni } = req.params;
     const users = await userRepository.find({
       where: { numeroDeDni: ILike(`%${dni}%`) },
       relations: [
-        "grupoFamiliar",
-        "actuaciones",
-        "solicitudes",
-        "juntaMedica",
-        "parteDeEnfermo",
-        "aptitudPsicofisica",
         "cursosRealizados",
+        "evaluacionesMedicas",
+        "grupoFamiliar",
+        "licencias"
       ],
     });
     if (users.length > 0) {
@@ -167,6 +135,7 @@ export const getUserByDni = async (req: Request, res: Response) => {
   }
 };
 
+// Obtener usuario por apellido
 export const getUserByApellido = async (req: Request, res: Response) => {
   try {
     const { apellido } = req.params;
@@ -175,13 +144,10 @@ export const getUserByApellido = async (req: Request, res: Response) => {
     // Obtener todos los usuarios (con relaciones necesarias)
     const allUsers = await userRepository.find({
       relations: [
-        "grupoFamiliar",
-        "actuaciones",
-        "solicitudes",
-        "juntaMedica",
-        "parteDeEnfermo",
-        "aptitudPsicofisica",
         "cursosRealizados",
+        "evaluacionesMedicas",
+        "grupoFamiliar",
+        "licencias"
       ],
     });
 
@@ -200,19 +166,17 @@ export const getUserByApellido = async (req: Request, res: Response) => {
   }
 };
 
-export const getUserByGrado = async (req: Request, res: Response) => {
+// Obtener usuario por cargo
+export const getUserByCargo = async (req: Request, res: Response) => {
   try {
-    const { grado } = req.params;
+    const { cargo } = req.params;
     const users = await userRepository.find({
-      where: { grado: ILike(`%${grado}%`) },
+      where: { cargo: ILike(`%${cargo}%`) },
       relations: [
-        "grupoFamiliar",
-        "actuaciones",
-        "solicitudes",
-        "juntaMedica",
-        "parteDeEnfermo",
-        "aptitudPsicofisica",
         "cursosRealizados",
+        "evaluacionesMedicas",
+        "grupoFamiliar",
+        "licencias"
       ],
     });
     if (users.length > 0) {
@@ -225,6 +189,7 @@ export const getUserByGrado = async (req: Request, res: Response) => {
   }
 };
 
+// Obtener usuario por curso
 export const getUserByCurso = async (req: Request, res: Response) => {
   try {
     const { curso } = req.params;
@@ -245,13 +210,10 @@ export const getUserByCurso = async (req: Request, res: Response) => {
     const users = await userRepository.find({
       where: { id: In(ids) },
       relations: [
-        "grupoFamiliar",
-        "actuaciones",
-        "solicitudes",
-        "juntaMedica",
-        "parteDeEnfermo",
-        "aptitudPsicofisica",
         "cursosRealizados",
+        "evaluacionesMedicas",
+        "grupoFamiliar",
+        "licencias"
       ],
     });
 
@@ -274,22 +236,16 @@ export const exportarUsuariosExcel = async (req: Request, res: Response) => {
     const userRepository = AppDataSource.getRepository(User);
     const usuarios = await userRepository.find({
       relations: {
-        grupoFamiliar: true,
-        actuaciones: true,
-        parteDeEnfermo: true,
-        solicitudes: true,
-        juntaMedica: true,
-        aptitudPsicofisica: true,
         cursosRealizados: true,
+        evaluacionesMedicas: true,
+        grupoFamiliar: true,
+        licencias: true,
       },
     });
 
     const data = usuarios.map((u) => ({
-      DESTINADO_EN_LA_UNIDAD: u.destinadoEnLaUnidad,
-      IOSFA: u.numeroDeIosfa,
-      GRADO: u.grado,
-      APELLIDO: u.apellido,
       NOMBRE: u.nombre,
+      APELLIDO: u.apellido,
       SEXO: u.sexo,
       FECHA_DE_NACIMIENTO: u.fechaDeNacimiento,
       GRUPO_SANGUINEO: u.grupoSanguineo,
@@ -298,27 +254,17 @@ export const exportarUsuariosExcel = async (req: Request, res: Response) => {
       DIRECCION: u.direccion,
       CODIGO_POSTAL: u.codigoPostal,
       CORREO_ELECTRONICO: u.correoElectronico,
-      CORREO_INSTITUCIONAL: u.correoInstitucional,
-      USUARIO_GDE: u.usuarioGde,
-      CBU: u.cbu,
-      CELULAR: u.numeroDeCelular,
-      RTI: u.rti,
-      DESTINO_ANTERIOR: u.destinoAnterior,
-      INSTITUTO_DE_FORMACION: u.institutoDeFormacion,
-      DESTINO_JB_GRUPOS: u.destinoJbGrupos,
-      DESTINO_INTERNO: u.destinoInterno,
-      CARGO: u.cargo,
-      ESCALAFON: u.escalafon,
-      ESPECIALIDAD: u.especialidad,
-      ESPECIALIDAD_AVANZADA: u.especialidadAvanzada,
-      FORMACION_ACADEMICA: u.formacionAcademica,
-      NIVEL_DE_INGLES: u.nivelDeIngles,
-      COMPROMISO_DE_SERVICIO: u.compromisoDeServicio,
-      ULTIMO_ASCENSO: u.ultimoAscenso,
-      FOTO_LEGAJO: u.fotoDeLegajo,
+      TELEFONO: u.telefono,
       ESTADO_CIVIL: u.estadoCivil,
+      CARGO: u.cargo,
+      DEPARTAMENTO: u.departamento,
+      FECHA_DE_INGRESO: u.fechaIngreso,
+      ACTIVO: u.activo,
+      FORMACION_ACADEMICA: u.formacionAcademica,
+      ESPECIALIDAD: u.especialidad,
+      NIVEL_DE_INGLES: u.nivelDeIngles,
     }));
-
+    
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
@@ -336,12 +282,10 @@ export const exportarUsuariosExcel = async (req: Request, res: Response) => {
     res.send(buffer);
   } catch (error) {
     console.error("Error al exportar usuarios:", error);
-    res
-      .status(500)
-      .json({
-        message: "Error al exportar a Excel",
-        error: (error as Error).message,
-        stack: (error as Error).stack,
-      });
+    res.status(500).json({
+      message: "Error al exportar a Excel",
+      error: (error as Error).message,
+      stack: (error as Error).stack,
+    });
   }
 };

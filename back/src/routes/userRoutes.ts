@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getAllUsers, getUserById, createUser, updateUser, getUserByIosfa, getUserByDni, getUserByApellido, getUserByGrado, getUserByCurso, exportarUsuariosExcel } from "../controllers/userControllers";
+import { getAllUsers, getUserById, createUser, updateUser, getUserByDni, getUserByApellido, getUserByCurso, exportarUsuariosExcel, getUserByCargo } from "../controllers/userControllers";
 
 const router = Router();
 
@@ -7,10 +7,9 @@ const router = Router();
 
 
 // Rutas CRUD para usuarios
-router.get('/iosfa/:iosfa', getUserByIosfa);
 router.get('/dni/:dni', getUserByDni);
 router.get('/apellido/:apellido', getUserByApellido);
-router.get('/grado/:grado', getUserByGrado);
+router.get('/cargo/:cargo', getUserByCargo);
 router.get('/curso/:curso', getUserByCurso);
 router.get('/', getAllUsers);        
 router.get('/:id', getUserById);     

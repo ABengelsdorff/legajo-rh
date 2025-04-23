@@ -46,14 +46,7 @@ export const getUserById = async (id: number): Promise<IUser> => {
   return response.json();
 };
 
-export const getUserByIosfa = async (iosfa: number): Promise<IUser> => {
-  const response = await fetch(`${API_URL}/users/iosfa/${iosfa}`, {
-    headers: getAuthHeaders(),
-  });
 
-  if (!response.ok) throw new Error("Usuario no encontrado");
-  return response.json();
-};
 
 export const getUserByDni = async (dni: number): Promise<IUser> => {
   const response = await fetch(`${API_URL}/users/dni/${dni}`, {
@@ -73,8 +66,8 @@ export const getUserByApellido = async (apellido: string): Promise<IUser[]> => {
   return response.json();
 };
 
-export const getUserByGrado = async (grado: string): Promise<IUser[]> => {
-  const response = await fetch(`${API_URL}/users/grado/${grado}`, {
+export const getUserByCargo = async (cargo: string): Promise<IUser[]> => {
+  const response = await fetch(`${API_URL}/users/cargo/${cargo}`, {
     headers: getAuthHeaders(),
   });
 

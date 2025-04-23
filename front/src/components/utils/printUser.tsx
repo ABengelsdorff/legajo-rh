@@ -11,12 +11,11 @@ export function printUser(user: IUser) {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false, 
+    hour12: false,
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
   });
-  
 
   const userInfo = `
 
@@ -92,12 +91,7 @@ export function printUser(user: IUser) {
           <div class="info-item"><span class="label">Correo Electrónico:</span> ${
             user.correoElectronico
           }</div>
-          <div class="info-item"><span class="label">Correo Institucional:</span> ${
-            user.correoInstitucional
-          }</div>
-          <div class="info-item"><span class="label">Celular:</span> ${
-            user.numeroDeCelular
-          }</div>
+          
           <div class="info-item"><span class="label">Dirección:</span> ${
             user.direccion
           }</div>
@@ -110,63 +104,26 @@ export function printUser(user: IUser) {
           <div class="info-item"><span class="label">Grupo Sanguíneo:</span> ${
             user.grupoSanguineo
           }</div>
-          <div class="info-item"><span class="label">CBU:</span> ${
-            user.cbu
-          }</div>
+          
         </div>
       </div>
 
       <div class="info-section">
         <h2>Información Profesional</h2>
         <div class="info-grid">
-          <div class="info-item"><span class="label">Grado:</span> ${
-            user.grado
-          }</div>
-          <div class="info-item"><span class="label">Escalafón:</span> ${
-            user.escalafon
-          }</div>
+          
+          
           <div class="info-item"><span class="label">Cargo:</span> ${
             user.cargo
           }</div>
           <div class="info-item"><span class="label">Especialidad:</span> ${
             user.especialidad
           }</div>
-          <div class="info-item"><span class="label">Especialidad Avanzada:</span> ${
-            user.especialidadAvanzada
-          }</div>
-          <div class="info-item"><span class="label">Destino JB:</span> ${
-            user.destinoJbGrupos
-          }</div>
-          <div class="info-item"><span class="label">Destino Interno:</span> ${
-            user.destinoInterno
-          }</div>
-          <div class="info-item"><span class="label">Destino Anterior:</span> ${
-            user.destinoAnterior
-          }</div>
-          <div class="info-item"><span class="label">RTI:</span> ${
-            user.rti
-          }</div>
+         
           <div class="info-item"><span class="label">Formación Académica:</span> ${
             user.formacionAcademica
           }</div>
-          <div class="info-item"><span class="label">Instituto de Formación:</span> ${
-            user.institutoDeFormacion
-          }</div>
-          <div class="info-item"><span class="label">Número de IOSFA:</span> ${
-            user.numeroDeIosfa
-          }</div>
-          <div class="info-item"><span class="label">Usuario GDE:</span> ${
-            user.usuarioGde
-          }</div>
-          <div class="info-item"><span class="label">Compromiso de Servicio:</span> ${
-            user.compromisoDeServicio
-          }</div>
-          <div class="info-item"><span class="label">Último Ascenso:</span> ${formatDate(
-            user.ultimoAscenso
-          )}</div>
-          <div class="info-item"><span class="label">Foto de Legajo:</span> ${
-            user.fotoDeLegajo
-          }</div>
+         
         </div>
       </div>
 
@@ -192,7 +149,7 @@ export function printUser(user: IUser) {
                 (f) => `
             <li>${f.parentesco}: ${f.nombre} ${f.apellido} </li>
             <li>DNI: ${f.dni}</li>
-            <li>Personal Militar: ${f.personalMilitar}</li>
+        
             <li class="break-wrap">Observaciones: ${f.observaciones}</li>
           `
               )
@@ -202,105 +159,22 @@ export function printUser(user: IUser) {
       </div>
 
 
- <div class="info-section">
-  <h2>Situación de Revista</h2>
-  <ul>
-  
-          <li>Situacion de Revista: ${user.situacionDeRevista || "-"}</li>
-  </ul>
-</div>
 
 
-<div class="info-section">
-  <h2>Compromiso de Servicio</h2>
-  <ul>
-    <li>Compromiso: ${user.compromisoDeServicio}</li>
-    <li>Último Ascenso: ${formatDate(user.ultimoAscenso)}</li>
-    <li>Foto de Legajo: ${user.fotoDeLegajo}</li>
-  </ul>
-</div>
-      <div class="info-section">
-        <h2>Actuaciones</h2>
-        <ul>
-          ${
-            user.actuaciones
-              ?.map(
-                (a) => `
-            <li>Expediente: ${a.numeroDeExpediente}</li>
-            <li class="break-wrap">Afección: ${a.afeccion}</li>
-            <li>Afección: Disponibilidad: ${formatDate(
-              a.disponibilidad?.desde
-            )} al ${formatDate(a.disponibilidad?.hasta)}</li>
-            <li>Afección: Pasiva: ${formatDate(
-              a.pasiva?.desde
-            )} al ${formatDate(a.pasiva?.hasta)}</li>
-          `
-              )
-              .join("<br>") || "<li>-</li>"
-          }
-        </ul>
-      </div>
 
-      <div class="info-section">
-        <h2>Solicitudes</h2>
-        <ul>
-          ${
-            user.solicitudes
-              ?.map(
-                (s) => `
-            <li>Expediente: ${s.numeroDeExpediente}</li>
-            <li>Desde: ${formatDate(s.solicitud?.desde)}</li>
-            <li class="break-wrap">Observaciones: ${s.observaciones}</li>
-          `
-              )
-              .join("<br>") || "<li>-</li>"
-          }
-        </ul>
-      </div>
 
-      <div class="info-section">
-        <h2>Parte de Enfermo</h2>
-        <ul>
-          ${
-            user.parteDeEnfermo
-              ?.map(
-                (p) => `
-            <li>Inicio: ${formatDate(p.inicio)}</li>
-            <li class="break-wrap">Observaciones: ${p.observaciones}</li>
-          `
-              )
-              .join("<br>") || "<li>-</li>"
-          }
-        </ul>
-      </div>
-
-      <div class="info-section">
-        <h2>Aptitud Psicofísica</h2>
-        <ul>
-          ${
-            user.aptitudPsicofisica
-              ?.map(
-                (a) => `
-            <li>Estado: ${a.estado}</li>
-            <li class="break-wrap">Observación: ${a.observacion}</li>
-          `
-              )
-              .join("<br>") || "<li>-</li>"
-          }
-        </ul>
-      </div>
+      
 
       <div class="info-section">
         <h2>Junta Médica</h2>
         <ul>
           ${
-            user.juntaMedica
+            user.evaluacionesMedicas
               ?.map(
                 (j) => `
-            <li class="break-wrap">Mensaje: ${j.mensaje}</li>
-            <li>Turnos: ${formatDate(j.turnos)}</li>
+            
             <li class="break-wrap">Observación: ${j.observacion}</li>
-            <li class="break-wrap">Afección: ${j.afeccion}</li>
+            
           `
               )
               .join("<br>") || "<li>-</li>"

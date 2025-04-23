@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { ValidacionLegajo } from "../../components/utils/rulesForm";
 import { createUser, updateUser } from "../../services/userServices";
@@ -14,7 +14,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Check } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 export default function LegajoProfesional({
   initialData,
@@ -24,50 +23,6 @@ export default function LegajoProfesional({
   onSave?: (data: IUser) => void;
 }) {
   const [formSuccess, setFormSuccess] = useState(false);
-  const [user, setUser] = useState<IUser>(
-    initialData || {
-      nombre: "",
-      apellido: "",
-      sexo: "",
-      fechaDeNacimiento: null,
-      grupoSanguineo: "",
-      numeroDeDni: "",
-      numeroDeCuil: "",
-      direccion: "",
-      codigoPostal: "",
-      correoElectronico: "",
-      correoInstitucional: "",
-      usuarioGde: "",
-      cbu: "",
-      numeroDeCelular: "",
-      numeroDeIosfa: "",
-      rti: "",
-      destinoAnterior: "",
-      institutoDeFormacion: "",
-      grado: "",
-      destinadoEnLaUnidad: "",
-      destinoJbGrupos: "",
-      destinoInterno: "",
-      cargo: "",
-      escalafon: "",
-      especialidad: "",
-      especialidadAvanzada: "",
-      cursosRealizados: [{ id: Date.now(), nombre: "" }],
-      formacionAcademica: "",
-      nivelDeIngles: 0,
-      estadoCivil: "",
-      grupoFamiliar: [],
-      situacionDeRevista: "",
-      compromisoDeServicio: "",
-      ultimoAscenso: "",
-      fotoDeLegajo: "",
-      actuaciones: [],
-      parteDeEnfermo: [],
-      aptitudPsicofisica: [],
-      solicitudes: [],
-      juntaMedica: [],
-    }
-  );
 
   const router = useRouter();
 
@@ -75,11 +30,36 @@ export default function LegajoProfesional({
     control,
     handleSubmit,
     reset,
-    getValues,
     formState: { errors },
   } = useForm<IUser>({
     mode: "onChange",
-    defaultValues: initialData || user,
+    defaultValues: initialData || {
+      nombre: "",
+      apellido: "",
+      sexo: "",
+      fechaDeNacimiento: "",
+      grupoSanguineo: "",
+      numeroDeDni: "",
+      numeroDeCuil: "",
+      direccion: "",
+      codigoPostal: "",
+      correoElectronico: "",
+      telefono: "",
+      estadoCivil: "",
+      cargo: "",
+      departamento: "",
+      fechaIngreso: "",
+      activo: "",
+      formacionAcademica: "",
+      especialidad: "",
+      nivelDeIngles: 0,
+      grupoFamiliar: [],
+      evaluacionesMedicas: [],
+      licencias: [],
+      cursosRealizados: [
+        { id: Date.now(), nombre: "", institucion: "", fechaFinalizacion: "" },
+      ],
+    },
   });
 
   const {
@@ -92,48 +72,21 @@ export default function LegajoProfesional({
   });
 
   const {
-    fields: fieldsParteEnfermo,
-    append: appendParteEnfermo,
-    remove: removeParteEnfermo,
+    fields: evaluacionesMedicasFields,
+    append: appendEvaluacionMedica,
+    remove: removeEvaluacionMedica,
   } = useFieldArray({
     control,
-    name: "parteDeEnfermo",
+    name: "evaluacionesMedicas",
   });
 
   const {
-    fields: fieldsAptitud,
-    append: appendAptitud,
-    remove: removeAptitud,
+    fields: licenciasFields,
+    append: appendLicencia,
+    remove: removeLicencia,
   } = useFieldArray({
     control,
-    name: "aptitudPsicofisica",
-  });
-
-  const {
-    fields: fieldsJunta,
-    append: appendJunta,
-    remove: removeJunta,
-  } = useFieldArray({
-    control,
-    name: "juntaMedica",
-  });
-
-  const {
-    fields: fieldsActuaciones,
-    append: appendActuacion,
-    remove: removeActuacion,
-  } = useFieldArray({
-    control,
-    name: "actuaciones",
-  });
-
-  const {
-    fields: fieldsSolicitudes,
-    append: appendSolicitud,
-    remove: removeSolicitud,
-  } = useFieldArray({
-    control,
-    name: "solicitudes",
+    name: "licencias",
   });
 
   const {
@@ -142,7 +95,7 @@ export default function LegajoProfesional({
     remove,
   } = useFieldArray({
     control,
-    name: "cursosRealizados" as const,
+    name: "cursosRealizados",
   });
 
   useEffect(() => {
@@ -150,31 +103,25 @@ export default function LegajoProfesional({
       const normalizado: IUser = {
         ...initialData,
         sexo: (initialData.sexo?.toUpperCase() ?? "") as
-          | ""
           | "FEMENINO"
-          | "MASCULINO",
+          | "MASCULINO"
+          | "",
         estadoCivil: (initialData.estadoCivil?.toUpperCase() ?? "") as
-          | ""
           | "SOLTERO"
           | "CASADO"
           | "CONCUBINATO"
           | "DIVORCIADO"
-          | "VIUDO",
+          | "VIUDO"
+          | "",
         cargo: (initialData.cargo?.toUpperCase() ?? "") as
           | "AUXILIAR"
           | "ENCARGADO"
           | "",
-        grado: (initialData.grado?.toUpperCase() ?? "") as IUser["grado"],
-        destinoJbGrupos: (initialData.destinoJbGrupos?.toUpperCase() ??
-          "") as IUser["destinoJbGrupos"],
-        institutoDeFormacion:
-          (initialData.institutoDeFormacion?.toUpperCase() ??
-            "") as IUser["institutoDeFormacion"],
-        destinadoEnLaUnidad: (initialData.destinadoEnLaUnidad?.toUpperCase() ??
-          "") as "" | "SI" | "NO",
+        formacionAcademica: (initialData.formacionAcademica?.toUpperCase() ??
+          "") as IUser["formacionAcademica"],
+        activo: (initialData.activo?.toUpperCase() ?? "") as "SI" | "NO" | "",
       };
 
-      setUser(normalizado);
       reset(normalizado);
     }
   }, [initialData, reset]);
@@ -198,9 +145,8 @@ export default function LegajoProfesional({
         router.push("/Buscador");
       }, 3000);
 
-      // 🔁 Llamar a la función onSave si fue pasada como prop
       if (onSave) {
-        onSave(savedUser); // <<<<< ✅ Devuelve el usuario actualizado
+        onSave(savedUser);
       }
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
@@ -258,7 +204,7 @@ export default function LegajoProfesional({
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-              {/* Personal Information Section */}
+              {/* //! Informacion personal */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                   <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -279,9 +225,9 @@ export default function LegajoProfesional({
                           </label>
                           <input
                             {...field}
-                            type="text"
                             id="nombre"
-                            value={field.value || ""}
+                            type="text"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -293,6 +239,7 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
+                    {/* Apellido */}
                     <Controller
                       name="apellido"
                       control={control}
@@ -307,9 +254,9 @@ export default function LegajoProfesional({
                           </label>
                           <input
                             {...field}
-                            type="text"
                             id="apellido"
-                            value={field.value || ""}
+                            type="text"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -321,6 +268,7 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
+                    {/* Sexo */}
                     <Controller
                       name="sexo"
                       control={control}
@@ -336,6 +284,7 @@ export default function LegajoProfesional({
                           <select
                             {...field}
                             id="sexo"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           >
                             <option value="">Seleccionar...</option>
@@ -351,6 +300,7 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
+                    {/* Fecha de Nacimiento */}
                     <Controller
                       name="fechaDeNacimiento"
                       control={control}
@@ -364,7 +314,7 @@ export default function LegajoProfesional({
                             Fecha de Nacimiento
                           </label>
                           <input
-                            {...field} // Esta línea permite que React Hook Form maneje el valor
+                            {...field}
                             type="date"
                             id="fechaDeNacimiento"
                             value={
@@ -374,23 +324,15 @@ export default function LegajoProfesional({
                                     .split("T")[0]
                                 : ""
                             }
-                            // Asegúrate de convertir la fecha a formato de cadena para el input
                             onChange={(e) => {
                               const value = e.target.value;
                               if (value) {
-                                const [year, month, day] = value.split("-");
-                                const fixedDate = new Date(
-                                  Number(year),
-                                  Number(month) - 1,
-                                  Number(day),
-                                  12
-                                ); // 👈 12:00 hs
-                                field.onChange(fixedDate);
+                                const [y, m, d] = value.split("-");
+                                field.onChange(new Date(+y, +m - 1, +d, 12));
                               } else {
-                                field.onChange(null);
+                                field.onChange("");
                               }
                             }}
-                            // Actualiza el valor correctamente
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -401,6 +343,7 @@ export default function LegajoProfesional({
                         {errors.fechaDeNacimiento.message}
                       </span>
                     )}
+
 
                     <Controller
                       name="numeroDeDni"
@@ -416,9 +359,9 @@ export default function LegajoProfesional({
                           </label>
                           <input
                             {...field}
-                            type="text"
                             id="numeroDeDni"
-                            value={field.value || ""}
+                            type="text"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -430,6 +373,7 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
+                    {/* CUIL */}
                     <Controller
                       name="numeroDeCuil"
                       control={control}
@@ -444,9 +388,9 @@ export default function LegajoProfesional({
                           </label>
                           <input
                             {...field}
-                            type="text"
                             id="numeroDeCuil"
-                            value={field.value || ""}
+                            type="text"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -458,34 +402,7 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
-                    <Controller
-                      name="grupoSanguineo"
-                      control={control}
-                      rules={ValidacionLegajo.grupoSanguineo}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="grupoSanguineo"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Grupo Sanguíneo
-                          </label>
-                          <input
-                            {...field}
-                            type="text"
-                            id="grupoSanguineo"
-                            value={field.value || ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.grupoSanguineo && (
-                      <span className="text-red-600">
-                        {errors.grupoSanguineo.message}
-                      </span>
-                    )}
-
+                    {/* Dirección */}
                     <Controller
                       name="direccion"
                       control={control}
@@ -500,9 +417,9 @@ export default function LegajoProfesional({
                           </label>
                           <input
                             {...field}
-                            type="text"
                             id="direccion"
-                            value={field.value || ""}
+                            type="text"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
@@ -514,162 +431,37 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
+                  
+                    {/* Teléfono */}
                     <Controller
-                      name="codigoPostal"
+                      name="telefono"
                       control={control}
-                      rules={ValidacionLegajo.codigoPostal}
+                      rules={ValidacionLegajo.telefono}
                       render={({ field }) => (
                         <div className="relative">
                           <label
-                            htmlFor="codigoPostal"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Código Postal
-                          </label>
-                          <input
-                            {...field}
-                            type="text"
-                            id="codigoPostal"
-                            value={field.value || ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.codigoPostal && (
-                      <span className="text-red-600">
-                        {errors.codigoPostal.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name="correoElectronico"
-                      control={control}
-                      rules={ValidacionLegajo.correoElectronico}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="correoElectronico"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Correo Electrónico
-                          </label>
-                          <input
-                            {...field}
-                            type="email"
-                            id="correoElectronico"
-                            value={field.value || ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.correoElectronico && (
-                      <span className="text-red-600">
-                        {errors.correoElectronico.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name="cbu"
-                      control={control}
-                      rules={ValidacionLegajo.cbu}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="cbu"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            CBU
-                          </label>
-                          <input
-                            {...field}
-                            type="text"
-                            id="cbu"
-                            value={field.value || ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.cbu && (
-                      <span className="text-red-600">{errors.cbu.message}</span>
-                    )}
-
-                    <Controller
-                      name="numeroDeCelular"
-                      control={control}
-                      rules={ValidacionLegajo.numeroDeCelular}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="numeroDeCelular"
+                            htmlFor="telefono"
                             className="block text-sm font-medium text-gray-900"
                           >
                             Número de Celular
                           </label>
                           <input
                             {...field}
+                            id="telefono"
                             type="text"
-                            id="numeroDeCelular"
-                            value={field.value || ""}
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
                       )}
                     />
-                    {errors.numeroDeCelular && (
+                    {errors.telefono && (
                       <span className="text-red-600">
-                        {errors.numeroDeCelular.message}
+                        {errors.telefono.message}
                       </span>
                     )}
 
-                    <Controller
-                      name="formacionAcademica"
-                      control={control}
-                      rules={ValidacionLegajo.formacionAcademica}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="formacionAcademica"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Formación Académica
-                          </label>
-                          <select
-                            {...field}
-                            id="formacionAcademica"
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          >
-                            <option value="">Seleccionar...</option>
-                            <option value="SECUNDARIO INCOMPLETO">
-                              SECUNDARIO INCOMPLETO
-                            </option>
-                            <option value="SECUNDARIO COMPLETO">
-                              SECUNDARIO COMPLETO
-                            </option>
-                            <option value="TERCIARIO INCOMPLETO">
-                              TERCIARIO INCOMPLETO
-                            </option>
-                            <option value="TERCIARIO COMPLETO">
-                              TERCIARIO COMPLETO
-                            </option>
-                            <option value="UNIVERSITARIO INCOMPLETO">
-                              UNIVERSITARIO INCOMPLETO
-                            </option>
-                            <option value="UNIVERSITARIO COMPLETO">
-                              UNIVERSITARIO COMPLETO
-                            </option>
-                          </select>
-                        </div>
-                      )}
-                    />
-                    {errors.formacionAcademica && (
-                      <span className="text-red-600">
-                        {errors.formacionAcademica.message}
-                      </span>
-                    )}
-
+                    {/* Estado Civil */}
                     <Controller
                       name="estadoCivil"
                       control={control}
@@ -684,8 +476,8 @@ export default function LegajoProfesional({
                           </label>
                           <select
                             {...field}
-                            value={field.value ?? ""}
                             id="estadoCivil"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           >
                             <option value="">Seleccionar...</option>
@@ -706,27 +498,27 @@ export default function LegajoProfesional({
                   </div>
                 </div>
 
-                {/* Información Profesional */}
+                {/*//! Información Profesional */}
                 <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                   <h2 className="text-2xl font-bold text-gray-800 mb-4">
                     Información Profesional
                   </h2>
                   <div className="space-y-4">
                     <Controller
-                      name="destinadoEnLaUnidad"
+                      name="activo"
                       control={control}
-                      rules={ValidacionLegajo.destinadoEnLaUnidad}
+                      rules={ValidacionLegajo.activo}
                       render={({ field }) => (
                         <div className="relative">
                           <label
-                            htmlFor="destinadoEnLaUnidad"
+                            htmlFor="activo"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Destinado en la Unidad
+                            Activo
                           </label>
                           <select
                             {...field}
-                            id="destinadoEnLaUnidad"
+                            id="activo"
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           >
                             <option value="">Seleccionar...</option>
@@ -736,212 +528,53 @@ export default function LegajoProfesional({
                         </div>
                       )}
                     />
-                    {errors.destinadoEnLaUnidad && (
+                    {errors.activo && (
                       <span className="text-red-600">
-                        {errors.destinadoEnLaUnidad.message}
+                        {errors.activo.message}
                       </span>
                     )}
 
+                    {/* Fecha de Ingresoo */}
                     <Controller
-                      name="numeroDeIosfa"
+                      name="fechaIngreso"
                       control={control}
-                      rules={ValidacionLegajo.numeroDeIosfa}
+                      rules={ValidacionLegajo.fechaIngreso}
                       render={({ field }) => (
                         <div className="relative">
                           <label
-                            htmlFor="numeroDeIosfa"
+                            htmlFor="fechaDeIngreso"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Número de IOSFA
+                            Fecha de Ingreso
                           </label>
                           <input
                             {...field}
-                            id="numeroDeIosfa"
-                            type="text"
-                            value={field.value || ""}
+                            type="date"
+                            id="fechaDeIngreso"
+                            value={
+                              field.value
+                                ? new Date(field.value)
+                                    .toISOString()
+                                    .split("T")[0]
+                                : ""
+                            }
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              if (value) {
+                                const [y, m, d] = value.split("-");
+                                field.onChange(new Date(+y, +m - 1, +d, 12));
+                              } else {
+                                field.onChange("");
+                              }
+                            }}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
                       )}
                     />
-                    {errors.numeroDeIosfa && (
+                    {errors.fechaIngreso && (
                       <span className="text-red-600">
-                        {errors.numeroDeIosfa.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name="institutoDeFormacion"
-                      control={control}
-                      rules={ValidacionLegajo.institutoDeFormacion}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="institutoDeFormacion"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Instituto de Formación
-                          </label>
-                          <select
-                            {...field}
-                            id="institutoDeFormacion"
-                            value={field.value ?? ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          >
-                            <option value="">Seleccionar...</option>
-                            <option value="BAME">BAME</option>
-                            <option value="CUPROSO">CUPROSO</option>
-                            <option value="CUSERPRO">CUSERPRO</option>
-                            <option value="EAM">EAM</option>
-                            <option value="ESFA">ESFA</option>
-                            <option value="ESFAC">ESFAC</option>
-                            <option value="ESFAE">ESFAE</option>
-                            <option value="IFE">IFE</option>
-                            <option value="INCORPORACION TROPA">
-                              INCORPORACION TROPA
-                            </option>
-                          </select>
-                        </div>
-                      )}
-                    />
-                    {errors.institutoDeFormacion && (
-                      <span className="text-red-600">
-                        {errors.institutoDeFormacion.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name="escalafon"
-                      control={control}
-                      rules={ValidacionLegajo.escalafon}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="escalafon"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Escalafón
-                          </label>
-                          <input
-                            {...field}
-                            id="escalafon"
-                            value={field.value || ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          ></input>
-                        </div>
-                      )}
-                    />
-                    {errors.escalafon && (
-                      <span className="text-red-600">
-                        {errors.escalafon.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name="grado"
-                      control={control}
-                      rules={ValidacionLegajo.grado}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="grado"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Grado
-                          </label>
-                          <select
-                            {...field}
-                            value={field.value ?? ""}
-                            id="grado"
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          >
-                            <option value="">Seleccionar...</option>
-                            <option value="CABO">CABO</option>
-                            <option value="CABO PRIMERO">CABO PRIMERO</option>
-                            <option value="CABO PRINCIPAL">
-                              CABO PRINCIPAL
-                            </option>
-                            <option value="SUBOFICIAL AUXILIAR">
-                              SUBOFICIAL AUXILIAR
-                            </option>
-                            <option value="SUBOFICIAL AYUDANTE">
-                              SUBOFICIAL AYUDANTE
-                            </option>
-                            <option value="SUBOFICIAL PRINCIPAL">
-                              SUBOFICIAL PRINCIPAL
-                            </option>
-                            <option value="SUBOFICIAL MAYOR">
-                              SUBOFICIAL MAYOR
-                            </option>
-                          </select>
-                        </div>
-                      )}
-                    />
-                    {errors.grado && (
-                      <span className="text-red-600">
-                        {errors.grado.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name="destinoJbGrupos"
-                      control={control}
-                      rules={ValidacionLegajo.destinoJbGrupos}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="destinoJbGrupos"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Destino JB Grupos
-                          </label>
-                          <select
-                            {...field}
-                            id="destinoJbGrupos"
-                            value={field.value ?? ""}
-                            multiple={false}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          >
-                            <option value="">Seleccionar...</option>
-                            <option value="JEFATURA">JEFATURA</option>
-                            <option value="GRUPO BASE">GRUPO BASE</option>
-                            <option value="GRUPO TECNICO">GRUPO TECNICO</option>
-                            <option value="GRUPO AEREO">GRUPO AEREO</option>
-                          </select>
-                        </div>
-                      )}
-                    />
-                    {errors.destinoJbGrupos && (
-                      <span className="text-red-600">
-                        {errors.destinoJbGrupos.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name="destinoInterno"
-                      control={control}
-                      rules={ValidacionLegajo.destinoInterno}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="destinoInterno"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Destino Interno
-                          </label>
-                          <input
-                            {...field}
-                            type="text"
-                            id="destinoInterno"
-                            value={field.value || ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.destinoInterno && (
-                      <span className="text-red-600">
-                        {errors.destinoInterno.message}
+                        {errors.fechaIngreso.message}
                       </span>
                     )}
 
@@ -1005,31 +638,96 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
+                    {/* Formación Académica */}
                     <Controller
-                      name="especialidadAvanzada"
+                      name="formacionAcademica"
                       control={control}
-                      rules={ValidacionLegajo.especialidadAvanzada}
+                      rules={ValidacionLegajo.formacionAcademica}
                       render={({ field }) => (
                         <div className="relative">
                           <label
-                            htmlFor="especialidadAvanzada"
+                            htmlFor="formacionAcademica"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Especialidad Avanzada
+                            Formación Académica
                           </label>
-                          <input
+                          <select
                             {...field}
-                            type="text"
-                            value={field.value || ""}
-                            id="especialidadAvanzada"
+                            id="formacionAcademica"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
+                          >
+                            <option value="">Seleccionar...</option>
+                            <option value="SECUNDARIO INCOMPLETO">
+                              SECUNDARIO INCOMPLETO
+                            </option>
+                            <option value="SECUNDARIO COMPLETO">
+                              SECUNDARIO COMPLETO
+                            </option>
+                            <option value="TERCIARIO INCOMPLETO">
+                              TERCIARIO INCOMPLETO
+                            </option>
+                            <option value="TERCIARIO COMPLETO">
+                              TERCIARIO COMPLETO
+                            </option>
+                            <option value="UNIVERSITARIO INCOMPLETO">
+                              UNIVERSITARIO INCOMPLETO
+                            </option>
+                            <option value="UNIVERSITARIO COMPLETO">
+                              UNIVERSITARIO COMPLETO
+                            </option>
+                          </select>
                         </div>
                       )}
                     />
-                    {errors.especialidadAvanzada && (
+                    {errors.formacionAcademica && (
                       <span className="text-red-600">
-                        {errors.especialidadAvanzada.message}
+                        {errors.formacionAcademica.message}
+                      </span>
+                    )}
+
+                    <Controller
+                      name="departamento"
+                      control={control}
+                      rules={ValidacionLegajo.departamento}
+                      render={({ field }) => (
+                        <div className="relative">
+                          <label
+                            htmlFor="departamento"
+                            className="block text-sm font-medium text-gray-900"
+                          >
+                            Departamento
+                          </label>
+                          <select
+                            {...field}
+                            id="departamento"
+                            value={field.value || ""}
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                          >
+                            <option value="">Seleccionar...</option>
+                            <option value="RECLUTAMIENTO Y SELECCIÓN">
+                              RECLUTAMIENTO Y SELECCIÓN
+                            </option>
+                            <option value="CAPACITACIÓN Y DESARROLLO">
+                              CAPACITACIÓN Y DESARROLLO
+                            </option>
+                            <option value="CONSULTORÍA ORGANIZACIONAL">
+                              CONSULTORÍA ORGANIZACIONAL
+                            </option>
+                            <option value="EVALUACIONES PSICOTÉCNICAS">
+                              EVALUACIONES PSICOTÉCNICAS
+                            </option>
+                            <option value="RELACIONES LABORALES">
+                              RELACIONES LABORALES
+                            </option>
+                            <option value="OTROS">OTROS</option>
+                          </select>
+                        </div>
+                      )}
+                    />
+                    {errors.departamento && (
+                      <span className="text-red-600">
+                        {errors.departamento.message}
                       </span>
                     )}
 
@@ -1069,115 +767,64 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
-                    <Controller
-                      name="rti"
+                      {/* Código Postal */}
+                      <Controller
+                      name="codigoPostal"
                       control={control}
-                      rules={ValidacionLegajo.rti}
+                      rules={ValidacionLegajo.codigoPostal}
                       render={({ field }) => (
                         <div className="relative">
                           <label
-                            htmlFor="rti"
+                            htmlFor="codigoPostal"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            RTI
+                            Código Postal
                           </label>
                           <input
                             {...field}
+                            id="codigoPostal"
                             type="text"
-                            value={field.value || ""}
-                            id="rti"
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
                       )}
                     />
-                    {errors.rti && (
-                      <span className="text-red-600">{errors.rti.message}</span>
-                    )}
-
-                    <Controller
-                      name="destinoAnterior"
-                      control={control}
-                      rules={ValidacionLegajo.destinoAnterior}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="destinoAnterior"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Destino Anterior
-                          </label>
-                          <input
-                            {...field}
-                            type="text"
-                            value={field.value || ""}
-                            id="destinoAnterior"
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.destinoAnterior && (
-                      <span className="text-red-600 ">
-                        {errors.destinoAnterior.message}
+                    {errors.codigoPostal && (
+                      <span className="text-red-600">
+                        {errors.codigoPostal.message}
                       </span>
                     )}
 
+                    {/* Correo Electrónico */}
                     <Controller
-                      name="correoInstitucional"
+                      name="correoElectronico"
                       control={control}
-                      rules={ValidacionLegajo.correoInstitucional}
+                      rules={ValidacionLegajo.correoElectronico}
                       render={({ field }) => (
                         <div className="relative">
                           <label
-                            htmlFor="correoInstitucional"
+                            htmlFor="correoElectronico"
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Correo Institucional
+                            Correo Electrónico
                           </label>
                           <input
                             {...field}
+                            id="correoElectronico"
                             type="email"
-                            id="correoInstitucional"
-                            value={field.value || ""}
+                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
                       )}
                     />
-                    {errors.correoInstitucional && (
+                    {errors.correoElectronico && (
                       <span className="text-red-600">
-                        {errors.correoInstitucional.message}
+                        {errors.correoElectronico.message}
                       </span>
                     )}
 
-                    <Controller
-                      name="usuarioGde"
-                      control={control}
-                      rules={ValidacionLegajo.usuarioGde}
-                      render={({ field }) => (
-                        <div className="relative">
-                          <label
-                            htmlFor="usuarioGde"
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Usuario GDE
-                          </label>
-                          <input
-                            {...field}
-                            type="text"
-                            value={field.value || ""}
-                            id="usuarioGde"
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.usuarioGde && (
-                      <span className="text-red-600">
-                        {errors.usuarioGde.message}
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>
@@ -1189,26 +836,126 @@ export default function LegajoProfesional({
                 </h2>
                 <div className="space-y-4">
                   {cursos.map((curso, index) => (
-                    <div key={curso.id || index} className="space-y-1">
-                      <div className="flex items-center space-x-4">
-                        <Controller
-                          name={`cursosRealizados.${index}.nombre`}
-                          control={control}
-                          rules={ValidacionLegajo.cursosRealizados}
-                          render={({ field }) => (
+                    <div
+                      key={curso.id || index}
+                      className="space-y-4 border p-4 rounded-lg bg-white"
+                    >
+                      {/* Nombre */}
+                      <Controller
+                        name={`cursosRealizados.${index}.nombre`}
+                        control={control}
+                        rules={ValidacionLegajo.cursosRealizados}
+                        render={({ field }) => (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-900">
+                              Nombre del Curso
+                            </label>
                             <input
                               {...field}
+                              type="text"
                               value={field.value ?? ""}
                               onChange={(e) =>
                                 field.onChange(e.target.value.toUpperCase())
                               }
-                              type="text"
-                              className="text-gray-900 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                               placeholder="Ej: CURSO DE LOGÍSTICA"
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
-                          )}
-                        />
+                            {errors.cursosRealizados?.[index]?.nombre && (
+                              <span className="text-red-600 text-sm">
+                                {
+                                  errors.cursosRealizados[index]?.nombre
+                                    ?.message
+                                }
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      />
 
+                      {/* Institución */}
+                      <Controller
+                        name={`cursosRealizados.${index}.institucion`}
+                        control={control}
+                        rules={ValidacionLegajo.cursosInstitucion}
+                        render={({ field }) => (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-900">
+                              Institución
+                            </label>
+                            <input
+                              {...field}
+                              type="text"
+                              value={field.value ?? ""}
+                              placeholder="Ej: UNIVERSIDAD TECNOLÓGICA"
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            />
+                            {errors.cursosRealizados?.[index]?.institucion && (
+                              <span className="text-red-600 text-sm">
+                                {
+                                  errors.cursosRealizados[index]?.institucion
+                                    ?.message
+                                }
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      />
+
+                      {/* Fecha de finalización */}
+                      <Controller
+                        name={`cursosRealizados.${index}.fechaFinalizacion`}
+                        control={control}
+                        rules={ValidacionLegajo.cursosFecha}
+                        render={({ field }) => (
+                          <div>
+                            <label className="block text-sm font-medium text-gray-900">
+                              Fecha de Finalización
+                            </label>
+                            <input
+                              {...field}
+                              type="date"
+                              value={
+                                field.value
+                                  ? new Date(field.value)
+                                      .toISOString()
+                                      .split("T")[0]
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value) {
+                                  const [year, month, day] = value.split("-");
+                                  const date = new Date(
+                                    Number(year),
+                                    Number(month) - 1,
+                                    Number(day),
+                                    12
+                                  );
+                                  field.onChange(date);
+                                } else {
+                                  field.onChange(null);
+                                }
+                              }}
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            />
+                            {errors.cursosRealizados?.[index]
+                              ?.fechaFinalizacion && (
+                              <span className="text-red-600 text-sm">
+                                {
+                                  errors.cursosRealizados[index]
+                                    ?.fechaFinalizacion?.message
+                                }
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      />
+
+                      {/* Botón Eliminar */}
+                      <div className="flex justify-end">
                         <button
                           type="button"
                           onClick={() => remove(index)}
@@ -1217,18 +964,20 @@ export default function LegajoProfesional({
                           Eliminar
                         </button>
                       </div>
-
-                      {errors.cursosRealizados?.[index]?.nombre && (
-                        <span className="text-red-600 text-sm">
-                          {errors.cursosRealizados[index]?.nombre?.message}
-                        </span>
-                      )}
                     </div>
                   ))}
 
+                  {/* Botón Agregar */}
                   <button
                     type="button"
-                    onClick={() => append({ id: Date.now(), nombre: "" })}
+                    onClick={() =>
+                      append({
+                        id: Date.now(),
+                        nombre: "",
+                        institucion: "",
+                        fechaFinalizacion: "",
+                      })
+                    }
                     className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                   >
                     Agregar Curso
@@ -1244,113 +993,105 @@ export default function LegajoProfesional({
                 {grupoFamiliarFields.map((familiar, index) => (
                   <div
                     key={index}
-                    className="grid grid-cols-2 gap-6 mb-4 p-4 bg-white rounded-lg"
+                    className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 p-4 bg-white rounded-lg"
                   >
                     {/* Columna Izquierda */}
                     <div className="space-y-4">
+                      {/* Nombre */}
                       <Controller
                         name={`grupoFamiliar.${index}.nombre`}
                         control={control}
                         rules={ValidacionLegajo.nombre}
                         render={({ field }) => (
                           <div>
-                            <label
-                              htmlFor={`familiar-nombre-${index}`}
-                              className="block text-sm font-medium text-gray-900"
-                            >
+                            <label className="block text-sm font-medium text-gray-900">
                               Nombre
                             </label>
                             <input
                               {...field}
                               type="text"
                               value={field.value ?? ""}
-                              id={`familiar-nombre-${index}`}
-                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
+                            {errors.grupoFamiliar?.[index]?.nombre && (
+                              <span className="text-red-600 text-sm">
+                                {errors.grupoFamiliar[index].nombre?.message}
+                              </span>
+                            )}
                           </div>
                         )}
                       />
-                      {errors.grupoFamiliar?.[index]?.nombre && (
-                        <span className="text-red-600">
-                          {errors.grupoFamiliar[index].nombre.message}
-                        </span>
-                      )}
 
+                      {/* Apellido */}
                       <Controller
                         name={`grupoFamiliar.${index}.apellido`}
                         control={control}
                         rules={ValidacionLegajo.apellido}
                         render={({ field }) => (
                           <div>
-                            <label
-                              htmlFor={`familiar-apellido-${index}`}
-                              className="block text-sm font-medium text-gray-900"
-                            >
+                            <label className="block text-sm font-medium text-gray-900">
                               Apellido
                             </label>
                             <input
                               {...field}
                               type="text"
                               value={field.value ?? ""}
-                              id={`familiar-apellido-${index}`}
-                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
+                            {errors.grupoFamiliar?.[index]?.apellido && (
+                              <span className="text-red-600 text-sm">
+                                {errors.grupoFamiliar[index].apellido?.message}
+                              </span>
+                            )}
                           </div>
                         )}
                       />
-                      {errors.grupoFamiliar?.[index]?.apellido && (
-                        <span className="text-red-600">
-                          {errors.grupoFamiliar[index].apellido.message}
-                        </span>
-                      )}
 
+                      {/* DNI */}
                       <Controller
                         name={`grupoFamiliar.${index}.dni`}
                         control={control}
                         rules={ValidacionLegajo.numeroDeDni}
                         render={({ field }) => (
                           <div>
-                            <label
-                              htmlFor={`familiar-dni-${index}`}
-                              className="block text-sm font-medium text-gray-900"
-                            >
+                            <label className="block text-sm font-medium text-gray-900">
                               DNI
                             </label>
                             <input
                               {...field}
                               type="text"
                               value={field.value ?? ""}
-                              id={`familiar-dni-${index}`}
-                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
+                            {errors.grupoFamiliar?.[index]?.dni && (
+                              <span className="text-red-600 text-sm">
+                                {errors.grupoFamiliar[index].dni?.message}
+                              </span>
+                            )}
                           </div>
                         )}
                       />
-                      {errors.grupoFamiliar?.[index]?.dni && (
-                        <span className="text-red-600">
-                          {errors.grupoFamiliar[index].dni.message}
-                        </span>
-                      )}
                     </div>
 
                     {/* Columna Derecha */}
                     <div className="space-y-4">
+                      {/* Parentesco */}
                       <Controller
                         name={`grupoFamiliar.${index}.parentesco`}
                         control={control}
                         rules={ValidacionLegajo.parentesco}
                         render={({ field }) => (
                           <div>
-                            <label
-                              htmlFor={`familiar-parentesco-${index}`}
-                              className="block text-sm font-medium text-gray-900"
-                            >
+                            <label className="block text-sm font-medium text-gray-900">
                               Parentesco
                             </label>
                             <select
                               {...field}
-                              id={`familiar-parentesco-${index}`}
-                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             >
                               <option value="">Seleccionar...</option>
                               <option value="CONYUGUE">CÓNYUGUE</option>
@@ -1360,82 +1101,110 @@ export default function LegajoProfesional({
                               <option value="HIJA">HIJA</option>
                               <option value="OTRO">OTRO</option>
                             </select>
+                            {errors.grupoFamiliar?.[index]?.parentesco && (
+                              <span className="text-red-600 text-sm">
+                                {
+                                  errors.grupoFamiliar[index].parentesco
+                                    ?.message
+                                }
+                              </span>
+                            )}
                           </div>
                         )}
                       />
-                      {errors.grupoFamiliar?.[index]?.parentesco && (
-                        <span className="text-red-600">
-                          {errors.grupoFamiliar[index].parentesco.message}
-                        </span>
-                      )}
 
+                      {/* Fecha de Nacimiento */}
                       <Controller
-                        name={`grupoFamiliar.${index}.personalMilitar`}
+                        name={`grupoFamiliar.${index}.fechaNacimiento`}
                         control={control}
-                        rules={ValidacionLegajo.personalMilitar}
+                        rules={ValidacionLegajo.fechadeNacimiento}
                         render={({ field }) => (
-                          <div className="relative">
-                            <label
-                              htmlFor={`familiar-personalMilitar-${index}`}
-                              className="block text-sm font-medium text-gray-900"
-                            >
-                              Personal Militar
+                          <div>
+                            <label className="block text-sm font-medium text-gray-900">
+                              Fecha de Nacimiento
                             </label>
-                            <select
+                            <input
                               {...field}
-                              id={`familiar-personalMilitar-${index}`}
-                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                            >
-                              <option value="">Seleccionar...</option>
-                              <option value="SI">SI</option>
-                              <option value="NO">NO</option>
-                            </select>
+                              type="date"
+                              value={
+                                field.value
+                                  ? new Date(field.value)
+                                      .toISOString()
+                                      .split("T")[0]
+                                  : ""
+                              }
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                if (value) {
+                                  const [year, month, day] = value.split("-");
+                                  const date = new Date(
+                                    Number(year),
+                                    Number(month) - 1,
+                                    Number(day),
+                                    12
+                                  );
+                                  field.onChange(date);
+                                } else {
+                                  field.onChange(null);
+                                }
+                              }}
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            />
+                            {errors.grupoFamiliar?.[index]?.fechaNacimiento && (
+                              <span className="text-red-600 text-sm">
+                                {
+                                  errors.grupoFamiliar[index].fechaNacimiento
+                                    ?.message
+                                }
+                              </span>
+                            )}
                           </div>
                         )}
                       />
-                      {errors.grupoFamiliar?.[index]?.personalMilitar && (
-                        <span className="text-red-600">
-                          {errors.grupoFamiliar[index].personalMilitar.message}
-                        </span>
-                      )}
 
+                      {/* Observaciones */}
                       <Controller
                         name={`grupoFamiliar.${index}.observaciones`}
                         control={control}
                         rules={ValidacionLegajo.observaciones}
                         render={({ field }) => (
                           <div>
-                            <label
-                              htmlFor={`familiar-observaciones-${index}`}
-                              className="block text-sm font-medium text-gray-900"
-                            >
+                            <label className="block text-sm font-medium text-gray-900">
                               Observaciones
                             </label>
                             <textarea
                               {...field}
-                              id={`familiar-observaciones-${index}`}
                               value={field.value ?? ""}
-                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                              className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             />
+                            {errors.grupoFamiliar?.[index]?.observaciones && (
+                              <span className="text-red-600 text-sm">
+                                {
+                                  errors.grupoFamiliar[index].observaciones
+                                    ?.message
+                                }
+                              </span>
+                            )}
                           </div>
                         )}
                       />
-                      {errors.grupoFamiliar?.[index]?.observaciones && (
-                        <span className="text-red-600">
-                          {errors.grupoFamiliar[index].observaciones.message}
-                        </span>
-                      )}
 
-                      <button
-                        type="button"
-                        onClick={() => removeGrupoFamiliar(index)}
-                        className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
-                      >
-                        Eliminar
-                      </button>
+                      <div className="flex justify-end">
+                        <button
+                          type="button"
+                          onClick={() => removeGrupoFamiliar(index)}
+                          className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
+
+                {/* Botón agregar */}
                 <button
                   type="button"
                   onClick={() =>
@@ -1444,7 +1213,7 @@ export default function LegajoProfesional({
                       nombre: "",
                       apellido: "",
                       dni: "",
-                      personalMilitar: "",
+                      fechaNacimiento: "",
                       observaciones: "",
                     })
                   }
@@ -1454,353 +1223,63 @@ export default function LegajoProfesional({
                 </button>
               </div>
 
-              {/* //!Situacion de revista */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md mt-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Situacion de revista
-                </h2>
-                <div className="space-y-4">
-                  <Controller
-                    name="situacionDeRevista"
-                    control={control}
-                    rules={ValidacionLegajo.situacionDeRevista}
-                    render={({ field }) => (
-                      <div>
-                        <select
-                          {...field}
-                          id="situacionDeRevista"
-                          className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        >
-                          <option value="">Seleccionar...</option>
-                          <option value="SERVICIO EFECTIVO">
-                            SERVICIO EFECTIVO
-                          </option>
-                          <option value="DISPONIBILIDAD">DISPONIBILIDAD</option>
-                          <option value="PASIVA">PASIVA</option>
-                        </select>
-                      </div>
-                    )}
-                  />
-                  {errors.situacionDeRevista && (
-                    <span className="text-red-600">
-                      {errors.situacionDeRevista.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* //!Compromiso de Servicio */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md mt-6">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Compromiso de Servicio
-                </h2>
-                <div className="space-y-4">
-                  <Controller
-                    name="compromisoDeServicio"
-                    control={control}
-                    rules={ValidacionLegajo.compromisoDeServicio}
-                    render={({ field }) => (
-                      <div>
-                        <label
-                          htmlFor="compromisoDeServicio"
-                          className="block text-sm font-medium text-gray-900"
-                        >
-                          Compromiso de Servicio
-                        </label>
-                        <select
-                          {...field}
-                          id="compromisoDeServicio"
-                          className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
-              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        >
-                          <option value="">Seleccionar...</option>
-                          <option value="SI">SI</option>
-                          <option value="NO">NO</option>
-                        </select>
-                      </div>
-                    )}
-                  />
-                  {errors.compromisoDeServicio && (
-                    <span className="text-red-600">
-                      {errors.compromisoDeServicio.message}
-                    </span>
-                  )}
-
-                  <Controller
-                    name="ultimoAscenso"
-                    control={control}
-                    rules={ValidacionLegajo.ultimoAscenso}
-                    render={({ field }) => (
-                      <input
-                        {...field}
-                        type="date"
-                        value={
-                          field.value
-                            ? new Date(field.value).toISOString().split("T")[0]
-                            : ""
-                        }
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          if (value) {
-                            const [y, m, d] = value.split("-");
-                            const fixedDate = new Date(+y, +m - 1, +d, 12);
-                            field.onChange(fixedDate);
-                          } else {
-                            field.onChange(null);
-                          }
-                        }}
-                        className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
-              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                      />
-                    )}
-                  />
-                  {errors.ultimoAscenso && (
-                    <span className="text-red-600">
-                      {errors.ultimoAscenso.message}
-                    </span>
-                  )}
-
-                  <Controller
-                    name="fotoDeLegajo"
-                    control={control}
-                    rules={ValidacionLegajo.fotoDeLegajo}
-                    render={({ field }) => (
-                      <div>
-                        <label
-                          htmlFor="fotoDeLegajo"
-                          className="block text-sm font-medium text-gray-900"
-                        >
-                          Foto de Legajo
-                        </label>
-                        <select
-                          {...field}
-                          id="fotoDeLegajo"
-                          className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
-              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                        >
-                          <option value="">Seleccionar...</option>
-                          <option value="SI">SI</option>
-                          <option value="NO">NO</option>
-                        </select>
-                      </div>
-                    )}
-                  />
-                  {errors.fotoDeLegajo && (
-                    <span className="text-red-600">
-                      {errors.fotoDeLegajo.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* //!Solicitudes */}
+              {/* //!Licencias */}
               <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Solicitudes
+                  Licencias
                 </h2>
 
-                {fieldsSolicitudes.map((field, index) => (
+                {licenciasFields.map((field, index) => (
                   <div
                     key={field.id}
                     className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
                   >
+                    {/* Tipo de licencia */}
                     <Controller
-                      name={`solicitudes.${index}.numeroDeExpediente`}
+                      name={`licencias.${index}.tipo`}
                       control={control}
-                      rules={ValidacionLegajo.solicitudNumeroDeExpediente}
+                      rules={ValidacionLegajo.licenciaTipo}
                       render={({ field }) => (
                         <div>
                           <label
-                            htmlFor={`numeroDeExpediente-${index}`}
+                            htmlFor={`licencia-tipo-${index}`}
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Número de Expediente
+                            Tipo de Licencia
                           </label>
                           <input
                             {...field}
-                            id={`numeroDeExpediente-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
-              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.solicitudes?.[index]?.numeroDeExpediente && (
-                      <span className="text-red-600">
-                        {errors.solicitudes[index].numeroDeExpediente?.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name={`solicitudes.${index}.solicitud.desde`}
-                      control={control}
-                      rules={ValidacionLegajo.solicitudDesde}
-                      render={({ field }) => (
-                        <input
-                          type="date"
-                          value={
-                            field.value
-                              ? new Date(field.value)
-                                  .toISOString()
-                                  .split("T")[0]
-                              : ""
-                          }
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (value) {
-                              const [y, m, d] = value.split("-");
-                              const fixedDate = new Date(+y, +m - 1, +d, 12);
-                              field.onChange(fixedDate);
-                            } else {
-                              field.onChange(null);
-                            }
-                          }}
-                        />
-                      )}
-                    />
-                    {errors.solicitudes?.[index]?.solicitud?.desde && (
-                      <span className="text-red-600">
-                        {errors.solicitudes[index].solicitud.desde?.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name={`solicitudes.${index}.observaciones`}
-                      control={control}
-                      rules={ValidacionLegajo.solicitudObservaciones}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`solicitudes-observaciones-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Observaciones
-                          </label>
-                          <textarea
-                            {...field}
-                            id={`solicitudes-observaciones-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
-              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                            value={field.value ?? ""}
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.solicitudes?.[index]?.observaciones && (
-                      <span className="text-red-600">
-                        {errors.solicitudes[index].observaciones?.message}
-                      </span>
-                    )}
-
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => removeSolicitud(index)}
-                        className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    appendSolicitud({
-                      numeroDeExpediente: "",
-                      solicitud: { desde: "" },
-                      observaciones: "",
-                    })
-                  }
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  Agregar Solicitud
-                </button>
-              </div>
-
-              {/* //!Actuaciones */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Actuaciones por Enfermedad
-                </h2>
-                {fieldsActuaciones.map((actuacion, index) => (
-                  <div
-                    key={index}
-                    className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
-                  >
-                    <Controller
-                      name={`actuaciones.${index}.numeroDeExpediente`}
-                      control={control}
-                      rules={ValidacionLegajo.numeroDeExpediente}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`numeroDeExpediente-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Número de Expediente
-                          </label>
-                          <input
-                            {...field}
-                            id={`numeroDeExpediente-${index}`}
+                            type="text"
+                            id={`licencia-tipo-${index}`}
                             value={field.value || ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.actuaciones?.[index]?.numeroDeExpediente && (
-                      <span className="text-red-600">
-                        {errors.actuaciones[index].numeroDeExpediente.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name={`actuaciones.${index}.afeccion`}
-                      control={control}
-                      rules={ValidacionLegajo.afeccion}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`afeccion-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Afeccion
-                          </label>
-                          <textarea
-                            {...field}
-                            id={`actuaciones-${index}`}
-                            value={field.value ?? ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.actuaciones?.[index]?.afeccion && (
-                      <span className="text-red-600">
-                        {errors.actuaciones[index].afeccion.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name={`actuaciones.${index}.disponibilidad.desde`}
-                      control={control}
-                      rules={ValidacionLegajo.disponibilidadDesde}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`disponibilidadDesde-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Disponibilidad Desde
-                          </label>
-                          <input
-                            {...field}
-                            type="date"
-                            id={`disponibilidadDesde-${index}`}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
-        focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                          />
+                        </div>
+                      )}
+                    />
+                    {errors.licencias?.[index]?.tipo && (
+                      <span className="text-red-600">
+                        {errors.licencias[index].tipo?.message}
+                      </span>
+                    )}
+
+                    {/* Desde */}
+                    <Controller
+                      name={`licencias.${index}.desde`}
+                      control={control}
+                      rules={ValidacionLegajo.licenciaDesde}
+                      render={({ field }) => (
+                        <div>
+                          <label
+                            htmlFor={`licencia-desde-${index}`}
+                            className="block text-sm font-medium text-gray-900"
+                          >
+                            Desde
+                          </label>
+                          <input
+                            type="date"
+                            id={`licencia-desde-${index}`}
                             value={
                               field.value
                                 ? new Date(field.value)
@@ -1817,48 +1296,47 @@ export default function LegajoProfesional({
                                 field.onChange(null);
                               }
                             }}
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
                       )}
                     />
-
-                    {errors.actuaciones?.[index]?.disponibilidad?.desde && (
+                    {errors.licencias?.[index]?.desde && (
                       <span className="text-red-600">
-                        {errors.actuaciones[index].disponibilidad.desde.message}
+                        {errors.licencias[index].desde?.message}
                       </span>
                     )}
 
+                    {/* Hasta */}
                     <Controller
-                      name={`actuaciones.${index}.disponibilidad.hasta`}
+                      name={`licencias.${index}.hasta`}
                       control={control}
                       rules={{
-                        ...ValidacionLegajo.disponibilidadHasta,
+                        ...ValidacionLegajo.licenciaHasta,
                         validate: (value) => {
-                          const desde = getValues(
-                            `actuaciones.${index}.disponibilidad.desde`
-                          );
+                          const desde =
+                            control._formValues.licencias?.[index]?.desde;
                           if (desde && value) {
                             return (
                               new Date(value) >= new Date(desde) ||
-                              "La fecha de finalización debe ser posterior a la de inicio"
+                              "La fecha hasta debe ser posterior a la fecha desde"
                             );
                           }
-                          return true; // Si no hay fecha de "desde", no validamos
+                          return true;
                         },
                       }}
                       render={({ field }) => (
                         <div>
                           <label
-                            htmlFor={`disponibilidadHasta-${index}`}
+                            htmlFor={`licencia-hasta-${index}`}
                             className="block text-sm font-medium text-gray-900"
                           >
-                            Disponibilidad Hasta
+                            Hasta
                           </label>
                           <input
-                            {...field}
                             type="date"
-                            id={`disponibilidadHasta-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            id={`licencia-hasta-${index}`}
                             value={
                               field.value
                                 ? new Date(field.value)
@@ -1875,231 +1353,52 @@ export default function LegajoProfesional({
                                 field.onChange(null);
                               }
                             }}
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
                       )}
                     />
-                    {errors.actuaciones?.[index]?.disponibilidad?.hasta && (
+                    {errors.licencias?.[index]?.hasta && (
                       <span className="text-red-600">
-                        {errors.actuaciones[index].disponibilidad.hasta.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name={`actuaciones.${index}.pasiva.desde`}
-                      control={control}
-                      rules={ValidacionLegajo.pasivaDesde}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`pasivaDesde-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Pasiva Desde
-                          </label>
-                          <input
-                            {...field}
-                            type="date"
-                            id={`pasivaDesde-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                            value={
-                              field.value
-                                ? new Date(field.value)
-                                    .toISOString()
-                                    .split("T")[0]
-                                : ""
-                            }
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              if (value) {
-                                const [y, m, d] = value.split("-");
-                                field.onChange(new Date(+y, +m - 1, +d, 12));
-                              } else {
-                                field.onChange(null);
-                              }
-                            }}
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.actuaciones?.[index]?.pasiva?.desde && (
-                      <span className="text-red-600">
-                        {errors.actuaciones[index].pasiva.desde.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name={`actuaciones.${index}.pasiva.hasta`}
-                      control={control}
-                      rules={{
-                        ...ValidacionLegajo.pasivaHasta,
-                        validate: (value) => {
-                          const desde = getValues(
-                            `actuaciones.${index}.pasiva.desde`
-                          );
-                          if (desde && value) {
-                            return (
-                              new Date(value) >= new Date(desde) ||
-                              "La fecha de finalización debe ser posterior a la de inicio"
-                            );
-                          }
-                          return true; // Si no hay fecha de "desde", no validamos
-                        },
-                      }}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`pasivaHasta-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Pasiva Hasta
-                          </label>
-                          <input
-                            {...field}
-                            type="date"
-                            id={`pasivaHasta-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                            value={
-                              field.value
-                                ? new Date(field.value)
-                                    .toISOString()
-                                    .split("T")[0]
-                                : ""
-                            }
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              if (value) {
-                                const [y, m, d] = value.split("-");
-                                field.onChange(new Date(+y, +m - 1, +d, 12));
-                              } else {
-                                field.onChange(null);
-                              }
-                            }}
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.actuaciones?.[index]?.pasiva?.hasta && (
-                      <span className="text-red-600">
-                        {errors.actuaciones[index].pasiva.hasta.message}
-                      </span>
-                    )}
-
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => removeActuacion(index)}
-                        className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={() =>
-                    appendActuacion({
-                      numeroDeExpediente: "",
-                      afeccion: "",
-                      disponibilidad: { desde: "", hasta: "" },
-                      pasiva: { desde: "", hasta: "" },
-                    })
-                  }
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  Agregar Actuación
-                </button>
-              </div>
-
-              {/* //!Parte de Enfermo */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Parte de Enfermo
-                </h2>
-                {fieldsParteEnfermo.map((parte, index) => (
-                  <div
-                    key={index}
-                    className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
-                  >
-                    {/* Inicio */}
-                    <Controller
-                      name={`parteDeEnfermo.${index}.inicio`}
-                      control={control}
-                      rules={ValidacionLegajo.inicioParteDeEnfermo}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`inicio-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Inicio
-                          </label>
-                          <input
-                            {...field}
-                            type="date"
-                            id={`inicio-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                            value={
-                              field.value
-                                ? new Date(field.value)
-                                    .toISOString()
-                                    .split("T")[0]
-                                : ""
-                            }
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              if (value) {
-                                const [y, m, d] = value.split("-");
-                                field.onChange(new Date(+y, +m - 1, +d, 12));
-                              } else {
-                                field.onChange(null);
-                              }
-                            }}
-                          />
-                        </div>
-                      )}
-                    />
-
-                    {errors.parteDeEnfermo?.[index]?.inicio && (
-                      <span className="text-red-600">
-                        {errors.parteDeEnfermo[index].inicio.message}
+                        {errors.licencias[index].hasta?.message}
                       </span>
                     )}
 
                     {/* Observaciones */}
                     <Controller
-                      name={`parteDeEnfermo.${index}.observaciones`}
+                      name={`licencias.${index}.observaciones`}
                       control={control}
-                      rules={ValidacionLegajo.parteDeEnfermoObservaciones}
+                      rules={ValidacionLegajo.licenciaObservaciones}
                       render={({ field }) => (
                         <div>
                           <label
-                            htmlFor={`observaciones-parte-${index}`}
+                            htmlFor={`licencia-observaciones-${index}`}
                             className="block text-sm font-medium text-gray-900"
                           >
                             Observaciones
                           </label>
                           <textarea
                             {...field}
-                            id={`observaciones-parte-${index}`}
+                            id={`licencia-observaciones-${index}`}
                             value={field.value ?? ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
+              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                           />
                         </div>
                       )}
                     />
-                    {errors.parteDeEnfermo?.[index]?.observaciones && (
+                    {errors.licencias?.[index]?.observaciones && (
                       <span className="text-red-600">
-                        {errors.parteDeEnfermo[index].observaciones.message}
+                        {errors.licencias[index].observaciones?.message}
                       </span>
                     )}
 
-                    {/* Botón eliminar */}
+                    {/* Eliminar */}
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        onClick={() => removeParteEnfermo(index)}
+                        onClick={() => removeLicencia(index)}
                         className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
                       >
                         Eliminar
@@ -2108,169 +1407,70 @@ export default function LegajoProfesional({
                   </div>
                 ))}
 
-                {/* Botón agregar */}
+                {/* Agregar nueva licencia */}
                 <button
                   type="button"
                   onClick={() =>
-                    appendParteEnfermo({
-                      inicio: "",
+                    appendLicencia({
+                      tipo: "",
+                      desde: "",
+                      hasta: "",
                       observaciones: "",
                     })
                   }
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
-                  Agregar Parte De Enfermo
+                  Agregar Licencia
                 </button>
               </div>
 
-              {/* //!Aptitud Psicofísica */}
+              {/* Evaluaciones Médicas */}
               <div className="bg-gray-50 p-6 rounded-lg shadow-md">
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Aptitud Psicofísica
+                  Evaluaciones Médicas
                 </h2>
-                {fieldsAptitud.map((aptitud, index) => (
+                {evaluacionesMedicasFields.map((item, index) => (
                   <div
-                    key={index}
+                    key={item.id}
                     className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
                   >
                     <Controller
-                      name={`aptitudPsicofisica.${index}.estado`}
+                      name={`evaluacionesMedicas.${index}.resultado`}
                       control={control}
-                      rules={ValidacionLegajo.aptitudPsicofisicaEstado}
+                      rules={ValidacionLegajo.evaluacionResultado}
                       render={({ field }) => (
                         <div>
-                          <label
-                            htmlFor={`estado-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Estado
+                          <label className="block text-sm font-medium text-gray-900">
+                            Resultado
                           </label>
                           <input
                             {...field}
                             type="text"
-                            value={field.value ?? ""}
-                            id={`estado-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm
-              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.aptitudPsicofisica?.[index]?.estado && (
-                      <span className="text-red-600">
-                        {errors.aptitudPsicofisica[index].estado.message}
-                      </span>
-                    )}
-
-                    <Controller
-                      name={`aptitudPsicofisica.${index}.observacion`}
-                      control={control}
-                      rules={ValidacionLegajo.aptitudPsicofisicaObservaciones}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`observacion-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Observaciones
-                          </label>
-                          <textarea
-                            {...field}
-                            id={`observacion-${index}`}
-                            value={field.value ?? ""}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm
-              focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                          />
-                        </div>
-                      )}
-                    />
-                    {errors.aptitudPsicofisica?.[index]?.observacion && (
-                      <span className="text-red-600">
-                        {errors.aptitudPsicofisica[index].observacion.message}
-                      </span>
-                    )}
-
-                    <div className="flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => removeAptitud(index)}
-                        className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
-                      >
-                        Eliminar
-                      </button>
-                    </div>
-                  </div>
-                ))}
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    appendAptitud({
-                      estado: "",
-                      observacion: "",
-                    })
-                  }
-                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-                >
-                  Agregar Aptitud Psicofísica
-                </button>
-              </div>
-
-              {/* //!Junta Médica */}
-              <div className="bg-gray-50 p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">
-                  Junta Médica
-                </h2>
-                {fieldsJunta.map((junta, index) => (
-                  <div
-                    key={index}
-                    className="space-y-4 border p-4 rounded-lg mb-4 bg-white"
-                  >
-                    <Controller
-                      name={`juntaMedica.${index}.mensaje`}
-                      control={control}
-                      rules={ValidacionLegajo.juntaMedicaMensaje}
-                      render={({ field }) => (
-                        <div>
-                          <label
-                            htmlFor={`juntaMedicaMensaje-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Mensaje Aeronáutico
-                          </label>
-                          <input
-                            {...field}
-                            id={`juntaMedicaMensaje-${index}`}
-                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            value={field.value || ""}
                           />
                         </div>
                       )}
                     />
-                    {errors.juntaMedica?.[index]?.mensaje && (
+                    {errors.evaluacionesMedicas?.[index]?.resultado && (
                       <span className="text-red-600">
-                        {errors.juntaMedica[index].mensaje.message}
+                        {errors.evaluacionesMedicas[index].resultado?.message}
                       </span>
                     )}
 
                     <Controller
-                      name={`juntaMedica.${index}.turnos`}
+                      name={`evaluacionesMedicas.${index}.fecha`}
                       control={control}
-                      rules={ValidacionLegajo.juntaMedicaTurnos}
+                      rules={ValidacionLegajo.evaluacionFecha}
                       render={({ field }) => (
                         <div>
-                          <label
-                            htmlFor={`juntaMedicaTurnos-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Turnos de Junta Médica
+                          <label className="block text-sm font-medium text-gray-900">
+                            Fecha
                           </label>
                           <input
                             {...field}
                             type="date"
-                            id={`juntaMedicaTurnos-${index}`}
-                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 
-        focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                             value={
                               field.value
                                 ? new Date(field.value)
@@ -2291,71 +1491,63 @@ export default function LegajoProfesional({
                         </div>
                       )}
                     />
-
-                    {errors.juntaMedica?.[index]?.turnos && (
+                    {errors.evaluacionesMedicas?.[index]?.fecha && (
                       <span className="text-red-600">
-                        {errors.juntaMedica[index].turnos.message}
+                        {errors.evaluacionesMedicas[index].fecha?.message}
                       </span>
                     )}
 
                     <Controller
-                      name={`juntaMedica.${index}.observacion`}
+                      name={`evaluacionesMedicas.${index}.observacion`}
                       control={control}
-                      rules={ValidacionLegajo.juntaMedicaObservacion}
+                      rules={ValidacionLegajo.evaluacionObservacion}
                       render={({ field }) => (
                         <div>
-                          <label
-                            htmlFor={`juntaMedicaObservacion-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Observación de Junta Médica
+                          <label className="block text-sm font-medium text-gray-900">
+                            Observaciones
                           </label>
                           <textarea
                             {...field}
-                            id={`juntaMedicaObservacion-${index}`}
-                            value={field.value ?? ""}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            value={field.value ?? ""}
                           />
                         </div>
                       )}
                     />
-                    {errors.juntaMedica?.[index]?.observacion && (
+                    {errors.evaluacionesMedicas?.[index]?.observacion && (
                       <span className="text-red-600">
-                        {errors.juntaMedica[index].observacion.message}
+                        {errors.evaluacionesMedicas[index].observacion?.message}
                       </span>
                     )}
 
                     <Controller
-                      name={`juntaMedica.${index}.afeccion`}
+                      name={`evaluacionesMedicas.${index}.profesional`}
                       control={control}
-                      rules={ValidacionLegajo.juntaMedicaAfeccion}
+                      rules={ValidacionLegajo.evaluacionProfesional}
                       render={({ field }) => (
                         <div>
-                          <label
-                            htmlFor={`afeccion-${index}`}
-                            className="block text-sm font-medium text-gray-900"
-                          >
-                            Afección
+                          <label className="block text-sm font-medium text-gray-900">
+                            Profesional
                           </label>
                           <input
                             {...field}
                             type="text"
-                            value={field.value ?? ""}
-                            id={`afeccion-${index}`}
                             className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-600 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                            value={field.value || ""}
                           />
                         </div>
                       )}
                     />
-                    {errors.juntaMedica?.[index]?.afeccion && (
+                    {errors.evaluacionesMedicas?.[index]?.profesional && (
                       <span className="text-red-600">
-                        {errors.juntaMedica[index].afeccion.message}
+                        {errors.evaluacionesMedicas[index].profesional?.message}
                       </span>
                     )}
+
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        onClick={() => removeJunta(index)}
+                        onClick={() => removeEvaluacionMedica(index)}
                         className="px-2 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
                       >
                         Eliminar
@@ -2363,19 +1555,20 @@ export default function LegajoProfesional({
                     </div>
                   </div>
                 ))}
+
                 <button
                   type="button"
                   onClick={() =>
-                    appendJunta({
-                      mensaje: "",
-                      turnos: null,
+                    appendEvaluacionMedica({
+                      resultado: "",
+                      fecha: null,
                       observacion: "",
-                      afeccion: "",
+                      profesional: "",
                     })
                   }
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                 >
-                  Agregar Junta Médica
+                  Agregar Evaluación Médica
                 </button>
               </div>
 

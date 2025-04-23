@@ -81,7 +81,7 @@ export const ValidacionLegajo = {
       message: "Solo se permiten números",
     },
   },
-  numeroDeCelular: {
+  telefono: {
     required: "El número de celular es obligatorio",
     pattern: {
       value: /^[0-9]+$/,
@@ -94,7 +94,7 @@ export const ValidacionLegajo = {
   estadoCivil: {
     required: "El estado civil es obligatorio",
   },
-  destinadoEnLaUnidad: {
+  activo: {
     required: "El campo 'Destinado en la Unidad' es obligatorio",
   },
   numeroDeIosfa: {
@@ -115,7 +115,7 @@ export const ValidacionLegajo = {
         "Solo se permiten letras mayúsculas, números, espacios y símbolos",
     },
   },
-  grado: {
+  cargo: {
     required: "El grado es obligatorio",
   },
   destinoJbGrupos: {
@@ -129,9 +129,7 @@ export const ValidacionLegajo = {
         "Solo se permiten letras mayúsculas, números, espacios y símbolos",
     },
   },
-  cargo: {
-    required: "El cargo es obligatorio",
-  },
+ 
   especialidad: {
     required: "La especialidad es obligatoria",
     pattern: {
@@ -140,7 +138,7 @@ export const ValidacionLegajo = {
         "Solo se permiten letras mayúsculas, números, espacios y símbolos",
     },
   },
-  especialidadAvanzada: {
+  departamento: {
     required: "La especialidad avanzada es obligatoria",
     pattern: {
       value: /^[A-ZÁÉÍÓÚÑ0-9\s\W_]+$/,
@@ -196,11 +194,11 @@ export const ValidacionLegajo = {
         "Solo se permiten letras mayúsculas, números, espacios y símbolos",
     },
   },
-  cursosRealizados: {
-    validate: (curso: string) =>
-      (/^[A-ZÁÉÍÓÚÑ\s]+$/.test(curso) && curso.length >= 2) ||
-      "Cada curso debe tener al menos 2 caracteres y estar en mayúsculas",
-  },
+  cursosRealizados: { required: "El nombre del curso es obligatorio" },
+  cursosInstitucion: { required: "La institución es obligatoria" },
+  cursosFecha: { required: "La fecha es obligatoria" },
+
+
   situacionDeRevista: {
     required: "La situación de revista es obligatoria",
   },
@@ -278,9 +276,7 @@ export const ValidacionLegajo = {
   solicitudNumeroDeExpediente: {
     required: "El número de expediente es obligatorio",
   },
-  solicitudDesde: {
-    required: "La fecha de inicio de solicitud es obligatoria",
-  },
+
   inicioParteDeEnfermo: {
     required: "La fecha de inicio del parte de enfermo es obligatoria",
   },
@@ -311,6 +307,9 @@ export const ValidacionLegajo = {
   compromisoDeServicio: {
     required: "Debe indicar si hay compromiso de servicio",
   },
+  fechaIngreso: {
+    required: "Debe indicar si hay compromiso de servicio",
+  },
 
   ultimoAscenso: {
     required: "Debe ingresar la fecha del último ascenso",
@@ -318,6 +317,54 @@ export const ValidacionLegajo = {
 
   fotoDeLegajo: {
     required: "Debe indicar si hay foto de legajo",
+  },
+
+
+  licenciaTipo: {
+    required: "El tipo de licencia es obligatorio",
+    maxLength: {
+      value: 100,
+      message: "El tipo no puede superar los 100 caracteres",
+    },
+  },
+
+  licenciaDesde: {
+    required: "La fecha de inicio es obligatoria",
+  },
+
+  licenciaHasta: {
+    required: "La fecha de finalización es obligatoria",
+  },
+
+  licenciaObservaciones: {
+    maxLength: {
+      value: 500,
+      message: "Las observaciones no pueden superar los 500 caracteres",
+    },
+  },
+
+  evaluacionResultado: {
+    required: "El resultado es obligatorio",
+    maxLength: {
+      value: 100,
+      message: "Máximo 100 caracteres",
+    },
+  },
+  evaluacionFecha: {
+    required: "La fecha es obligatoria",
+  },
+  evaluacionObservacion: {
+    maxLength: {
+      value: 300,
+      message: "Máximo 300 caracteres",
+    },
+  },
+  evaluacionProfesional: {
+    required: "El nombre del profesional es obligatorio",
+    maxLength: {
+      value: 100,
+      message: "Máximo 100 caracteres",
+    },
   },
 };
 

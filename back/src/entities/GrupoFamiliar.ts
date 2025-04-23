@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { User } from './User';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { User } from "./User";
 
 @Entity()
 export class GrupoFamiliar {
@@ -19,11 +19,11 @@ export class GrupoFamiliar {
   dni!: string;
 
   @Column()
-  personalMilitar!: string;
+  fechaNacimiento!: Date;
 
-  @Column()
+  @Column({ type: "text" })
   observaciones!: string;
 
-  @ManyToOne(() => User, (user) => user.grupoFamiliar)
+  @ManyToOne(() => User, (user) => user.grupoFamiliar, { onDelete: "CASCADE" })
   user!: User;
 }

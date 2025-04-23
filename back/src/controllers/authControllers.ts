@@ -6,6 +6,8 @@ import { generarToken } from "../utils/generarToken";
 
 const usuarioRepository = AppDataSource.getRepository(Usuario);
 
+// Controlador para registrar un nuevo usuario
+
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { nombreUsuario, contraseña, confirmarContraseña, rol } = req.body;
@@ -41,7 +43,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
   }
 };
 
-
+// Controlador para iniciar sesión
 export const loginUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { nombreUsuario, contraseña } = req.body;

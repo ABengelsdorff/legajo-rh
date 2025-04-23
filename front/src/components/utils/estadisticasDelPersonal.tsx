@@ -24,11 +24,11 @@ import { useRef } from "react";
 export default function EstadisticasPersonal() {
   const [usuarios, setUsuarios] = useState<IUser[]>([]);
   const [filteredUsuarios, setFilteredUsuarios] = useState<IUser[]>([]);
-  const [destinadoEnUnidad, setDestinadoEnUnidad] = useState<string>("SI");
+  const [activo, setActivo] = useState<string>("SI");
   const [selectedDestino, setSelectedDestino] = useState<string>("TODOS");
   const [destinos, setDestinos] = useState<string[]>([]);
   const [selectedEstadistica, setSelectedEstadistica] =
-    useState<string>("grados");
+    useState<string>("sexo");
 
   const chartColors = [
     "#FF6B6B",
@@ -51,9 +51,7 @@ export default function EstadisticasPersonal() {
         setUsuarios(users);
 
         const uniqueDestinos = Array.from(
-          new Set(
-            users.map((user) => user.destinoJbGrupos || "No especificado")
-          )
+          new Set(users.map((user) => user.departamento || "No especificado"))
         );
 
         setDestinos(uniqueDestinos);
@@ -66,15 +64,18 @@ export default function EstadisticasPersonal() {
   }, []);
 
   useEffect(() => {
-    const filtrados = usuarios.filter((user) => {
+    const filtrados = usuarios.filter((u) => {
+      const coincideActivo = u.activo === activo;
       const coincideDestino =
-        selectedDestino === "TODOS" || user.destinoJbGrupos === selectedDestino;
-      const coincideUnidad = user.destinadoEnLaUnidad === destinadoEnUnidad;
-      return coincideDestino && coincideUnidad;
+        selectedDestino === "TODOS" || u.departamento === selectedDestino;
+  
+      return coincideActivo && coincideDestino;
     });
-
+  
     setFilteredUsuarios(filtrados);
-  }, [usuarios, selectedDestino, destinadoEnUnidad]);
+  }, [usuarios, activo, selectedDestino]);
+  
+
 
   const agruparPorCampo = (usuarios: IUser[], campo: keyof IUser) => {
     const conteo: Record<string, number> = {};
@@ -114,40 +115,34 @@ export default function EstadisticasPersonal() {
   };
 
   const nombresEstadisticas: Record<string, string> = {
-    grados: "GRADO",
     sexo: "SEXO",
     especialidades: "ESPECIALIDAD",
-    institutoDeFormacion: "INSTITUTO DE FORMACIÓN",
-    destino: "DESTINO",
-    grupoSanguineo: "GRUPO SANGUÍNEO",
     estadoCivil: "ESTADO CIVIL",
     formacionAcademica: "FORMACIÓN ACADÉMICA",
-    destinadoEnLaUnidad: "DESTINADO EN LA UNIDAD",
+    activo: "ACTIVO",
     cursosRealizados: "CURSOS REALIZADOS",
     nivelDeIngles: "NIVEL DE INGLES",
   };
 
   const datos = {
-    grados: agruparPorCampo(filteredUsuarios, "grado"),
     sexo: agruparPorCampo(filteredUsuarios, "sexo"),
     especialidades: agruparPorCampo(filteredUsuarios, "especialidad"),
-    institutoDeFormacion: agruparPorCampo(
-      filteredUsuarios,
-      "institutoDeFormacion"
-    ),
-    destino: agruparPorCampo(filteredUsuarios, "destinoJbGrupos"),
-    grupoSanguineo: agruparPorCampo(filteredUsuarios, "grupoSanguineo"),
     estadoCivil: agruparPorCampo(filteredUsuarios, "estadoCivil"),
     formacionAcademica: agruparPorCampo(filteredUsuarios, "formacionAcademica"),
-    destinadoEnLaUnidad: agruparPorCampo(
-      filteredUsuarios,
-      "destinadoEnLaUnidad"
-    ),
+    activo: agruparPorCampo(filteredUsuarios, "activo"),
     cursosRealizados: agruparCursosRealizados(filteredUsuarios),
     nivelDeIngles: agruparPorCampo(filteredUsuarios, "nivelDeIngles"),
   };
 
   const renderDonutChart = (data: ChartDataItem[], title: string) => {
+    if (!Array.isArray(data) || data.length === 0) {
+      return (
+        <div className="text-center text-gray-500 py-8">
+          No hay datos suficientes para esta estadística.
+        </div>
+      );
+    }
+    
     return (
       <div ref={chartRef}>
         <Card className="w-full">
@@ -235,8 +230,7 @@ export default function EstadisticasPersonal() {
           <div className="text-center mb-4">
             <h1 className="text-3xl font-extrabold text-gray-900">
               Estadísticas del Personal{" "}
-              {destinadoEnUnidad === "SI" ? "Destinado" : "NO Destinado"} en la
-              Unidad
+              {activo === "SI" ? "Activo" : "NO Activo"} en la Empresa
             </h1>
           </div>
 
@@ -252,11 +246,11 @@ export default function EstadisticasPersonal() {
                   htmlFor="destinado-filter"
                   className="block text-lg font-medium text-gray-700 mb-1"
                 >
-                  Destinado en la unidad
+                  Activo
                 </label>
                 <Select
-                  value={destinadoEnUnidad}
-                  onValueChange={(value) => setDestinadoEnUnidad(value)}
+                  value={activo}
+                  onValueChange={(value) => setActivo(value)}
                 >
                   <SelectTrigger className="w-full bg-blue-50 border-blue-200">
                     <SelectValue placeholder="Seleccionar opción" />
@@ -298,7 +292,7 @@ export default function EstadisticasPersonal() {
                     htmlFor="destino-filter"
                     className="block text-lg font-medium text-gray-700 mb-1"
                   >
-                    Destino:
+                    Departamento:
                   </label>
                   <Select
                     value={selectedDestino}

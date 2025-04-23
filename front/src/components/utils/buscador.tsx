@@ -4,10 +4,10 @@ import type React from "react";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import {
-  getUserByIosfa,
+  
   getUserByDni,
   getUserByApellido,
-  getUserByGrado,
+  getUserByCargo,
   getUserByCurso,
 } from "../../services/userServices";
 import { IUser } from "@/components/interfaces/interfaces";
@@ -48,15 +48,7 @@ export default function LegajoSearch() {
     try {
       let result: IUser | IUser[];
 
-      if (searchType === "iosfa") {
-        const iosfaNumber = Number(searchQuery);
-        if (isNaN(iosfaNumber) || iosfaNumber <= 0) {
-          setError("Ingrese un número de IOSFA válido.");
-          setLoading(false);
-          return;
-        }
-        result = await getUserByIosfa(iosfaNumber);
-      } else if (searchType === "dni") {
+        if (searchType === "dni") {
         const dniNumber = Number(searchQuery);
         if (isNaN(dniNumber) || dniNumber <= 0) {
           setError("Ingrese un DNI válido.");
@@ -71,13 +63,14 @@ export default function LegajoSearch() {
           return;
         }
         result = await getUserByApellido(searchQuery);
-      } else if (searchType === "grado") {
+
+      } else if (searchType === "cargo") {
         if (!searchQuery.trim()) {
-          setError("Ingrese un grado válido.");
+          setError("Ingrese un cargo válido.");
           setLoading(false);
           return;
         }
-        result = await getUserByGrado(searchQuery);
+        result = await getUserByCargo(searchQuery);
       } else if (searchType === "curso") {
         if (!searchQuery.trim()) {
           setError("Ingrese un curso válido.");
@@ -210,17 +203,7 @@ export default function LegajoSearch() {
             <form onSubmit={handleSearch} className="space-y-8">
               {/* Botones para seleccionar el criterio de búsqueda */}
               <div className="flex flex-wrap gap-4 mb-4 justify-center">
-                <button
-                  type="button"
-                  onClick={() => setSearchType("iosfa")}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    searchType === "iosfa"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-blue-100"
-                  }`}
-                >
-                  Buscar por IOSFA
-                </button>
+               
                 <button
                   type="button"
                   onClick={() => setSearchType("dni")}
@@ -245,14 +228,14 @@ export default function LegajoSearch() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setSearchType("grado")}
+                  onClick={() => setSearchType("cargo")}
                   className={`px-4 py-2 rounded-lg transition-colors ${
-                    searchType === "grado"
+                    searchType === "cargo"
                       ? "bg-blue-600 text-white"
                       : "bg-gray-200 text-gray-700 hover:bg-blue-100"
                   }`}
                 >
-                  Buscar por Grado
+                  Buscar por Cargo
                 </button>
                 <button
                   type="button"
@@ -349,37 +332,21 @@ export default function LegajoSearch() {
                       <div className="grid grid-cols-4 gap-4 text-black">
                         <p>
                           <strong>Destinado en la Unidad:</strong>{" "}
-                          {result.destinadoEnLaUnidad}
+                          {result.activo}
                         </p>
-                        <p>
-                          <strong>Número de IOSFA:</strong>{" "}
-                          {result.numeroDeIosfa}
-                        </p>
-                        <p>
-                          <strong>Grado:</strong> {result.grado}
-                        </p>
+                       
+                       
                         <p>
                           <strong>Cargo:</strong> {result.cargo}
                         </p>
-                        <p>
-                          <strong>Escalafón:</strong> {result.escalafon}
-                        </p>
+                        
                         <p>
                           <strong>Especialidad:</strong> {result.especialidad}
                         </p>
+                     
+                      
                         <p>
-                          <strong>Especialidad Avanzada:</strong>{" "}
-                          {result.especialidadAvanzada}
-                        </p>
-                        <p>
-                          <strong>Destino:</strong> {result.destinoJbGrupos}
-                        </p>
-                        <p>
-                          <strong>Destino Interno:</strong>{" "}
-                          {result.destinoInterno}
-                        </p>
-                        <p>
-                          <strong>Celular:</strong> {result.numeroDeCelular}
+                          <strong>Celular:</strong> {result.telefono}
                         </p>
                         <p>
                           <strong>DNI:</strong> {result.numeroDeDni}
