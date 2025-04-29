@@ -4,7 +4,7 @@ import Navbar from "../components/NavBar";
 import AuthProvider from "@/components/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "Legajo",
+  title: "Human Resources",
   description: "Gestión de personal en app de escritorio",
 };
 

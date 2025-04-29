@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "Aplicación de escritorio para gestión de legajos",
   "main": "dist-electron/main.js",
-  "author": "Sandoval Angel",
+  "author": "Bengelsdorff Angélica",
   "license": "MIT",
   "scripts": {
   "clean": "rimraf dist dist-electron electron/backend-dist front/out back/dist",

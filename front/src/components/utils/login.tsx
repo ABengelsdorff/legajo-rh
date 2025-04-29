@@ -118,10 +118,10 @@ export default function LoginForm() {
           <div className="max-w-md mx-auto">
             <div className="flex justify-center mb-8">
               <Image
-                src="/septima.jpg"
-                alt="Logo Fuerza Aérea"
-                width={120}
-                height={120}
+               src="/logohr.png"
+                alt="Logo Recursos Humanos"
+                width={250}
+                height={250}
               />
             </div>
             <div className="text-center mb-8">

@@ -68,14 +68,12 @@ export default function EstadisticasPersonal() {
       const coincideActivo = u.activo === activo;
       const coincideDestino =
         selectedDestino === "TODOS" || u.departamento === selectedDestino;
-  
+
       return coincideActivo && coincideDestino;
     });
-  
+
     setFilteredUsuarios(filtrados);
   }, [usuarios, activo, selectedDestino]);
-  
-
 
   const agruparPorCampo = (usuarios: IUser[], campo: keyof IUser) => {
     const conteo: Record<string, number> = {};
@@ -142,7 +140,7 @@ export default function EstadisticasPersonal() {
         </div>
       );
     }
-    
+
     return (
       <div ref={chartRef}>
         <Card className="w-full">

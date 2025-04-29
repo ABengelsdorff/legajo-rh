@@ -38,7 +38,6 @@ export default function LegajoProfesional({
       apellido: "",
       sexo: "",
       fechaDeNacimiento: "",
-      grupoSanguineo: "",
       numeroDeDni: "",
       numeroDeCuil: "",
       direccion: "",
@@ -56,9 +55,7 @@ export default function LegajoProfesional({
       grupoFamiliar: [],
       evaluacionesMedicas: [],
       licencias: [],
-      cursosRealizados: [
-        { id: Date.now(), nombre: "", institucion: "", fechaFinalizacion: "" },
-      ],
+      cursosRealizados: [],
     },
   });
 
@@ -190,10 +187,10 @@ export default function LegajoProfesional({
 
             <div className="flex justify-center mb-8">
               <Image
-                src="/septima.jpg"
-                alt="Logo Fuerza Aérea Argentina"
-                width={180}
-                height={180}
+                src="/logohr.png"
+                alt="Logo Recursos Humanos"
+                width={250}
+                height={250}
                 className="drop-shadow-xl"
               />
             </div>
@@ -344,7 +341,6 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
-
                     <Controller
                       name="numeroDeDni"
                       control={control}
@@ -431,7 +427,6 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
-                  
                     {/* Teléfono */}
                     <Controller
                       name="telefono"
@@ -600,6 +595,13 @@ export default function LegajoProfesional({
                             <option value="">Seleccionar...</option>
                             <option value="ENCARGADO">ENCARGADO</option>
                             <option value="AUXILIAR">AUXILIAR</option>
+                            <option value="RECLUTADOR">RECLUTADOR</option>
+                            <option value="ANALISTA">ANALISTA</option>
+                            <option value="COORDINADOR">COORDINADOR</option>
+                            <option value="ASISTENTE">ASISTENTE</option>
+                            <option value="CONSULTOR">CONSULTOR</option>
+                            <option value="JEFE">JEFE</option>
+                            <option value="GERENTE">GERENTE</option>
                           </select>
                         </div>
                       )}
@@ -767,8 +769,8 @@ export default function LegajoProfesional({
                       </span>
                     )}
 
-                      {/* Código Postal */}
-                      <Controller
+                    {/* Código Postal */}
+                    <Controller
                       name="codigoPostal"
                       control={control}
                       rules={ValidacionLegajo.codigoPostal}
@@ -824,7 +826,6 @@ export default function LegajoProfesional({
                         {errors.correoElectronico.message}
                       </span>
                     )}
-
                   </div>
                 </div>
               </div>
@@ -926,16 +927,9 @@ export default function LegajoProfesional({
                               onChange={(e) => {
                                 const value = e.target.value;
                                 if (value) {
-                                  const [year, month, day] = value.split("-");
-                                  const date = new Date(
-                                    Number(year),
-                                    Number(month) - 1,
-                                    Number(day),
-                                    12
-                                  );
-                                  field.onChange(date);
+                                  field.onChange(value);
                                 } else {
-                                  field.onChange(null);
+                                  field.onChange("");
                                 }
                               }}
                               className="text-gray-900 mt-2 py-2 px-2 block w-full rounded-md border-gray-300 shadow-sm 

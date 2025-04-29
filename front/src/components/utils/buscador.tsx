@@ -4,7 +4,6 @@ import type React from "react";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import {
-  
   getUserByDni,
   getUserByApellido,
   getUserByCargo,
@@ -48,7 +47,7 @@ export default function LegajoSearch() {
     try {
       let result: IUser | IUser[];
 
-        if (searchType === "dni") {
+      if (searchType === "dni") {
         const dniNumber = Number(searchQuery);
         if (isNaN(dniNumber) || dniNumber <= 0) {
           setError("Ingrese un DNI válido.");
@@ -63,7 +62,6 @@ export default function LegajoSearch() {
           return;
         }
         result = await getUserByApellido(searchQuery);
-
       } else if (searchType === "cargo") {
         if (!searchQuery.trim()) {
           setError("Ingrese un cargo válido.");
@@ -188,10 +186,10 @@ export default function LegajoSearch() {
           <div className="max-w-full mx-auto">
             <div className="flex justify-center mb-8">
               <Image
-                src="/septima.jpg"
-                alt="Logo Fuerza Aérea Argentina"
-                width={180}
-                height={180}
+                src="/logohr.png"
+                alt="Logo Recursos Humanos"
+                width={250}
+                height={250}
                 className="drop-shadow-md"
               />
             </div>
@@ -203,18 +201,6 @@ export default function LegajoSearch() {
             <form onSubmit={handleSearch} className="space-y-8">
               {/* Botones para seleccionar el criterio de búsqueda */}
               <div className="flex flex-wrap gap-4 mb-4 justify-center">
-               
-                <button
-                  type="button"
-                  onClick={() => setSearchType("dni")}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
-                    searchType === "dni"
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-blue-100"
-                  }`}
-                >
-                  Buscar por DNI
-                </button>
                 <button
                   type="button"
                   onClick={() => setSearchType("apellido")}
@@ -226,6 +212,19 @@ export default function LegajoSearch() {
                 >
                   Buscar por Apellido
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSearchType("dni")}
+                  className={`px-4 py-2 rounded-lg transition-colors ${
+                    searchType === "dni"
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-700 hover:bg-blue-100"
+                  }`}
+                >
+                  Buscar por DNI
+                </button>
+
                 <button
                   type="button"
                   onClick={() => setSearchType("cargo")}
@@ -254,20 +253,16 @@ export default function LegajoSearch() {
                 <div className="flex gap-4">
                   <input
                     // Usamos "number" solo para IOSFA y DNI, y "text" para los demás
-                    type={
-                      searchType === "iosfa" || searchType === "dni"
-                        ? "number"
-                        : "text"
-                    }
+                    type={searchType === "dni" ? "number" : "text"}
                     placeholder={
-                      searchType === "iosfa"
-                        ? "Ingrese Número de IOSFA"
-                        : searchType === "dni"
+                      searchType === "dni"
                         ? "Ingrese Número de DNI"
                         : searchType === "apellido"
                         ? "Ingrese Apellido"
                         : searchType === "grado"
                         ? "Ingrese Grado"
+                        : searchType === "cargo"
+                        ? "Ingrese Cargo"
                         : "Ingrese Curso"
                     }
                     value={searchQuery}
@@ -331,20 +326,12 @@ export default function LegajoSearch() {
                       </h3>
                       <div className="grid grid-cols-4 gap-4 text-black">
                         <p>
-                          <strong>Destinado en la Unidad:</strong>{" "}
-                          {result.activo}
+                          <strong>Activo:</strong> {result.activo}
                         </p>
-                       
-                       
+
                         <p>
-                          <strong>Cargo:</strong> {result.cargo}
+                          <strong>Sexo:</strong> {result.sexo}
                         </p>
-                        
-                        <p>
-                          <strong>Especialidad:</strong> {result.especialidad}
-                        </p>
-                     
-                      
                         <p>
                           <strong>Celular:</strong> {result.telefono}
                         </p>
@@ -352,7 +339,17 @@ export default function LegajoSearch() {
                           <strong>DNI:</strong> {result.numeroDeDni}
                         </p>
                         <p>
-                          <strong>Sexo:</strong> {result.sexo}
+                          <strong>Cargo:</strong> {result.cargo}
+                        </p>
+                        <p>
+                          <strong>Fecha de ingreso</strong>{" "}
+                          {result.fechaIngreso}
+                        </p>
+                        <p>
+                          <strong>Especialidad:</strong> {result.especialidad}
+                        </p>
+                        <p>
+                          <strong>Departamento</strong> {result.departamento}
                         </p>
                       </div>
                       <div className="mt-4 flex justify-end">

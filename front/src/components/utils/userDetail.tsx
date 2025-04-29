@@ -27,23 +27,26 @@ const UserDetail: React.FC<Props> = ({ user }) => {
               : "No definida"}
           </p>
           <p>
+            <strong>Correo Electrónico:</strong> {user.correoElectronico}
+          </p>
+          <p>
+            <strong>Codigo Postal:</strong> {user.codigoPostal}
+          </p>
+
+          <p>
+            <strong>Telefono:</strong> {user.telefono}
+          </p>
+          <p>
             <strong>DNI:</strong> {user.numeroDeDni}
           </p>
           <p>
             <strong>CUIL:</strong> {user.numeroDeCuil}
           </p>
-
           <p>
-            <strong>Correo Electrónico:</strong> {user.correoElectronico}
+            <strong>Dirección:</strong> {user.direccion}
           </p>
           <p>
-            <strong>Celular:</strong> {user.telefono}
-          </p>
-          <p>
-            <strong>Formación Académica:</strong> {user.formacionAcademica}
-          </p>
-          <p>
-            <strong>Estado Civil:</strong> {user.estadoCivil}
+            <strong>Estado Civil</strong> {user.estadoCivil}
           </p>
         </div>
       </div>
@@ -62,11 +65,22 @@ const UserDetail: React.FC<Props> = ({ user }) => {
             <strong>Cargo:</strong> {user.cargo}
           </p>
           <p>
-            <strong>Especialidad:</strong> {user.especialidad}
+            <strong>Formación Académica:</strong> {user.formacionAcademica}
           </p>
-
+          <p>
+            <strong>Fecha de Ingreso:</strong>{" "}
+            {user.fechaIngreso
+              ? new Date(user.fechaIngreso).toLocaleDateString("es-AR")
+              : "No definida"}
+          </p>
           <p>
             <strong>Nivel de Inglés:</strong> {user.nivelDeIngles}%
+          </p>
+          <p>
+            <strong>Especialidad:</strong> {user.especialidad}
+          </p>
+          <p>
+            <strong>Departamento</strong> {user.departamento}
           </p>
         </div>
       </div>
@@ -77,7 +91,16 @@ const UserDetail: React.FC<Props> = ({ user }) => {
         <ul className="list-disc list-inside">
           {user.cursosRealizados.length > 0 ? (
             user.cursosRealizados.map((curso, index) => (
-              <li key={curso.id || index}>{curso.nombre}</li>
+              <li key={curso.id || index}>
+                {curso.nombre} - {curso.institucion} -{" "}
+                {curso.fechaFinalizacion
+                  ? typeof curso.fechaFinalizacion === "string"
+                    ? curso.fechaFinalizacion
+                    : new Date(curso.fechaFinalizacion).toLocaleDateString(
+                        "es-AR"
+                      )
+                  : "Sin fecha"}
+              </li>
             ))
           ) : (
             <li>No hay datos de Cursos Realizados</li>
@@ -95,7 +118,10 @@ const UserDetail: React.FC<Props> = ({ user }) => {
             user.grupoFamiliar.map((familiar, index) => (
               <div key={index} className="border p-5 rounded bg-white">
                 <p>
-                  <strong>Nombre:</strong> {familiar.nombre} {familiar.apellido}
+                  <strong>Nombre:</strong> {familiar.nombre}
+                </p>
+                <p>
+                  <strong>Apellido:</strong> {familiar.apellido}
                 </p>
                 <p>
                   <strong>DNI:</strong> {familiar.dni}
@@ -103,14 +129,16 @@ const UserDetail: React.FC<Props> = ({ user }) => {
                 <p>
                   <strong>Parentesco:</strong> {familiar.parentesco}
                 </p>
-
-                <p
-                  className="mt-3 mb-3 max-h-32 w-full overflow-y-auto overflow-x-hidden
-               break-words whitespace-pre-wrap"
-                  style={{ minWidth: "200px", maxWidth: "100%" }}
-                >
-                  <strong>Observaciones: </strong>
-                  {familiar.observaciones}
+                <p>
+                  <strong>Fecha de Nacimiento:</strong>{" "}
+                  {familiar.fechaNacimiento
+                    ? new Date(familiar.fechaNacimiento).toLocaleDateString(
+                        "es-AR"
+                      )
+                    : "No definida"}
+                </p>
+                <p>
+                  <strong>Observaciones:</strong> {familiar.observaciones}
                 </p>
               </div>
             ))
@@ -120,42 +148,69 @@ const UserDetail: React.FC<Props> = ({ user }) => {
         </div>
       </div>
 
-      {/* Junta medica*/}
+      {/* Evaluacion medica*/}
 
       <div className="p-4 rounded-lg mb-4 bg-blue-50 border border-blue-200 max-w-screen-md">
         <h3 className="text-lg font-semibold text-gray-700 mb-2">
-          Junta Médica
+          Evaluación Médica
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
           {user.evaluacionesMedicas.length > 0 ? (
-            user.evaluacionesMedicas.map((junta, index) => (
+            user.evaluacionesMedicas.map((evaluacion, index) => (
               <div key={index} className="border p-5 rounded bg-white">
-                <p
-                  className="mt-3 mb-3 max-h-32 w-full overflow-y-auto overflow-x-hidden
-               break-words whitespace-pre-wrap"
-                  style={{ minWidth: "200px", maxWidth: "100%" }}
-                >
-                  <strong>Resultado:</strong> {junta.resultado}
+                <p>
+                  <strong>Fecha:</strong>{" "}
+                  {evaluacion.fecha
+                    ? new Date(evaluacion.fecha).toLocaleDateString("es-AR")
+                    : "No definida"}
+                </p>
+                <p>
+                  <strong>Resultado:</strong> {evaluacion.resultado}
                 </p>
 
-                <p
-                  className="mt-3 mb-3 max-h-32 w-full overflow-y-auto overflow-x-hidden
-               break-words whitespace-pre-wrap"
-                  style={{ minWidth: "200px", maxWidth: "100%" }}
-                >
-                  <strong>Observación:</strong> {junta.observacion}
+                <p>
+                  <strong>Observaciones:</strong> {evaluacion.observacion}
                 </p>
-                <p
-                  className="mt-3 mb-3 max-h-32 w-full overflow-y-auto overflow-x-hidden
-               break-words whitespace-pre-wrap"
-                  style={{ minWidth: "200px", maxWidth: "100%" }}
-                >
-                  <strong>Profesional:</strong> {junta.profesional}
+                <p>
+                  <strong>Profesional:</strong> {evaluacion.profesional}
                 </p>
               </div>
             ))
           ) : (
-            <p>No hay registros de Junta Médica.</p>
+            <p>No hay registros de Evaluacion Médica.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Licencias */}
+      <div className="p-4 rounded-lg mb-4 bg-blue-50 border border-blue-200 max-w-screen-md">
+        <h3 className="text-lg font-semibold text-gray-700 mb-2">Licencias</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-black">
+          {user.licencias.length > 0 ? (
+            user.licencias.map((licencia, index) => (
+              <div key={index} className="border p-5 rounded bg-white">
+                <p>
+                  <strong>Tipo:</strong> {licencia.tipo}
+                </p>
+                <p>
+                  <strong>Desde:</strong>{" "}
+                  {licencia.desde
+                    ? new Date(licencia.desde).toLocaleDateString("es-AR")
+                    : "No definido"}
+                </p>
+                <p>
+                  <strong>Hasta:</strong>{" "}
+                  {licencia.hasta
+                    ? new Date(licencia.hasta).toLocaleDateString("es-AR")
+                    : "No definido"}
+                </p>
+                <p>
+                  <strong>Observaciones:</strong> {licencia.observaciones}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p>No hay registros de Licencias.</p>
           )}
         </div>
       </div>

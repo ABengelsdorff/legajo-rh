@@ -197,10 +197,10 @@ export default function AdminPanel() {
           <div className="max-w-3xl mx-auto">
             <div className="flex justify-center mb-6">
               <Image
-                src="/septima.jpg"
-                alt="Logo Fuerza Aérea Argentina"
-                width={100}
-                height={100}
+                src="/logohr.png"
+                alt="Logo Recursos Humanos"
+                width={200}
+                height={200}
               />
             </div>
             <div className="text-center mb-6">

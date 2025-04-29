@@ -59,10 +59,10 @@ export default function Users() {
           <div className="max-w-full mx-auto">
             <div className="flex justify-center mb-8">
               <Image
-                src="/septima.jpg"
-                alt="Logo Fuerza Aérea Argentina"
-                width={180}
-                height={180}
+                src="/logohr.png"
+                alt="Logo Recursos Humanos"
+                width={250}
+                height={250}
                 className="drop-shadow-md"
               />
             </div>
@@ -85,7 +85,6 @@ export default function Users() {
                     link.click();
                     document.body.removeChild(link);
                   }}
-                  
                   className="flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-sm hover:from-blue-700 hover:to-blue-600 transition-all ml-auto"
                 >
                   Exportar a Excel
@@ -141,30 +140,27 @@ export default function Users() {
                               <div className="m-4">
                                 <h3 className="text-lg font-bold text-gray-800">
                                   {user.apellido} {user.nombre}, {user.cargo}
-                                </h3>
+                                </h3>                                
                                 <p className="text-gray-600">
-                                  ACTIVO:{" "}
-                                  {user.activo}
+                                 <strong>ACTIVO: </strong> {user.activo}
                                 </p>
                               </div>
                             </div>
 
-                            
-                              {user.especialidad && (
-                                <div className="flex items-center text-gray-600">
-                                  <span>ESPECIALIDAD: {user.especialidad}</span>
+                            {user.activo && (
+                                <div className="mt-10 text-gray-600 m-4">
+                                  <span><strong>DEPARTAMENTO: </strong>{user.departamento}</span>
                                 </div>
                               )}
 
-                              <Link
-                                href={`/Buscador`}
-                                className="flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-sm hover:from-blue-700 hover:to-blue-600 transition-all ml-auto"
-                              >
-                                BUSCAR <ChevronRight className="h-4 w-4" />
-                              </Link>
-                            </div>
+                            <Link
+                              href={`/Buscador`}
+                              className="flex items-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-300 text-white font-semibold rounded-lg shadow-sm hover:from-blue-700 hover:to-blue-600 transition-all ml-auto"
+                            >
+                              BUSCAR <ChevronRight className="h-4 w-4" />
+                            </Link>
                           </div>
-                       
+                        </div>
                       ))}
                     </div>
                   </div>

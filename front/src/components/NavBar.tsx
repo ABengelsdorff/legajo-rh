@@ -28,13 +28,13 @@ export default function Navbar() {
     <nav className="bg-slate-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center mt-4">
+          <div className="flex items-center mt-5">
             <div className="flex-shrink-0">
               <Image
-                src="/escudo_FAA1.png"
-                alt="Logo Fuerza Aérea Argentina"
-                width={150}
-                height={150}
+                src="/logohr.png"
+                alt="Logo Recursos Humanos"
+                width={85}
+                height={85}
                 className="drop-shadow-md"
               />
             </div>
