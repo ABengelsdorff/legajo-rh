@@ -2,21 +2,21 @@
 
 **LegajoRH** es una aplicación de escritorio desarrollada con Electron, Next.js, Express y SQLite que permite a una consultora de Recursos Humanos gestionar legajos completos del personal de manera local, segura y eficiente.
 
-Este sistema fue creado para RHNet, una consultora ficticia dedicada a la administración de personal, formación, salud laboral y desempeño.
-
 ---
 
-## 🚀 Características principales
+## 🔧 Funcionalidades principales
 
-🔐 Autenticación segura con JWT
-👩‍💼 Gestión completa del legajo de empleados
-📁 Edición de información personal, profesional y médica
-👨‍👩‍👧‍👦 Gestión de grupo familiar
-📝 Exportación de legajos a PDF individuales
-📊 Visualización de estadísticas internas
-📈 Exportación masiva de datos a Excel
-💻 Aplicación de escritorio 100% offline (Electron + SQLite)
-🖥️ Interfaz moderna, intuitiva y responsive
+- ✅ Panel de administración para registrar y gestionar usuarios con diferentes roles
+- ✅ CRUD completo para cada sección del legajo (datos personales, grupo familiar, licencias, etc.)
+- ✅ Formulario validado con React Hook Form para garantizar integridad y facilidad de uso
+- ✅ Sistema de búsquedas y filtros avanzados (por apellido, cursos, cargo, y más)
+- ✅ Exportación a Excel con toda la información cargada
+- ✅ Descarga en PDF del legajo completo de cada persona
+- ✅ Gráficos interactivos y visuales para análisis estadístico del personal
+- ✅ Interfaz moderna y responsive, pensada para usabilidad real
+- ✅ Autenticación segura con JWT
+- ✅ Aplicación de escritorio 100% offline (Electron + SQLite)
+
 ---
 
 ## 🧱 Tecnologías utilizadas
@@ -41,7 +41,7 @@ Cada legajo incluye:
 - **Cursos realizados**: capacitaciones y formaciones internas o externas  
 - **Evaluaciones médicas**: aptitud psicofísica  
 - **Licencias y solicitudes**: parte médico, junta médica
-- 
+
 ---
 
 ## 📦 Instalación local
@@ -68,15 +68,17 @@ cd ../electron
 # Construir la aplicación de escritorio y backend
 npm install
 npm run build
-
 ```
+
 ## 🎬 Demostración
 Ver video de presentación en YouTube
+https://youtu.be/hjgjQO_xigg
 
 ---
 
 ## 📥 Instalador
 Descargar instalador (.exe) desde Google Drive
+https://drive.google.com/uc?export=download&id=1kAVZRdtwEDRsC0lK0jodrpNHC5iGvGDa
 
 ---
 
@@ -91,3 +93,5 @@ Desarrollado por [Angélica Bengelsdorff](https://www.linkedin.com/in/angelica-b
 ## 📄 Licencia
 
 Este proyecto se encuentra bajo la licencia MIT.
+
+
