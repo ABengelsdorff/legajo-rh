@@ -8,15 +8,15 @@ Este sistema fue creado para RHNet, una consultora ficticia dedicada a la admini
 
 ## 🚀 Características principales
 
-- 🔐 Autenticación con JWT  
-- 👩‍💼 Gestión completa del legajo de empleados  
-- 📁 Edición de información personal, profesional y médica  
-- 📚 Registro de cursos, evaluaciones y actuaciones  
-- 👨‍👩‍👧‍👦 Carga de grupo familiar  
-- 📝 Exportación a PDF para impresión o archivo  
-- 📊 Visualización de estadísticas internas  
-- 🖥️ Aplicación de escritorio 100% offline (SQLite + Electron)  
-
+🔐 Autenticación segura con JWT
+👩‍💼 Gestión completa del legajo de empleados
+📁 Edición de información personal, profesional y médica
+👨‍👩‍👧‍👦 Gestión de grupo familiar
+📝 Exportación de legajos a PDF individuales
+📊 Visualización de estadísticas internas
+📈 Exportación masiva de datos a Excel
+💻 Aplicación de escritorio 100% offline (Electron + SQLite)
+🖥️ Interfaz moderna, intuitiva y responsive
 ---
 
 ## 🧱 Tecnologías utilizadas
@@ -27,7 +27,7 @@ Este sistema fue creado para RHNet, una consultora ficticia dedicada a la admini
 - **App de escritorio**: Electron  
 - **Estado global**: Zustand  
 - **PDFs**: jsPDF  
-- **Validaciones**: react-hook-form + Zod  
+- **Validaciones**: react-hook-form
 
 ---
 
@@ -39,11 +39,9 @@ Cada legajo incluye:
 - **Datos laborales**: cargo, departamento, antigüedad  
 - **Grupo familiar**: carga dinámica de miembros  
 - **Cursos realizados**: capacitaciones y formaciones internas o externas  
-- **Actuaciones**: desempeño, cambios de puesto, observaciones  
 - **Evaluaciones médicas**: aptitud psicofísica  
-- **Licencias y solicitudes**: parte médico, junta médica  
-- **Compromiso laboral**: foto, acuerdo de permanencia, ascensos  
-
+- **Licencias y solicitudes**: parte médico, junta médica
+- 
 ---
 
 ## 📦 Instalación local
@@ -53,14 +51,36 @@ Cada legajo incluye:
 git clone https://github.com/ABengelsdorff/legajo-rh.git
 cd legajo-rh
 
-# Instalar dependencias
-cd back && npm install
-cd ../front && npm install
+# Instalar dependencias del backend
+cd back
+npm install
 
-# Iniciar en modo desarrollo
-cd .. && npm run dev
+# Instalar dependencias del frontend
+cd ../front
+npm install
+
+# Construir el frontend exportado
+npm run build  # ejecutado dentro de /front
+
+# Volver a la raíz y entrar a la carpeta Electron
+cd ../electron
+
+# Construir la aplicación de escritorio y backend
+npm install
+npm run build
+
 ```
+## 🎬 Demostración
+Ver video de presentación en YouTube
 
+---
+
+## 📥 Instalador
+Descargar instalador (.exe) desde Google Drive
+
+---
+
+Google Drive puede mostrar una advertencia al descargar archivos .exe. Es seguro proceder con la descarga.
 
 ## 👩‍💻 Autor/a
 
